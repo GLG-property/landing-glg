@@ -1,26 +1,298 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Brand — electric blue (certcar-inspired) */
+  --color-brand: #1d6bff;
+  --color-brand-50: #eef4ff;
+  --color-brand-100: #dbe8ff;
+  --color-brand-200: #bcd3ff;
+  --color-brand-300: #7ea6ff;
+  --color-brand-400: #4f86ff;
+  --color-brand-500: #2f6bff;
+  --color-brand-600: #155ee6;
+  --color-brand-700: #1250c4;
+
+  /* Neutrals */
+  --color-ink: #0a0e17;
+  --color-muted: #5a626f;
+  --color-faint: #8b93a2;
+  --color-surface: #f5f6f8;
+  --color-line: #e8eaf0;
+
+  /* Feedback */
+  --color-success: #16a34a;
+  --color-warn: #f59e0b;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-onest);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 96px;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: var(--color-ink);
+  font-family: var(--font-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--color-brand);
+  color: #fff;
+}
+
+/* Headings — large, crisp, medium weight (reference is airy, not bold) */
+.display {
+  letter-spacing: -0.021em;
+  line-height: 1.04;
+  font-weight: 500;
+}
+
+.dot {
+  color: var(--color-brand);
+}
+
+/* Soft, layered shadows — registered as utilities so hover:/etc. variants work */
+@utility shadow-soft {
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 8px 20px -18px rgba(16, 24, 40, 0.1);
+}
+@utility shadow-card {
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.04), 0 16px 36px -30px rgba(16, 24, 40, 0.14);
+}
+@utility shadow-pop {
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 8px 18px -12px rgba(29, 107, 255, 0.28);
+}
+
+/* Reusable primitives — layered so Tailwind utilities can override them */
+@layer components {
+  .card {
+    background: #fff;
+    border: 1px solid var(--color-line);
+    border-radius: 1.5rem;
+  }
+}
+
+/* Faint line-art backdrop used behind the hero */
+.grid-lines {
+  background-image:
+    linear-gradient(to right, rgba(29, 107, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(29, 107, 255, 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 38%, #000 30%, transparent 75%);
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 38%, #000 30%, transparent 75%);
+}
+
+/* Edge fade for horizontal scroll rows */
+.fade-x {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-rise {
+  animation: rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ---------- Motion system ---------- */
+
+/* Scroll reveal — gated behind .js so content stays visible without JavaScript.
+   Uses an animation (not a transition) so it finishes and releases the element,
+   leaving component hover transitions untouched. */
+.js .reveal:not(.is-visible),
+.js .reveal-group:not(.is-visible) > * {
+  opacity: 0;
+}
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.js .reveal.is-visible,
+.js .reveal-group.is-visible > * {
+  animation: reveal-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.js .reveal-group.is-visible > :nth-child(2) {
+  animation-delay: 70ms;
+}
+.js .reveal-group.is-visible > :nth-child(3) {
+  animation-delay: 140ms;
+}
+.js .reveal-group.is-visible > :nth-child(4) {
+  animation-delay: 210ms;
+}
+.js .reveal-group.is-visible > :nth-child(5) {
+  animation-delay: 280ms;
+}
+.js .reveal-group.is-visible > :nth-child(6) {
+  animation-delay: 350ms;
+}
+.js .reveal-group.is-visible > :nth-child(7) {
+  animation-delay: 420ms;
+}
+.js .reveal-group.is-visible > :nth-child(8) {
+  animation-delay: 490ms;
+}
+
+/* Rotating gradient border — pricing cards */
+@property --border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@keyframes border-rotate {
+  to {
+    --border-angle: 360deg;
+  }
+}
+.border-animated,
+.border-animated-hover:hover {
+  border-color: transparent;
+  background:
+    linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
+    conic-gradient(
+        from var(--border-angle, 0deg),
+        var(--color-brand) 0deg,
+        var(--color-brand-300) 70deg,
+        var(--color-brand-100) 150deg,
+        var(--color-brand-300) 215deg,
+        var(--color-brand) 280deg,
+        var(--color-brand-700) 330deg,
+        var(--color-brand) 360deg
+      )
+      border-box;
+  animation: border-rotate 5.5s linear infinite;
+}
+
+/* Dropdown / menu pop-in */
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+}
+.animate-pop {
+  transform-origin: top right;
+  animation: pop-in 0.18s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Shine sweep on primary buttons */
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shine::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    110deg,
+    transparent 25%,
+    rgba(255, 255, 255, 0.25) 50%,
+    transparent 75%
+  );
+  transform: translateX(-130%);
+}
+.btn-shine:hover::before {
+  animation: shine 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes shine {
+  to {
+    transform: translateX(130%);
+  }
+}
+
+/* Gift icon wiggle (voucher band) */
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  30% {
+    transform: rotate(-7deg);
+  }
+  70% {
+    transform: rotate(7deg);
+  }
+}
+.voucher-band:hover .gift-wiggle {
+  animation: wiggle 0.5s ease-in-out;
+}
+
+/* Gentle float (decorative map pins) */
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+.animate-float {
+  animation: float-y 4.5s ease-in-out infinite;
+}
+
+/* Faint steering-wheel watermark pattern (reference-style) */
+.pattern-wheel {
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%231d6bff'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Ccircle%20cx='12'%20cy='12'%20r='9'/%3E%3Ccircle%20cx='12'%20cy='12'%20r='2.4'/%3E%3Cpath%20d='M12%2014.4V20.5M9.9%2013.2%204.2%2015.5M14.1%2013.2l5.7%202.3M3.6%2010.2c3-1.1%205.7-1.6%208.4-1.6s5.4.5%208.4%201.6'/%3E%3C/svg%3E");
+  background-size: 120px 120px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-rise,
+  .animate-pop,
+  .animate-float,
+  .border-animated,
+  .border-animated-hover:hover {
+    animation: none;
+  }
+  .btn-shine:hover::before,
+  .voucher-band:hover .gift-wiggle {
+    animation: none;
+  }
+  .js .reveal:not(.is-visible),
+  .js .reveal-group:not(.is-visible) > * {
+    opacity: 1;
+  }
+  .js .reveal.is-visible,
+  .js .reveal-group.is-visible > * {
+    animation: none;
+  }
 }

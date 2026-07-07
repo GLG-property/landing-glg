@@ -1,0 +1,125 @@
+import Link from "next/link";
+import { Phone } from "lucide-react";
+import { site } from "@/lib/content";
+import { Container, Logo, Button } from "./primitives";
+import { TikTok, Facebook, Instagram } from "./icons";
+import { Reveal } from "./Reveal";
+
+const columns = [
+  {
+    title: "Cursuri",
+    links: [
+      { label: "Pachet Premium", href: "#preturi" },
+      { label: "Pachet Standard", href: "#preturi" },
+      { label: "Pachet Social", href: "#preturi" },
+    ],
+  },
+  {
+    title: "Școala",
+    links: [
+      { label: "Despre noi", href: "#despre" },
+      { label: "Cum te înscrii", href: "#cursuri" },
+      { label: "Întrebări frecvente", href: "#intrebari" },
+    ],
+  },
+  {
+    title: "Contact",
+    links: [
+      { label: site.phone, href: site.phoneHref },
+      { label: "Facebook", href: site.social.facebook },
+      { label: "Instagram", href: site.social.instagram },
+      { label: "TikTok", href: site.social.tiktok },
+    ],
+  },
+];
+
+const socials = [
+  { icon: Facebook, href: site.social.facebook, label: "Facebook" },
+  { icon: Instagram, href: site.social.instagram, label: "Instagram" },
+  { icon: TikTok, href: site.social.tiktok, label: "TikTok" },
+];
+
+export function Footer() {
+  return (
+    <footer className="relative overflow-hidden border-t border-line bg-white pt-16">
+      <Container>
+        <Reveal stagger className="grid gap-12 pb-14 lg:grid-cols-2 lg:gap-20">
+          {/* CTA card */}
+          <div className="card flex flex-col items-start p-7 shadow-soft sm:p-8">
+            <Logo />
+            <h2 className="mt-6 text-2xl font-semibold tracking-tight text-ink sm:text-[2rem]">
+              Gata să obții permisul<span className="dot">?</span>
+            </h2>
+            <p className="mt-3 max-w-md text-muted">
+              Fă primul pas spre carnetul de conducere. Te așteptăm la unul dintre
+              cele patru centre din Chișinău.
+            </p>
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <Button href="#preturi" withArrow>
+                Înscrie-te acum
+              </Button>
+              <a
+                href={site.phoneHref}
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-line px-6 py-3.5 font-semibold text-ink transition-colors hover:border-brand-200 hover:text-brand"
+              >
+                <Phone className="size-4 text-brand" />
+                {site.phone}
+              </a>
+            </div>
+          </div>
+
+          {/* Link columns */}
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
+            {columns.map((col) => (
+              <div key={col.title}>
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-faint">
+                  {col.title}
+                </h3>
+                <ul className="mt-4 flex flex-col gap-3">
+                  {col.links.map((link) => (
+                    <li key={link.label}>
+                      <Link
+                        href={link.href}
+                        className="text-[0.95rem] font-medium text-muted transition-colors hover:text-brand"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </Reveal>
+
+        {/* bottom bar */}
+        <div className="flex flex-col-reverse items-center justify-between gap-5 border-t border-line py-7 sm:flex-row">
+          <p className="text-sm text-muted">
+            © 2026 {site.name}. Toate drepturile rezervate. · Școală auto · Chișinău
+          </p>
+          <div className="flex gap-2.5">
+            {socials.map((s) => (
+              <a
+                key={s.label}
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={s.label}
+                className="grid size-10 place-items-center rounded-xl border border-line bg-white text-ink transition-colors hover:border-brand hover:bg-brand hover:text-white"
+              >
+                <s.icon className="size-5" />
+              </a>
+            ))}
+          </div>
+        </div>
+      </Container>
+
+      {/* watermark */}
+      <div aria-hidden="true" className="pointer-events-none select-none pb-2 text-center">
+        <span className="display block bg-gradient-to-b from-surface to-white bg-clip-text text-[24vw] leading-[0.8] text-transparent">
+          GLG
+        </span>
+      </div>
+    </footer>
+  );
+}
