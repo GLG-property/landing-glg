@@ -2,18 +2,14 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Menu, X, ChevronDown, Globe, Phone } from "lucide-react";
+import { Menu, X, Phone } from "lucide-react";
 import clsx from "clsx";
 import { nav, site } from "@/lib/content";
-import { Logo, Button, Container } from "./primitives";
-
-const langs = ["RO", "RU"] as const;
+import { Logo, Container } from "./primitives";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [lang, setLang] = useState<(typeof langs)[number]>("RO");
-  const [langOpen, setLangOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -64,42 +60,13 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2.5">
-          {/* Language selector */}
-          <div className="relative hidden sm:block">
-            <button
-              onClick={() => setLangOpen((v) => !v)}
-              onBlur={() => setTimeout(() => setLangOpen(false), 120)}
-              className="flex items-center gap-1.5 rounded-xl border border-line px-3 py-2 text-sm font-medium text-ink transition-colors hover:border-brand-200"
-              aria-label="Schimbă limba"
-            >
-              <Globe className="size-4 text-faint" />
-              {lang}
-              <ChevronDown className={clsx("size-3.5 text-faint transition-transform", langOpen && "rotate-180")} />
-            </button>
-            {langOpen ? (
-              <div className="animate-pop absolute right-0 mt-2 flex w-32 flex-col gap-1 overflow-hidden rounded-2xl border border-line bg-white p-1.5 shadow-card">
-                {langs.map((l) => (
-                  <button
-                    key={l}
-                    onMouseDown={() => {
-                      setLang(l);
-                      setLangOpen(false);
-                    }}
-                    className={clsx(
-                      "block w-full rounded-xl px-3 py-2 text-left text-sm font-medium transition-colors",
-                      l === lang ? "bg-brand-50 text-brand" : "text-muted hover:bg-surface"
-                    )}
-                  >
-                    {l === "RO" ? "Română" : "Русский"}
-                  </button>
-                ))}
-              </div>
-            ) : null}
-          </div>
-
-          <Button href="#preturi" className="hidden px-5 py-2.5 sm:inline-flex">
-            Înscrie-te
-          </Button>
+          <a
+            href={site.phoneHref}
+            className="btn-shine hidden items-center gap-2 rounded-xl border border-transparent bg-brand px-4 py-2 text-sm font-semibold text-white shadow-pop transition-colors hover:bg-brand-600 sm:inline-flex"
+          >
+            <Phone className="size-4" />
+            {site.phone}
+          </a>
 
           <button
             onClick={() => setOpen((v) => !v)}
@@ -147,18 +114,12 @@ export function Navbar() {
               )}
               style={{ transitionDelay: open ? `${60 + nav.length * 45}ms` : "0ms" }}
             >
-              <Link
-                href="#preturi"
-                onClick={() => setOpen(false)}
-                className="inline-flex w-full items-center justify-center rounded-xl bg-brand px-6 py-3.5 font-semibold text-white shadow-pop transition-colors hover:bg-brand-600"
-              >
-                Înscrie-te acum
-              </Link>
               <a
                 href={site.phoneHref}
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-line px-6 py-3.5 font-semibold text-ink"
+                onClick={() => setOpen(false)}
+                className="btn-shine inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand px-6 py-3.5 font-semibold text-white shadow-pop transition-colors hover:bg-brand-600"
               >
-                <Phone className="size-4 text-brand" />
+                <Phone className="size-4" />
                 {site.phone}
               </a>
             </div>

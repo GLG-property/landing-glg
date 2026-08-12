@@ -1,5 +1,5 @@
 import { CheckCircle2, Phone } from "lucide-react";
-import { hero, site } from "@/lib/content";
+import { hero } from "@/lib/content";
 import { Container, Eyebrow, Button } from "./primitives";
 
 export function Hero() {
@@ -39,22 +39,14 @@ export function Hero() {
           className="animate-rise mt-9 flex flex-col items-center gap-3 sm:flex-row"
           style={{ animationDelay: "230ms" }}
         >
-          <Button href={hero.primaryCta.href} withArrow className="px-7 py-4 text-base">
+          <Button href={hero.primaryCta.href} className="px-7 py-4 text-base">
+            <Phone className="size-5" />
             {hero.primaryCta.label}
           </Button>
           <Button href={hero.secondaryCta.href} variant="secondary" className="px-7 py-4 text-base">
             {hero.secondaryCta.label}
           </Button>
         </div>
-
-        <a
-          href={site.phoneHref}
-          className="animate-rise mt-5 inline-flex items-center gap-2 text-sm font-medium text-muted transition-colors hover:text-brand"
-          style={{ animationDelay: "300ms" }}
-        >
-          <Phone className="size-4 text-brand" />
-          sau sună-ne la <span className="font-semibold text-ink">{site.phone}</span>
-        </a>
 
         {/* Trust chips */}
         <ul className="mt-12 flex flex-wrap items-center justify-center gap-3">

@@ -1,7 +1,7 @@
-import { Check, Sparkles, Star, Tag } from "lucide-react";
+import { Check, Phone, Sparkles, Star, Tag } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import clsx from "clsx";
-import { pricing, type Plan } from "@/lib/content";
+import { pricing, site, type Plan } from "@/lib/content";
 import { Container, SectionHeading, BlockButton } from "./primitives";
 import { Reveal } from "./Reveal";
 
@@ -54,7 +54,10 @@ function PlanCard({ plan }: { plan: Plan }) {
         </ul>
 
         <div className="mt-7">
-          <BlockButton href="#contact">{plan.cta}</BlockButton>
+          <BlockButton href={site.phoneHref}>
+            <Phone className="size-4" />
+            {site.phone}
+          </BlockButton>
         </div>
       </div>
     </div>

@@ -31,7 +31,7 @@ export const hero = {
   titleBottom: "permisul tău de conducere",
   subtitle:
     "Indiferent de categoria dorită, îți asigurăm succesul la examen. Teorie și practică alături de cei mai competenți instructori din Republica Moldova.",
-  primaryCta: { label: "Înscrie-te acum", href: "#preturi" },
+  primaryCta: { label: site.phone, href: site.phoneHref },
   secondaryCta: { label: "Vezi pachetele", href: "#preturi" },
   chips: [
     "15.000+ absolvenți",
@@ -113,7 +113,6 @@ export type Plan = {
   tagline: string;
   category: string;
   features: string[];
-  cta: string;
 };
 
 export const pricing = {
@@ -138,7 +137,6 @@ export const pricing = {
         "Certificat de instruire gratuit",
         "Achitare deplină la depunerea cererii",
       ],
-      cta: "Înscrie-te",
     },
     {
       name: "Standard",
@@ -155,7 +153,6 @@ export const pricing = {
         "Achitare în 25 de rate",
         "Voucher cadou de 200 lei",
       ],
-      cta: "Înscrie-te",
     },
     {
       name: "Social",
@@ -171,7 +168,6 @@ export const pricing = {
         "Achitare în 25 de rate",
         "Necesită acte APL ce confirmă vulnerabilitatea socială",
       ],
-      cta: "Înscrie-te",
     },
   ] as Plan[],
 };

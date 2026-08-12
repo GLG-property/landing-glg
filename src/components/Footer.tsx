@@ -55,16 +55,10 @@ export function Footer() {
               cele patru centre din Chișinău.
             </p>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <Button href="#preturi" withArrow>
-                Înscrie-te acum
-              </Button>
-              <a
-                href={site.phoneHref}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-line px-6 py-3.5 font-semibold text-ink transition-colors hover:border-brand-200 hover:text-brand"
-              >
-                <Phone className="size-4 text-brand" />
+              <Button href={site.phoneHref}>
+                <Phone className="size-4" />
                 {site.phone}
-              </a>
+              </Button>
             </div>
           </div>
 
@@ -95,7 +89,15 @@ export function Footer() {
         {/* bottom bar */}
         <div className="flex flex-col-reverse items-center justify-between gap-5 border-t border-line py-7 sm:flex-row">
           <p className="text-sm text-muted">
-            © 2026 {site.name}. Toate drepturile rezervate. · Școală auto · Chișinău
+            © 2026 {site.name}. Toate drepturile rezervate. · Școală auto · Chișinău ·{" "}
+            <a
+              href="https://landings.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium transition-colors hover:text-brand"
+            >
+              Creare website - landings.md
+            </a>
           </p>
           <div className="flex gap-2.5">
             {socials.map((s) => (
