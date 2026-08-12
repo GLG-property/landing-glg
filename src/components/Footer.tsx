@@ -1,37 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import { Phone } from "lucide-react";
 import { site } from "@/lib/content";
+import { useI18n } from "./LanguageProvider";
 import { Container, Logo, Button } from "./primitives";
 import { TikTok, Facebook, Instagram } from "./icons";
 import { Reveal } from "./Reveal";
-
-const columns = [
-  {
-    title: "Cursuri",
-    links: [
-      { label: "Pachet Premium", href: "#preturi" },
-      { label: "Pachet Standard", href: "#preturi" },
-      { label: "Pachet Social", href: "#preturi" },
-    ],
-  },
-  {
-    title: "Școala",
-    links: [
-      { label: "Despre noi", href: "#despre" },
-      { label: "Cum te înscrii", href: "#cursuri" },
-      { label: "Întrebări frecvente", href: "#intrebari" },
-    ],
-  },
-  {
-    title: "Contact",
-    links: [
-      { label: site.phone, href: site.phoneHref },
-      { label: "Facebook", href: site.social.facebook },
-      { label: "Instagram", href: site.social.instagram },
-      { label: "TikTok", href: site.social.tiktok },
-    ],
-  },
-];
 
 const socials = [
   { icon: Facebook, href: site.social.facebook, label: "Facebook" },
@@ -40,6 +15,8 @@ const socials = [
 ];
 
 export function Footer() {
+  const { t } = useI18n();
+  const footer = t.footer;
   return (
     <footer className="relative overflow-hidden border-t border-line bg-white pt-16">
       <Container>
@@ -48,12 +25,9 @@ export function Footer() {
           <div className="card flex flex-col items-start p-7 shadow-soft sm:p-8">
             <Logo />
             <h2 className="mt-6 text-2xl font-semibold tracking-tight text-ink sm:text-[2rem]">
-              Gata să obții permisul<span className="dot">?</span>
+              {footer.heading}<span className="dot">?</span>
             </h2>
-            <p className="mt-3 max-w-md text-muted">
-              Fă primul pas spre carnetul de conducere. Te așteptăm la unul dintre
-              cele patru centre din Chișinău.
-            </p>
+            <p className="mt-3 max-w-md text-muted">{footer.text}</p>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
               <Button href={site.phoneHref}>
                 <Phone className="size-4" />
@@ -64,7 +38,7 @@ export function Footer() {
 
           {/* Link columns */}
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
-            {columns.map((col) => (
+            {footer.columns.map((col) => (
               <div key={col.title}>
                 <h3 className="text-sm font-semibold uppercase tracking-wide text-faint">
                   {col.title}
@@ -89,14 +63,14 @@ export function Footer() {
         {/* bottom bar */}
         <div className="flex flex-col-reverse items-center justify-between gap-5 border-t border-line py-7 sm:flex-row">
           <p className="text-sm text-muted">
-            © 2026 {site.name}. Toate drepturile rezervate. · Școală auto · Chișinău ·{" "}
+            © 2026 {site.name}. {footer.rights} ·{" "}
             <a
               href="https://landings.md"
               target="_blank"
               rel="noopener noreferrer"
               className="font-medium transition-colors hover:text-brand"
             >
-              Creare website - landings.md
+              {footer.credit}
             </a>
           </p>
           <div className="flex gap-2.5">

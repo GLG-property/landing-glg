@@ -1,5 +1,7 @@
+"use client";
+
 import { BadgeCheck } from "lucide-react";
-import { testimonials } from "@/lib/content";
+import { useI18n } from "./LanguageProvider";
 import { Container, SectionHeading } from "./primitives";
 import { Reveal } from "./Reveal";
 
@@ -11,6 +13,8 @@ const reviews = [
 ];
 
 export function Testimonials() {
+  const { t } = useI18n();
+  const testimonials = t.testimonials;
   return (
     <section className="bg-surface py-20 sm:py-24">
       <Container>
@@ -33,12 +37,12 @@ export function Testimonials() {
                 poster={r.poster}
               >
                 <source src={r.src} type="video/mp4" />
-                Browserul tău nu suportă redarea video.
+                {testimonials.videoFallback}
               </video>
               <figcaption className="flex items-center gap-2 px-4 py-3.5">
                 <BadgeCheck className="size-4 text-brand" />
                 <span className="text-sm font-medium text-muted">
-                  Recenzie absolvent GLG
+                  {testimonials.caption}
                 </span>
               </figcaption>
             </figure>

@@ -3,11 +3,14 @@
 import { useState } from "react";
 import { Plus, Phone } from "lucide-react";
 import clsx from "clsx";
-import { faq, site } from "@/lib/content";
+import { site } from "@/lib/content";
+import { useI18n } from "./LanguageProvider";
 import { Container, SectionHeading } from "./primitives";
 import { Reveal } from "./Reveal";
 
 export function Faq() {
+  const { t } = useI18n();
+  const faq = t.faq;
   const [open, setOpen] = useState<number | null>(0);
 
   return (
@@ -30,7 +33,7 @@ export function Faq() {
                 <Phone className="size-5" />
               </span>
               <span className="text-left">
-                <span className="block text-sm text-muted">Nu găsești răspunsul?</span>
+                <span className="block text-sm text-muted">{faq.cardQuestion}</span>
                 <span className="block font-semibold text-ink">{site.phone}</span>
               </span>
             </a>

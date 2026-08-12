@@ -1,9 +1,13 @@
-import { benefits } from "@/lib/content";
+"use client";
+
+import { useI18n } from "./LanguageProvider";
 import { iconMap } from "./icons";
 import { Container } from "./primitives";
 import { Reveal } from "./Reveal";
 
 export function Benefits() {
+  const { t } = useI18n();
+  const benefits = t.benefits;
   return (
     <section className="relative pb-6">
       <Container>

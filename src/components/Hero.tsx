@@ -1,8 +1,12 @@
+"use client";
+
 import { CheckCircle2, Phone } from "lucide-react";
-import { hero } from "@/lib/content";
+import { useI18n } from "./LanguageProvider";
 import { Container, Eyebrow, Button } from "./primitives";
 
 export function Hero() {
+  const { t } = useI18n();
+  const hero = t.hero;
   return (
     <section id="acasa" className="relative overflow-hidden">
       {/* Backdrop */}

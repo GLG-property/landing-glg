@@ -1,10 +1,14 @@
+"use client";
+
 import Link from "next/link";
 import { Gift, ArrowRight } from "lucide-react";
-import { voucher } from "@/lib/content";
+import { useI18n } from "./LanguageProvider";
 import { Container } from "./primitives";
 import { Reveal } from "./Reveal";
 
 export function Voucher() {
+  const { t } = useI18n();
+  const voucher = t.voucher;
   return (
     <section className="pb-4">
       <Container>

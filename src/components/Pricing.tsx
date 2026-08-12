@@ -1,7 +1,10 @@
+"use client";
+
 import { Check, Phone, Sparkles, Star, Tag } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import clsx from "clsx";
-import { pricing, site, type Plan } from "@/lib/content";
+import { site, type Plan } from "@/lib/content";
+import { useI18n } from "./LanguageProvider";
 import { Container, SectionHeading, BlockButton } from "./primitives";
 import { Reveal } from "./Reveal";
 
@@ -11,7 +14,7 @@ const badgeIcon: Record<string, LucideIcon> = {
   Social: Tag,
 };
 
-function PlanCard({ plan }: { plan: Plan }) {
+function PlanCard({ plan, categoryLabel }: { plan: Plan; categoryLabel: string }) {
   const Icon = badgeIcon[plan.name] ?? Star;
   return (
     <div
@@ -37,7 +40,7 @@ function PlanCard({ plan }: { plan: Plan }) {
       <div className="flex flex-1 flex-col rounded-[1.35rem] bg-white p-5 sm:p-6">
         <p className="text-[0.975rem] text-muted">{plan.tagline}</p>
         <span className="mt-4 inline-flex w-fit items-center rounded-full bg-surface px-3 py-1 text-xs font-semibold text-ink">
-          Categoriile {plan.category}
+          {categoryLabel} {plan.category}
         </span>
 
         <hr className="my-5 border-line" />
@@ -65,6 +68,8 @@ function PlanCard({ plan }: { plan: Plan }) {
 }
 
 export function Pricing() {
+  const { t } = useI18n();
+  const pricing = t.pricing;
   return (
     <section id="preturi" className="scroll-mt-24 py-20 sm:py-28">
       <Container>
@@ -76,13 +81,13 @@ export function Pricing() {
         />
         <Reveal stagger className="mt-12 grid items-stretch gap-6 lg:grid-cols-3">
           {pricing.plans.map((plan) => (
-            <PlanCard key={plan.name} plan={plan} />
+            <PlanCard key={plan.name} plan={plan} categoryLabel={pricing.categoryLabel} />
           ))}
         </Reveal>
         <p className="mt-6 text-center text-sm text-muted">
-          Prețurile detaliate ți le comunicăm la telefon sau direct la centru.{" "}
-          <a href="#contact" className="font-semibold text-brand hover:underline">
-            Contactează-ne
+          {pricing.note}{" "}
+          <a href={pricing.noteCta.href} className="font-semibold text-brand hover:underline">
+            {pricing.noteCta.label}
           </a>
         </p>
       </Container>

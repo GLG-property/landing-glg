@@ -1,10 +1,14 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { steps } from "@/lib/content";
+import { useI18n } from "./LanguageProvider";
 import { Container, SectionHeading } from "./primitives";
 import { Reveal } from "./Reveal";
 
 export function Steps() {
+  const { t } = useI18n();
+  const steps = t.steps;
   return (
     <section id="cursuri" className="relative scroll-mt-24 overflow-hidden bg-surface py-20 sm:py-28">
       {/* faint watermark pattern, reference-style */}

@@ -1,11 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { stats } from "@/lib/content";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useI18n } from "./LanguageProvider";
 import { Container } from "./primitives";
 import { Reveal } from "./Reveal";
-
-const fmt = new Intl.NumberFormat("ro-RO");
 
 function useInView<T extends HTMLElement>() {
   const ref = useRef<T>(null);
@@ -29,6 +27,11 @@ function useInView<T extends HTMLElement>() {
 }
 
 function Counter({ value, suffix }: { value: number; suffix: string }) {
+  const { lang } = useI18n();
+  const fmt = useMemo(
+    () => new Intl.NumberFormat(lang === "ru" ? "ru-RU" : "ro-RO"),
+    [lang]
+  );
   const { ref, inView } = useInView<HTMLDivElement>();
   const [display, setDisplay] = useState(0);
 
@@ -61,6 +64,8 @@ function Counter({ value, suffix }: { value: number; suffix: string }) {
 }
 
 export function Stats() {
+  const { t } = useI18n();
+  const stats = t.stats;
   return (
     <section className="py-10 sm:py-14">
       <Container>

@@ -1,5 +1,8 @@
+"use client";
+
 import { Phone, Clock, MapPin } from "lucide-react";
-import { contact, site } from "@/lib/content";
+import { site } from "@/lib/content";
+import { useI18n } from "./LanguageProvider";
 import { Container, SectionHeading, BlockButton } from "./primitives";
 import { TikTok, Facebook, Instagram } from "./icons";
 import { Reveal } from "./Reveal";
@@ -11,6 +14,8 @@ const socials = [
 ];
 
 export function Contact() {
+  const { t } = useI18n();
+  const contact = t.contact;
   return (
     <section id="contact" className="scroll-mt-24 py-20 sm:py-28">
       <Container>
@@ -33,7 +38,7 @@ export function Contact() {
                   <Phone className="size-5" />
                 </span>
                 <span>
-                  <span className="block text-sm text-muted">Sună-ne</span>
+                  <span className="block text-sm text-muted">{contact.callUs}</span>
                   <span className="block text-lg font-semibold text-ink group-hover:text-brand">
                     {site.phone}
                   </span>
@@ -45,14 +50,14 @@ export function Contact() {
                   <Clock className="size-5" />
                 </span>
                 <span>
-                  <span className="block text-sm text-muted">Program</span>
+                  <span className="block text-sm text-muted">{contact.hoursLabel}</span>
                   <span className="block text-lg font-semibold text-ink">{contact.hours}</span>
                 </span>
               </div>
             </Reveal>
 
             <div className="mt-6">
-              <span className="text-sm font-semibold text-muted">Urmărește-ne</span>
+              <span className="text-sm font-semibold text-muted">{contact.followUs}</span>
               <div className="mt-3 flex gap-2.5">
                 {socials.map((s) => (
                   <a
@@ -98,13 +103,13 @@ export function Contact() {
                 <MapPin className="size-5" />
               </span>
               <span className="absolute bottom-4 left-6 rounded-full bg-white/15 px-3 py-1 text-sm font-semibold text-white backdrop-blur-sm">
-                4 centre în Chișinău
+                {contact.mapBadge}
               </span>
             </div>
 
             {/* list */}
             <div className="p-6 sm:p-8">
-              <h3 className="text-lg font-semibold text-ink">Centrele noastre</h3>
+              <h3 className="text-lg font-semibold text-ink">{contact.centersTitle}</h3>
               <ul className="mt-4 flex flex-col gap-3">
                 {contact.sectors.map((sector) => (
                   <li key={sector} className="flex items-center gap-3 text-ink">
@@ -116,7 +121,7 @@ export function Contact() {
                 ))}
               </ul>
               <div className="mt-7">
-                <BlockButton href={site.phoneHref}>Sună acum · {site.phone}</BlockButton>
+                <BlockButton href={site.phoneHref}>{contact.callNow} · {site.phone}</BlockButton>
               </div>
             </div>
           </Reveal>

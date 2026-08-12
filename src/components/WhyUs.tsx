@@ -1,10 +1,14 @@
+"use client";
+
 import Image from "next/image";
-import { why } from "@/lib/content";
+import { useI18n } from "./LanguageProvider";
 import { iconMap } from "./icons";
 import { Container, SectionHeading } from "./primitives";
 import { Reveal } from "./Reveal";
 
 export function WhyUs() {
+  const { t } = useI18n();
+  const why = t.why;
   return (
     <section id="despre" className="py-20 sm:py-28">
       <Container>
@@ -42,7 +46,7 @@ export function WhyUs() {
             <div className="relative aspect-[4/3.3] overflow-hidden rounded-[1.75rem] shadow-card ring-1 ring-line">
               <Image
                 src="/masina-glg.jpg"
-                alt="Elev la volan într-o mașină de instruire GLG Property"
+                alt={why.imageAlt}
                 fill
                 className="object-cover transition-transform duration-700 hover:scale-[1.04]"
                 sizes="(max-width: 1024px) 100vw, 640px"

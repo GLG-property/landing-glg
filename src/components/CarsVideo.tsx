@@ -1,12 +1,15 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { useI18n } from "./LanguageProvider";
 import { Container } from "./primitives";
 import { Reveal } from "./Reveal";
 
-const chips = ["Skoda Fabia", "Skoda Scala", "Trasee de examinare"];
-
 /** Fleet band — the cars video runs as a dimmed backdrop behind the copy. */
 export function CarsVideo() {
+  const { t } = useI18n();
+  const cars = t.cars;
   return (
     <section className="py-6 sm:py-8">
       <Container>
@@ -29,17 +32,16 @@ export function CarsVideo() {
 
             <div className="relative max-w-xl px-7 py-14 sm:px-12 sm:py-20">
               <span className="inline-flex w-fit items-center rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-white/85 backdrop-blur-sm">
-                Parcul auto GLG
+                {cars.badge}
               </span>
               <h2 className="display mt-5 text-3xl text-white sm:text-4xl">
-                Mașini moderne, întreținute impecabil<span className="dot">.</span>
+                {cars.title}<span className="dot">.</span>
               </h2>
               <p className="mt-3 text-[0.975rem] leading-relaxed text-white/75">
-                Înveți pe aceleași modele pe care vei susține examenul, pe traseele
-                reale de examinare din Chișinău.
+                {cars.text}
               </p>
               <div className="mt-6 flex flex-wrap items-center gap-2.5">
-                {chips.map((chip) => (
+                {cars.chips.map((chip) => (
                   <span
                     key={chip}
                     className="rounded-full border border-white/20 px-3.5 py-1.5 text-sm font-medium text-white/85"
@@ -49,10 +51,10 @@ export function CarsVideo() {
                 ))}
               </div>
               <Link
-                href="#preturi"
+                href={cars.cta.href}
                 className="group mt-8 inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3.5 font-semibold text-ink transition-colors hover:bg-brand-50"
               >
-                Vezi pachetele
+                {cars.cta.label}
                 <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
               </Link>
             </div>
