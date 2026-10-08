@@ -38,8 +38,8 @@ function Counter({ value, suffix }: { value: number; suffix: string }) {
   useEffect(() => {
     if (!inView) return;
     if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setDisplay(value);
-      return;
+      const raf = requestAnimationFrame(() => setDisplay(value));
+      return () => cancelAnimationFrame(raf);
     }
     let raf = 0;
     let start: number | null = null;
@@ -70,7 +70,7 @@ export function Stats() {
     <section className="py-10 sm:py-14">
       <Container>
         <Reveal>
-          <div className="card grid grid-cols-2 gap-y-8 overflow-hidden bg-gradient-to-b from-white to-brand-50/40 px-6 py-10 shadow-soft sm:px-10 lg:grid-cols-4">
+          <div className="card grid grid-cols-2 gap-y-8 px-6 py-8 sm:px-10 lg:grid-cols-4">
           {stats.map((s, i) => (
             <div
               key={s.label}
@@ -79,10 +79,10 @@ export function Stats() {
                 (i !== 0 ? "lg:border-l lg:border-line lg:pl-10" : "")
               }
             >
-              <div className="display text-4xl text-brand sm:text-5xl">
+              <div className="text-3xl font-semibold tracking-tight tabular-nums text-ink">
                 <Counter value={s.value} suffix={s.suffix} />
               </div>
-              <div className="mt-2 text-sm font-medium text-muted sm:text-base">
+              <div className="mt-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
                 {s.label}
               </div>
             </div>

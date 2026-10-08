@@ -1,0 +1,29 @@
+# dependențe și output-uri de build — se regenerează în container
+node_modules
+.next
+out
+build
+coverage
+*.tsbuildinfo
+next-env.d.ts
+
+# git și meta
+.git
+.gitignore
+.vercel
+
+# secrete — nu intră niciodată în imagine
+.env*
+
+# fișiere Docker (nu sunt necesare în contextul de build)
+Dockerfile
+.dockerignore
+
+# documentație
+*.md
+
+# loguri
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*

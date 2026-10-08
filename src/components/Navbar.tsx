@@ -13,6 +13,7 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [active, setActive] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -28,6 +29,22 @@ export function Navbar() {
     };
   }, [open]);
 
+  // scroll-spy: marks the nav link of the section currently in view
+  useEffect(() => {
+    const sections = document.querySelectorAll("section[id]");
+    if (sections.length === 0) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        }
+      },
+      { rootMargin: "-30% 0px -60% 0px" }
+    );
+    sections.forEach((s) => observer.observe(s));
+    return () => observer.disconnect();
+  }, []);
+
   // close the mobile menu (and release the scroll lock) when crossing to desktop
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 1024px)");
@@ -41,42 +58,52 @@ export function Navbar() {
   return (
     <header
       className={clsx(
-        "sticky top-0 z-50 transition-all duration-300",
-        scrolled
-          ? "border-b border-line bg-white/85 backdrop-blur-xl"
-          : "border-b border-transparent bg-white/60 backdrop-blur-md"
+        "sticky top-0 z-50 border-b bg-white/95 backdrop-blur transition-shadow duration-200",
+        scrolled ? "border-line shadow-soft" : "border-transparent"
       )}
     >
-      <Container className="flex h-[72px] items-center justify-between gap-4">
+      <Container className="flex h-16 items-center justify-between gap-4">
         <Logo />
 
         <nav className="hidden items-center gap-1 lg:flex">
-          {t.nav.items.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="rounded-full px-4 py-2 text-[0.95rem] font-medium text-muted transition-colors hover:bg-surface hover:text-ink"
-            >
-              {item.label}
-            </Link>
-          ))}
+          {t.nav.items.map((item) => {
+            const anchor = item.href.replace(/^\/?#/, "");
+            const isActive = anchor === active;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={clsx(
+                  "relative px-3 py-2 text-sm font-medium transition-colors duration-200 after:absolute after:inset-x-3 after:bottom-1 after:h-px after:opacity-0 after:transition-opacity after:duration-200",
+                  isActive
+                    ? "text-ink after:bg-brand after:opacity-100"
+                    : "text-muted hover:text-ink after:bg-ink hover:after:opacity-100"
+                )}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2">
           {/* Language selector */}
           <div className="relative hidden sm:block">
             <button
               onClick={() => setLangOpen((v) => !v)}
               onBlur={() => setTimeout(() => setLangOpen(false), 120)}
-              className="flex items-center gap-1.5 rounded-xl border border-line px-3 py-2 text-sm font-medium text-ink transition-colors hover:border-brand-200"
+              className="btn-3d-light flex items-center gap-1.5 rounded-[10px] px-3 py-2 text-sm font-medium text-ink transition-colors duration-200"
               aria-label={t.nav.langAria}
             >
-              <Globe className="size-4 text-faint" />
+              <Globe className="size-4 text-faint" strokeWidth={1.5} />
               {lang.toUpperCase()}
-              <ChevronDown className={clsx("size-3.5 text-faint transition-transform", langOpen && "rotate-180")} />
+              <ChevronDown
+                className={clsx("size-3.5 text-faint transition-transform", langOpen && "rotate-180")}
+                strokeWidth={1.5}
+              />
             </button>
             {langOpen ? (
-              <div className="animate-pop absolute right-0 mt-2 flex w-32 flex-col gap-1 overflow-hidden rounded-2xl border border-line bg-white p-1.5 shadow-card">
+              <div className="card anim-drop absolute right-0 mt-2 flex w-32 flex-col gap-0.5 rounded-[10px] p-1">
                 {langs.map((l) => (
                   <button
                     key={l}
@@ -85,7 +112,7 @@ export function Navbar() {
                       setLangOpen(false);
                     }}
                     className={clsx(
-                      "block w-full rounded-xl px-3 py-2 text-left text-sm font-medium transition-colors",
+                      "block w-full rounded-[8px] px-3 py-2 text-left text-sm font-medium transition-colors duration-200",
                       l === lang ? "bg-brand-50 text-brand" : "text-muted hover:bg-surface"
                     )}
                   >
@@ -96,84 +123,99 @@ export function Navbar() {
             ) : null}
           </div>
 
+          {/* Phone, secondary */}
           <a
             href={site.phoneHref}
-            className="btn-shine hidden items-center gap-2 rounded-xl border border-transparent bg-brand px-4 py-2 text-sm font-semibold text-white shadow-pop transition-colors hover:bg-brand-600 sm:inline-flex"
+            className="hidden items-center gap-2 px-2 py-2 text-sm font-medium text-ink transition-colors duration-200 hover:text-brand md:inline-flex"
           >
-            <Phone className="size-4" />
+            <Phone className="size-4 text-muted" strokeWidth={1.5} />
             {site.phone}
+          </a>
+
+          {/* Primary CTA */}
+          <Link
+            href={t.nav.cta.href}
+            className="btn-3d hidden items-center rounded-[10px] px-4 py-2 text-sm font-medium text-white transition-colors duration-200 sm:inline-flex"
+          >
+            {t.nav.cta.label}
+          </Link>
+
+          <a
+            href={site.phoneHref}
+            aria-label={site.phone}
+            className="btn-3d-light grid size-10 place-items-center rounded-[10px] text-ink transition-colors duration-200 md:hidden"
+          >
+            <Phone className="size-4" strokeWidth={1.5} />
           </a>
 
           <button
             onClick={() => setOpen((v) => !v)}
-            className="grid size-10 place-items-center rounded-xl border border-line text-ink lg:hidden"
+            className="btn-3d-light grid size-10 place-items-center rounded-[10px] text-ink lg:hidden"
             aria-label={t.nav.menuAria}
             aria-expanded={open}
           >
-            {open ? <X className="size-5" /> : <Menu className="size-5" />}
+            {open ? <X className="size-5" strokeWidth={1.5} /> : <Menu className="size-5" strokeWidth={1.5} />}
           </button>
         </div>
       </Container>
 
-      {/* Mobile menu */}
-      <div
-        className={clsx(
-          "lg:hidden",
-          open ? "pointer-events-auto" : "pointer-events-none"
-        )}
-      >
+      {/* Mobile menu, full-height sheet under the header */}
+      <div className={clsx("lg:hidden", open ? "pointer-events-auto" : "pointer-events-none")}>
         <div
           className={clsx(
-            "fixed inset-x-0 top-[72px] z-40 origin-top border-b border-line bg-white transition-all duration-300",
-            open ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0"
+            "menu-sheet fixed inset-x-0 top-16 z-40 h-[calc(100dvh-4rem)] bg-white",
+            open ? "is-open opacity-100" : "opacity-0"
           )}
         >
-          <Container className="flex flex-col gap-1 py-5">
-            {t.nav.items.map((item, i) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className={clsx(
-                  "rounded-2xl px-4 py-3 text-lg font-semibold text-ink transition-all duration-300 hover:bg-surface",
-                  open ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
-                )}
-                style={{ transitionDelay: open ? `${60 + i * 45}ms` : "0ms" }}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <div
-              className={clsx(
-                "mt-3 flex flex-col gap-2.5 transition-all duration-300",
-                open ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
-              )}
-              style={{ transitionDelay: open ? `${60 + t.nav.items.length * 45}ms` : "0ms" }}
-            >
-              <a
-                href={site.phoneHref}
-                onClick={() => setOpen(false)}
-                className="btn-shine inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand px-6 py-3.5 font-semibold text-white shadow-pop transition-colors hover:bg-brand-600"
-              >
-                <Phone className="size-4" />
-                {site.phone}
-              </a>
-              <div className="flex gap-2.5" role="group" aria-label={t.nav.langAria}>
+          <Container className="flex h-full flex-col overflow-y-auto">
+            <nav className="nav-list pt-2">
+              {t.nav.items.map((item, i) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className="flex items-baseline justify-between border-b border-line py-4 transition-colors duration-200 hover:text-brand"
+                >
+                  <span className="text-xl font-semibold tracking-tight text-ink">
+                    {item.label}
+                  </span>
+                  <span className="text-xs tabular-nums text-faint">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                </Link>
+              ))}
+            </nav>
+
+            <div className="menu-actions mt-auto flex flex-col gap-2.5 pb-8 pt-6">
+              <div className="flex gap-2" role="group" aria-label={t.nav.langAria}>
                 {langs.map((l) => (
                   <button
                     key={l}
                     onClick={() => setLang(l)}
                     className={clsx(
-                      "flex-1 rounded-xl border px-4 py-3 text-sm font-semibold transition-colors",
-                      l === lang
-                        ? "border-brand bg-brand-50 text-brand"
-                        : "border-line text-muted hover:border-brand-200 hover:text-ink"
+                      "btn-3d-light flex-1 rounded-[10px] px-4 py-2.5 text-sm font-medium transition-colors duration-200",
+                      l === lang ? "border-brand text-brand" : "text-muted hover:text-ink"
                     )}
                   >
                     {langNames[l]}
                   </button>
                 ))}
               </div>
+              <a
+                href={site.phoneHref}
+                onClick={() => setOpen(false)}
+                className="btn-3d-light inline-flex w-full items-center justify-center gap-2 rounded-[10px] px-5 py-3.5 text-sm font-medium text-ink transition-colors duration-200"
+              >
+                <Phone className="size-4 text-muted" strokeWidth={1.5} />
+                {site.phone}
+              </a>
+              <Link
+                href={t.nav.cta.href}
+                onClick={() => setOpen(false)}
+                className="btn-3d inline-flex w-full items-center justify-center rounded-[10px] px-5 py-3.5 text-sm font-medium text-white transition-colors duration-200"
+              >
+                {t.nav.cta.label}
+              </Link>
             </div>
           </Container>
         </div>

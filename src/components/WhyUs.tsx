@@ -10,28 +10,31 @@ export function WhyUs() {
   const { t } = useI18n();
   const why = t.why;
   return (
-    <section id="despre" className="py-20 sm:py-28">
+    <section id="despre" className="py-14 sm:py-20">
       <Container>
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
           {/* Left: heading + feature list */}
           <div>
             <SectionHeading
+              index="01"
               eyebrow={why.eyebrow}
               title={why.title}
               accent={why.titleAccent}
               subtitle={why.subtitle}
             />
-            <Reveal as="ul" stagger className="mt-10 flex flex-col gap-7">
+            <Reveal as="ul" stagger className="mt-10 flex flex-col gap-6">
               {why.items.map((item) => {
                 const Icon = iconMap[item.icon];
                 return (
-                  <li key={item.title} className="flex gap-5">
-                    <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-white text-brand shadow-soft ring-1 ring-line">
-                      {Icon ? <Icon className="size-6" strokeWidth={1.75} /> : null}
+                  <li key={item.title} className="flex gap-4">
+                    <span className="chip-3d grid size-9 shrink-0 place-items-center rounded-[10px] text-ink">
+                      {Icon ? <Icon className="size-5" strokeWidth={1.5} /> : null}
                     </span>
                     <div>
-                      <h3 className="text-lg font-semibold text-ink">{item.title}</h3>
-                      <p className="mt-1 text-[0.975rem] leading-relaxed text-muted">
+                      <h3 className="text-base font-semibold tracking-tight text-ink">
+                        {item.title}
+                      </h3>
+                      <p className="mt-1 text-sm leading-relaxed text-muted">
                         {item.text}
                       </p>
                     </div>
@@ -43,12 +46,12 @@ export function WhyUs() {
 
           {/* Right: real photo */}
           <Reveal delay={120} className="relative">
-            <div className="relative aspect-[4/3.3] overflow-hidden rounded-[1.75rem] shadow-card ring-1 ring-line">
+            <div className="relative aspect-[4/3.3] overflow-hidden rounded-xl border border-line">
               <Image
                 src="/masina-glg.jpg"
                 alt={why.imageAlt}
                 fill
-                className="object-cover transition-transform duration-700 hover:scale-[1.04]"
+                className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 640px"
               />
             </div>

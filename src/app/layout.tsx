@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Onest } from "next/font/google";
+import { JsonLd } from "@/components/JsonLd";
 import "./globals.css";
 
 const onest = Onest({
@@ -13,30 +14,59 @@ const siteUrl = "https://scoalaautoglg.com";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Școala Auto GLG Property — Obținem împreună permisul tău",
-    template: "%s · GLG Property",
+    default: "Școala Auto GLG Property | Permis categoria B în Chișinău",
+    template: "%s | GLG Property",
   },
   description:
-    "Școală auto nr. 1 în Republica Moldova după rata de promovare. Categoriile B1 și B, instructori cu experiență, mașini moderne Skoda și pachete flexibile cu plata în rate.",
+    "Școală auto în Chișinău pentru categoria B. Instructori cu experiență, mașini moderne, plata în rate și înscriere online. Patru centre în oraș.",
   keywords: [
-    "scoala auto",
-    "GLG Property",
+    "scoala auto Chisinau",
     "permis de conducere",
     "categoria B",
-    "Chișinău",
-    "scoala auto Chisinau",
+    "GLG Property",
+    "inscriere online scoala auto",
   ],
-  openGraph: {
-    title: "Școala Auto GLG Property",
-    description:
-      "Obținem împreună permisul tău de conducere. Nr. 1 în Moldova după rata de promovare.",
-    url: siteUrl,
-    siteName: "GLG Property",
-    locale: "ro_MD",
-    type: "website",
+  alternates: {
+    canonical: "/",
   },
-  icons: {
-    icon: "/favicon.ico",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  openGraph: {
+    type: "website",
+    locale: "ro_RO",
+    url: siteUrl,
+    siteName: "Școala Auto GLG Property",
+    title: "Școala Auto GLG Property | Permis categoria B în Chișinău",
+    description:
+      "Școală auto în Chișinău pentru categoria B. Instructori cu experiență, mașini moderne, plata în rate și înscriere online.",
+    images: [
+      {
+        url: "/masina-glg.jpg",
+        width: 1500,
+        height: 1125,
+        alt: "Mașinile școlii auto GLG Property",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Școala Auto GLG Property | Permis categoria B în Chișinău",
+    description:
+      "Școală auto în Chișinău pentru categoria B. Instructori cu experiență, mașini moderne, plata în rate și înscriere online.",
+    images: ["/masina-glg.jpg"],
   },
 };
 
@@ -56,6 +86,7 @@ export default function RootLayout({
               "document.documentElement.classList.add('js');setTimeout(function(){if(!window.__glgJs){document.documentElement.classList.remove('js')}},3000);",
           }}
         />
+        <JsonLd />
         {children}
       </body>
     </html>

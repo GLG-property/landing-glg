@@ -13,6 +13,8 @@ import { Testimonials } from "@/components/Testimonials";
 import { Faq } from "@/components/Faq";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
+import { FloatingContact } from "@/components/FloatingContact";
+import { CookieConsent } from "@/components/CookieConsent";
 
 export default function Home() {
   return (
@@ -33,6 +35,8 @@ export default function Home() {
         <Contact />
       </main>
       <Footer />
+      <FloatingContact />
+      <CookieConsent />
     </LanguageProvider>
   );
 }

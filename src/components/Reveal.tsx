@@ -1,6 +1,6 @@
 "use client";
 
-import { createElement, useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import clsx from "clsx";
 
 // Signals the layout's fallback timer that the client bundle actually loaded,
@@ -23,6 +23,8 @@ type RevealProps = {
  * Fades content in on first scroll into view.
  * The hidden initial state only applies under `html.js` (set in layout),
  * so content stays fully visible when JavaScript is unavailable.
+ * The `is-visible` class is toggled imperatively (an external-DOM sync),
+ * so no state update, and no extra render, is needed on reveal.
  */
 export function Reveal({
   children,
@@ -31,20 +33,19 @@ export function Reveal({
   delay = 0,
   as = "div",
 }: RevealProps) {
-  const ref = useRef<HTMLElement | null>(null);
-  const [visible, setVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     if (typeof IntersectionObserver === "undefined") {
-      setVisible(true);
+      el.classList.add("is-visible");
       return;
     }
     const obs = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setVisible(true);
+          el.classList.add("is-visible");
           obs.disconnect();
         }
       },
@@ -55,13 +56,14 @@ export function Reveal({
     return () => obs.disconnect();
   }, []);
 
-  return createElement(
-    as,
-    {
-      ref,
-      className: clsx(stagger ? "reveal-group" : "reveal", visible && "is-visible", className),
-      style: delay ? { animationDelay: `${delay}ms` } : undefined,
-    },
-    children
+  const Tag = as as "div";
+  return (
+    <Tag
+      ref={ref}
+      className={clsx(stagger ? "reveal-group" : "reveal", className)}
+      style={delay ? { animationDelay: `${delay}ms` } : undefined}
+    >
+      {children}
+    </Tag>
   );
 }

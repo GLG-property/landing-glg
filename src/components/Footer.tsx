@@ -6,7 +6,7 @@ import { site } from "@/lib/content";
 import { useI18n } from "./LanguageProvider";
 import { Container, Logo, Button } from "./primitives";
 import { TikTok, Facebook, Instagram } from "./icons";
-import { Reveal } from "./Reveal";
+import { openCookiePrefs } from "./CookieConsent";
 
 const socials = [
   { icon: Facebook, href: site.social.facebook, label: "Facebook" },
@@ -18,19 +18,22 @@ export function Footer() {
   const { t } = useI18n();
   const footer = t.footer;
   return (
-    <footer className="relative overflow-hidden border-t border-line bg-white pt-16">
+    <footer className="border-t border-line bg-white">
       <Container>
-        <Reveal stagger className="grid gap-12 pb-14 lg:grid-cols-2 lg:gap-20">
-          {/* CTA card */}
-          <div className="card flex flex-col items-start p-7 shadow-soft sm:p-8">
+        <div className="grid gap-12 py-14 lg:grid-cols-2 lg:gap-20">
+          {/* Brand + CTA */}
+          <div className="flex max-w-md flex-col items-start">
             <Logo />
-            <h2 className="mt-6 text-2xl font-semibold tracking-tight text-ink sm:text-[2rem]">
+            <h2 className="mt-6 text-2xl font-semibold tracking-tight text-ink">
               {footer.heading}<span className="dot">?</span>
             </h2>
-            <p className="mt-3 max-w-md text-muted">{footer.text}</p>
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <Button href={site.phoneHref}>
-                <Phone className="size-4" />
+            <p className="mt-3 text-sm text-muted">{footer.text}</p>
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <Button href={t.hero.primaryCta.href} withArrow>
+                {t.hero.primaryCta.label}
+              </Button>
+              <Button href={site.phoneHref} variant="secondary">
+                <Phone className="size-4 text-muted" strokeWidth={1.5} />
                 {site.phone}
               </Button>
             </div>
@@ -40,15 +43,15 @@ export function Footer() {
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
             {footer.columns.map((col) => (
               <div key={col.title}>
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-faint">
+                <h3 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
                   {col.title}
                 </h3>
-                <ul className="mt-4 flex flex-col gap-3">
+                <ul className="mt-4 flex flex-col gap-2.5">
                   {col.links.map((link) => (
                     <li key={link.label}>
                       <Link
                         href={link.href}
-                        className="text-[0.95rem] font-medium text-muted transition-colors hover:text-brand"
+                        className="text-sm text-muted transition-colors duration-200 hover:text-ink"
                       >
                         {link.label}
                       </Link>
@@ -58,22 +61,46 @@ export function Footer() {
               </div>
             ))}
           </div>
-        </Reveal>
+        </div>
 
         {/* bottom bar */}
-        <div className="flex flex-col-reverse items-center justify-between gap-5 border-t border-line py-7 sm:flex-row">
-          <p className="text-sm text-muted">
-            © 2026 {site.name}. {footer.rights} ·{" "}
-            <a
-              href="https://landings.md"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium transition-colors hover:text-brand"
-            >
-              {footer.credit}
-            </a>
-          </p>
-          <div className="flex gap-2.5">
+        <div className="flex flex-col-reverse items-center justify-between gap-4 border-t border-line py-6 sm:flex-row">
+          <div className="flex flex-col items-center gap-2 text-center sm:items-start sm:text-left">
+            <p className="text-[13px] text-faint">
+              © 2026 {site.name}. {footer.rights} ·{" "}
+              <a
+                href="https://landings.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-colors duration-200 hover:text-ink"
+              >
+                {footer.credit}
+              </a>
+            </p>
+            <p className="text-[13px] text-faint">
+              <Link
+                href="/confidentialitate"
+                className="transition-colors duration-200 hover:text-ink"
+              >
+                {footer.privacy}
+              </Link>{" "}
+              ·{" "}
+              <Link
+                href="/termeni"
+                className="transition-colors duration-200 hover:text-ink"
+              >
+                {footer.terms}
+              </Link>{" "}
+              ·{" "}
+              <button
+                onClick={openCookiePrefs}
+                className="transition-colors duration-200 hover:text-ink"
+              >
+                {footer.cookieSettings}
+              </button>
+            </p>
+          </div>
+          <div className="flex gap-2">
             {socials.map((s) => (
               <a
                 key={s.label}
@@ -81,21 +108,14 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={s.label}
-                className="grid size-10 place-items-center rounded-xl border border-line bg-white text-ink transition-colors hover:border-brand hover:bg-brand hover:text-white"
+                className="btn-3d-light grid size-10 place-items-center rounded-[10px] text-muted transition-colors duration-200 hover:text-ink"
               >
-                <s.icon className="size-5" />
+                <s.icon className="size-4" />
               </a>
             ))}
           </div>
         </div>
       </Container>
-
-      {/* watermark */}
-      <div aria-hidden="true" className="pointer-events-none select-none pb-2 text-center">
-        <span className="display block bg-gradient-to-b from-surface to-white bg-clip-text text-[24vw] leading-[0.8] text-transparent">
-          GLG
-        </span>
-      </div>
     </footer>
   );
 }

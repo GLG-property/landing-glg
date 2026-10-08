@@ -26,15 +26,111 @@ type NavItem = { label: string; href: string };
 export type Plan = {
   name: string;
   badge?: string;
-  featured?: boolean;
   tagline: string;
   category: string;
   features: string[];
 };
 
+export type EnrollDict = {
+  eyebrow: string;
+  title: string;
+  titleAccent: string;
+  subtitle: string;
+  optional: string;
+  sections: {
+    personal: string;
+    contact: string;
+    address: string;
+    documents: string;
+    course: string;
+  };
+  fields: {
+    lastName: string;
+    firstName: string;
+    citizenship: string;
+    citizenshipPlaceholder: string;
+    idnp: string;
+    idnpHint: string;
+    birthDate: string;
+    sex: string;
+    sexM: string;
+    sexF: string;
+    email: string;
+    phoneMobile: string;
+    phoneHome: string;
+    phoneFamily: string;
+    phoneFamilyPlaceholder: string;
+    raion: string;
+    locality: string;
+    street: string;
+    number: string;
+    apartment: string;
+    idSeries: string;
+    idNumber: string;
+    idIssuedBy: string;
+    idIssuedDate: string;
+    workplace: string;
+    referral: string;
+    referralRecommendation: string;
+    referralSocial: string;
+    category: string;
+    studyLanguage: string;
+    langRo: string;
+    langRu: string;
+    transmission: string;
+    transmissionManual: string;
+    transmissionAuto: string;
+    sediu: string;
+    sediuPlaceholder: string;
+    slot: string;
+    slotPickSediu: string;
+    slotSaturday: string;
+    slotDaysHint: string;
+    scheduleOther: string;
+    schedule: string;
+    schedulePlaceholder: string;
+    practiceLocation: string;
+    practiceLocationPlaceholder: string;
+    license: string;
+    licenseNumber: string;
+    licenseIssued: string;
+    licenseIssuedPlaceholder: string;
+  };
+  consent: string;
+  consentLinkLabel: string;
+  consentSuffix: string;
+  submit: string;
+  submitting: string;
+  callOption: string;
+  errors: {
+    required: string;
+    idnp: string;
+    email: string;
+    phone: string;
+    date: string;
+    consent: string;
+    checkField: string;
+    noRuGroup: string;
+    formInvalid: string;
+    serverInvalid: string;
+    captcha: string;
+    rateLimited: string;
+    generic: string;
+    network: string;
+  };
+  success: {
+    title: string;
+    text: string;
+    duplicateTitle: string;
+    duplicateText: string;
+    back: string;
+    call: string;
+  };
+};
+
 export type Dict = {
   banner: { pre: string; amount: string; post: string; cta: string; close: string };
-  nav: { items: NavItem[]; menuAria: string; langAria: string };
+  nav: { items: NavItem[]; cta: Cta; menuAria: string; langAria: string };
   hero: {
     eyebrow: string;
     titleTop: string;
@@ -62,10 +158,12 @@ export type Dict = {
     titleAccent: string;
     subtitle: string;
     categoryLabel: string;
-    plans: Plan[];
+    plan: Plan;
+    enrollCta: Cta;
     note: string;
     noteCta: Cta;
   };
+  enroll: EnrollDict;
   steps: {
     eyebrow: string;
     title: string;
@@ -92,6 +190,9 @@ export type Dict = {
     hours: string;
     followUs: string;
     mapBadge: string;
+    mapTitle: string;
+    mapConsentText: string;
+    mapConsentCta: string;
     centersTitle: string;
     callNow: string;
     sectors: string[];
@@ -102,6 +203,33 @@ export type Dict = {
     columns: { title: string; links: NavItem[] }[];
     rights: string;
     credit: string;
+    privacy: string;
+    terms: string;
+    cookieSettings: string;
+  };
+  floating: { label: string; call: string };
+  privacy: {
+    title: string;
+    updated: string;
+    sections: { h: string; p: string }[];
+  };
+  terms: {
+    title: string;
+    updated: string;
+    sections: { h: string; p: string }[];
+  };
+  cookies: {
+    title: string;
+    text: string;
+    policyLabel: string;
+    acceptAll: string;
+    necessaryOnly: string;
+    prefs: string;
+    save: string;
+    categories: {
+      necessary: { label: string; desc: string };
+      media: { label: string; desc: string };
+    };
   };
 };
 
@@ -110,18 +238,18 @@ const ro: Dict = {
     pre: "Voucher cadou de",
     amount: "200 lei",
     post: "la înscrierea în sectoarele Botanica și Buiucani",
-    cta: "Profită",
+    cta: "Detalii",
     close: "Închide anunțul",
   },
 
   nav: {
     items: [
-      { label: "Acasă", href: "#acasa" },
-      { label: "Cursuri", href: "#cursuri" },
-      { label: "Prețuri", href: "#preturi" },
-      { label: "Despre noi", href: "#despre" },
-      { label: "Contact", href: "#contact" },
+      { label: "Acasă", href: "/#acasa" },
+      { label: "Despre noi", href: "/#despre" },
+      { label: "Cursuri", href: "/#cursuri" },
+      { label: "Contact", href: "/#contact" },
     ],
+    cta: { label: "Înscrie-te", href: "/inscriere" },
     menuAria: "Meniu",
     langAria: "Schimbă limba",
   },
@@ -131,9 +259,9 @@ const ro: Dict = {
     titleTop: "Obținem împreună",
     titleBottom: "permisul tău de conducere",
     subtitle:
-      "Indiferent de categoria dorită, îți asigurăm succesul la examen. Teorie și practică alături de cei mai competenți instructori din Republica Moldova.",
-    primaryCta: { label: site.phone, href: site.phoneHref },
-    secondaryCta: { label: "Vezi pachetele", href: "#preturi" },
+      "Teorie și practică cu instructori atestați, mașini moderne și 4 centre în Chișinău. Grupe în română și rusă.",
+    primaryCta: { label: "Înscrie-te online", href: "/inscriere" },
+    secondaryCta: { label: site.phone, href: site.phoneHref },
     chips: [
       "15.000+ absolvenți",
       "Nr. 1 la rata de promovare",
@@ -146,7 +274,7 @@ const ro: Dict = {
     {
       icon: "languages",
       title: "Grupe în română și rusă",
-      text: "Alegi limba în care înveți cel mai confortabil. Avem grupe separate în limba română și în limba rusă.",
+      text: "Grupe separate în limba română și în limba rusă. Alegi limba în care înveți.",
       tag: "RO / RU",
     },
     {
@@ -158,7 +286,7 @@ const ro: Dict = {
     {
       icon: "wallet",
       title: "Plata în 25 de rate",
-      text: "Pachetele Standard și Social se pot achita în până la 25 de rate, ca să înveți fără grija cheltuielilor.",
+      text: "Cursul se poate achita în până la 25 de rate.",
       tag: "0% stres",
     },
   ],
@@ -175,7 +303,7 @@ const ro: Dict = {
     title: "Mașini moderne, întreținute impecabil",
     text: "Înveți pe aceleași modele pe care vei susține examenul, pe traseele reale de examinare din Chișinău.",
     chips: ["Skoda Fabia", "Skoda Scala", "Trasee de examinare"],
-    cta: { label: "Vezi pachetele", href: "#preturi" },
+    cta: { label: "Vezi pachetul", href: "#preturi" },
   },
 
   why: {
@@ -183,7 +311,7 @@ const ro: Dict = {
     title: "De ce să alegi",
     titleAccent: "GLG Property",
     subtitle:
-      "Te pregătim să conduci cu adevărat, nu doar să treci examenul. Iată ce ne face diferiți.",
+      "Te pregătim să conduci cu adevărat, nu doar să treci examenul.",
     imageAlt: "Elev la volan într-o mașină de instruire GLG Property",
     items: [
       {
@@ -204,7 +332,7 @@ const ro: Dict = {
       {
         icon: "lifebuoy",
         title: "Suport complet",
-        text: "Te însoțim de la înscriere până la examen, fără stres și cu tot ce ai nevoie.",
+        text: "Te însoțim de la înscriere până la examen.",
       },
     ],
   },
@@ -218,87 +346,154 @@ const ro: Dict = {
 
   pricing: {
     eyebrow: "Categoriile B1 și B incluse",
-    title: "Alege pachetul potrivit",
-    titleAccent: "pentru tine",
+    title: "Un singur pachet,",
+    titleAccent: "simplu și complet",
     subtitle:
-      "Trei pachete, aceeași calitate a instruirii. Alegi în funcție de program și buget.",
+      "Fără opțiuni complicate: toți cursanții primesc același curs complet, cu program flexibil și plata în rate.",
     categoryLabel: "Categoriile",
-    plans: [
-      {
-        name: "Premium",
-        badge: "Individual",
-        tagline: "Pentru cei care vor rezultate rapide și grupe mici.",
-        category: "B1 · B",
-        features: [
-          "Durată curs: 3 luni",
-          "Ore doar sâmbăta",
-          "24 lecții practice cu Skoda Scala pe traseele de examinare",
-          "Doar 12 persoane în grup",
-          "Manuale gratuite",
-          "Examen teoretic și practic gratuit",
-          "Certificat de instruire gratuit",
-          "Achitare deplină la depunerea cererii",
-        ],
-      },
-      {
-        name: "Standard",
-        badge: "Cel mai popular",
-        featured: true,
-        tagline: "Echilibrul perfect între program flexibil și preț.",
-        category: "B1 · B",
-        features: [
-          "Durată curs: 3 luni",
-          "Luni & miercuri sau marți & joi",
-          "Orare: 09:30, 16:00, 17:30, 19:00 (18:00 grupa rusă)",
-          "15 lecții cu Skoda Fabia + 9 cu Skoda Scala",
-          "Grup de 30 persoane",
-          "Achitare în 25 de rate",
-          "Voucher cadou de 200 lei",
-        ],
-      },
-      {
-        name: "Social",
-        badge: "Preț redus",
-        tagline: "Pentru persoanele care beneficiază de sprijin social.",
-        category: "B1 · B",
-        features: [
-          "Durată curs: 3 luni",
-          "Luni & miercuri sau marți & joi",
-          "50% reducere la teorie",
-          "24 lecții practice cu Skoda Fabia",
-          "Grup de 30 persoane",
-          "Achitare în 25 de rate",
-          "Necesită acte APL ce confirmă vulnerabilitatea socială",
-        ],
-      },
-    ],
+    plan: {
+      name: "Standard",
+      tagline: "Tot ce ai nevoie ca să obții permisul, într-un singur pachet.",
+      category: "B1 · B",
+      features: [
+        "Durată curs: 3 luni",
+        "Luni & miercuri sau marți & joi",
+        "Orare: 09:30, 16:00, 17:30, 19:00 (18:00 grupa rusă)",
+        "24 de lecții practice cu Skoda Fabia și Skoda Scala",
+        "Grup de maximum 30 de persoane",
+        "Achitare în până la 25 de rate",
+      ],
+    },
+    enrollCta: { label: "Înscrie-te online", href: "/inscriere" },
     note: "Prețurile detaliate ți le comunicăm la telefon sau direct la centru.",
     noteCta: { label: "Contactează-ne", href: "#contact" },
   },
 
+  enroll: {
+    eyebrow: "Cerere de înscriere",
+    title: "Înscrie-te",
+    titleAccent: "online",
+    subtitle:
+      "Completează cererea-contract de acasă, în câteva minute. Alegi sediul și ora grupei, iar noi te sunăm ca să confirmăm înscrierea.",
+    optional: "(opțional)",
+    sections: {
+      personal: "Date personale",
+      contact: "Date de contact",
+      address: "Domiciliul",
+      documents: "Actul de identitate",
+      course: "Cursul dorit",
+    },
+    fields: {
+      lastName: "Nume",
+      firstName: "Prenume",
+      citizenship: "Cetățenia",
+      citizenshipPlaceholder: "Republica Moldova",
+      idnp: "IDNP",
+      idnpHint: "13 cifre, ca în buletin",
+      birthDate: "Data nașterii",
+      sex: "Sex",
+      sexM: "Masculin",
+      sexF: "Feminin",
+      email: "E-mail",
+      phoneMobile: "Telefon mobil",
+      phoneHome: "Telefon domiciliu",
+      phoneFamily: "Contact părinți / soț(ie)",
+      phoneFamilyPlaceholder: "nume și telefon",
+      raion: "Raion / sector",
+      locality: "Localitate",
+      street: "Strada",
+      number: "Nr.",
+      apartment: "Ap.",
+      idSeries: "Seria",
+      idNumber: "Numărul",
+      idIssuedBy: "Eliberat de",
+      idIssuedDate: "Data eliberării",
+      workplace: "Locul de muncă (instituția)",
+      referral: "De unde ai aflat de școală?",
+      referralRecommendation: "Recomandare",
+      referralSocial: "Rețele de socializare",
+      category: "Categoria solicitată",
+      studyLanguage: "Limba de studii",
+      langRo: "Română",
+      langRu: "Rusă",
+      transmission: "Instruirea practică la cutie",
+      transmissionManual: "Mecanică",
+      transmissionAuto: "Automată",
+      sediu: "Sediul (grupa de teorie)",
+      sediuPlaceholder: "Alege sediul",
+      slot: "Ora grupei",
+      slotPickSediu: "Alege întâi sediul",
+      slotSaturday: "Sâmbătă",
+      slotDaysHint:
+        "Zilele (Luni și Miercuri sau Marți și Joi) le stabilim împreună cu tine când grupa se formează.",
+      scheduleOther: "Altă preferință de orar",
+      schedule: "Ora disponibilă pentru cursuri",
+      schedulePlaceholder: "ex.: după 17:30",
+      practiceLocation: "Locația lecțiilor practice",
+      practiceLocationPlaceholder: "Alege locația",
+      license: "Permis de conducere (dacă ai deja unul)",
+      licenseNumber: "Nr. permisului",
+      licenseIssued: "Eliberat",
+      licenseIssuedPlaceholder: "data / autoritatea",
+    },
+    consent:
+      "Sunt de acord cu prelucrarea datelor mele personale de către GLG Property SRL în scopul înscrierii la cursuri și al întocmirii contractului de școlarizare, conform Legii 133/2011 privind protecția datelor cu caracter personal. Am citit",
+    consentLinkLabel: "politica de confidențialitate",
+    consentSuffix: ".",
+    submit: "Trimite cererea",
+    submitting: "Se trimite…",
+    callOption: "Preferi să vorbim la telefon?",
+    errors: {
+      required: "Câmp obligatoriu",
+      idnp: "IDNP-ul are exact 13 cifre",
+      email: "Adresă de e-mail invalidă",
+      phone: "Număr de telefon invalid",
+      date: "Dată invalidă",
+      consent: "Bifează acordul ca să poți trimite cererea",
+      checkField: "Verifică acest câmp",
+      noRuGroup:
+        "Grupe în limba rusă avem doar la Buiucani (17:30 și 19:00). Alege Buiucani sau limba română.",
+      formInvalid: "Verifică câmpurile marcate cu roșu.",
+      serverInvalid: "Unele câmpuri nu au fost acceptate. Verifică-le și trimite din nou.",
+      captcha: "Verificarea anti-robot a eșuat. Reîncarcă pagina și încearcă din nou.",
+      rateLimited: "Prea multe cereri de pe această conexiune. Încearcă peste o oră sau sună-ne.",
+      generic: "Ceva n-a mers. Încearcă din nou sau sună-ne la " + site.phone + ".",
+      network: "Nu am putut trimite cererea. Verifică conexiunea la internet și încearcă din nou.",
+    },
+    success: {
+      title: "Cererea a fost trimisă!",
+      text: "Îți mulțumim! Un coleg de la GLG te va suna în curând ca să confirme înscrierea și să-ți răspundă la întrebări.",
+      duplicateTitle: "Cererea ta există deja",
+      duplicateText:
+        "Am primit deja o cerere cu acest telefon sau IDNP în ultimele 24 de ore. Nu e nevoie să o retrimiți, te sunăm noi.",
+      back: "Înapoi la pagina principală",
+      call: "Sună-ne",
+    },
+  },
+
   steps: {
-    eyebrow: "Simplu de la început până la final",
+    eyebrow: "Patru pași",
     title: "Cum te înscrii,",
     titleAccent: "pas cu pas",
-    subtitle: "De la prima vizită până la permisul în buzunar.",
+    subtitle: "De la cerere până la permis.",
     items: [
       {
-        title: "Alege pachetul potrivit",
-        text: "Compari pachetele Premium, Standard și Social și alegi ce ți se potrivește.",
-        link: { label: "Vezi prețurile", href: "#preturi" },
+        title: "Completează cererea",
+        text: "Trimiți cererea online în câteva minute, sau ne suni și o completăm împreună.",
+        link: { label: "Completează cererea", href: "/inscriere" },
       },
       {
-        title: "Depune cererea la un centru",
-        text: "Te apropii de unul dintre cele 4 centre din Chișinău și completezi cererea de înscriere.",
+        title: "Confirmăm detaliile",
+        text: "Te sunăm și stabilim grupa, orarul și actele necesare.",
         link: { label: "Unde ne găsești?", href: "#contact" },
       },
       {
-        title: "Urmezi cursurile de teorie și practică",
-        text: "Înveți cu instructori experimentați, pe mașini moderne, în grupă în limba română sau rusă.",
+        title: "Urmezi teoria și practica",
+        text: "Cursuri cu instructori experimentați, pe mașini moderne, în română sau rusă.",
       },
       {
-        title: "Susții examenul și iei permisul",
-        text: "Te pregătim temeinic pentru examenul teoretic și practic, ca să promovezi din prima.",
+        title: "Susții examenul",
+        text: "Te pregătim pentru proba teoretică și practică, ca să promovezi din prima.",
       },
     ],
   },
@@ -323,12 +518,16 @@ const ro: Dict = {
         a: "Te pregătim pentru categoriile B1 și B, cele mai solicitate pentru autoturisme.",
       },
       {
+        q: "Cum mă înscriu?",
+        a: "Completezi cererea de înscriere online în câteva minute, iar noi te sunăm ca să confirmăm. Poți depune cererea și direct la centru.",
+      },
+      {
         q: "Cât durează cursul?",
-        a: "Toate pachetele au o durată de 3 luni și includ atât teoria, cât și practica.",
+        a: "Cursul durează 3 luni și include atât teoria, cât și practica.",
       },
       {
         q: "Pot achita în rate?",
-        a: "Da. Pachetele Standard și Social se pot achita în până la 25 de rate. Pachetul Premium se achită integral la depunerea cererii.",
+        a: "Da. Cursul se poate achita în până la 25 de rate.",
       },
       {
         q: "Se predă și în limba rusă?",
@@ -357,9 +556,12 @@ const ro: Dict = {
       "Avem patru centre în Chișinău, deschise de luni până sâmbătă. Sună-ne sau treci pe la noi.",
     callUs: "Sună-ne",
     hoursLabel: "Program",
-    hours: "Luni – Sâmbătă",
+    hours: "Luni - Sâmbătă",
     followUs: "Urmărește-ne",
     mapBadge: "4 centre în Chișinău",
+    mapTitle: "Harta Google, Școala Auto GLG Property, Chișinău",
+    mapConsentText: "Harta Google se încarcă doar cu acordul tău pentru media externe. La încărcare, Google poate seta cookie-uri proprii.",
+    mapConsentCta: "Afișează harta",
     centersTitle: "Centrele noastre",
     callNow: "Sună acum",
     sectors: ["Botanica", "Buiucani", "și alte 2 centre în Chișinău"],
@@ -372,31 +574,136 @@ const ro: Dict = {
       {
         title: "Cursuri",
         links: [
-          { label: "Pachet Premium", href: "#preturi" },
-          { label: "Pachet Standard", href: "#preturi" },
-          { label: "Pachet Social", href: "#preturi" },
+          { label: "Înscriere online", href: "/inscriere" },
+          { label: "Pachetul Standard", href: "/#preturi" },
         ],
       },
       {
         title: "Școala",
         links: [
-          { label: "Despre noi", href: "#despre" },
-          { label: "Cum te înscrii", href: "#cursuri" },
-          { label: "Întrebări frecvente", href: "#intrebari" },
+          { label: "Despre noi", href: "/#despre" },
+          { label: "Cum te înscrii", href: "/#cursuri" },
+          { label: "Întrebări frecvente", href: "/#intrebari" },
         ],
       },
       {
         title: "Contact",
         links: [
           { label: site.phone, href: site.phoneHref },
-          { label: "Facebook", href: site.social.facebook },
-          { label: "Instagram", href: site.social.instagram },
-          { label: "TikTok", href: site.social.tiktok },
+          { label: site.email, href: `mailto:${site.email}` },
+          { label: "Luni - Sâmbătă", href: "/#contact" },
         ],
       },
     ],
-    rights: "Toate drepturile rezervate. · Școală auto · Chișinău",
+    rights: "Toate drepturile rezervate. Școală auto · Chișinău",
     credit: "Creare website - landings.md",
+    privacy: "Politica de confidențialitate",
+    terms: "Termeni și condiții",
+    cookieSettings: "Setări cookies",
+  },
+
+  floating: { label: "Contactează-ne", call: "Sună-ne" },
+
+  privacy: {
+    title: "Politica de confidențialitate",
+    updated: "Ultima actualizare: august 2026",
+    sections: [
+      {
+        h: "Cine suntem",
+        p: "Operatorul datelor tale este GLG Property SRL, școală auto autorizată din Chișinău, Republica Moldova (site: scoalaautoglg.com). Prelucrăm date cu caracter personal în conformitate cu Legea nr. 133/2011 privind protecția datelor cu caracter personal și cu principiile Regulamentului (UE) 2016/679 (GDPR).",
+      },
+      {
+        h: "Ce date colectăm",
+        p: "Prin formularul de înscriere online colectăm datele necesare întocmirii cererii-contract de școlarizare: nume și prenume, IDNP, data nașterii, sexul, cetățenia, datele actului de identitate (seria, numărul, data și autoritatea emiterii), adresa de domiciliu, numărul de telefon, adresa de e-mail, locul de muncă (opțional) și, dacă există, datele permisului de conducere. Nu colectăm alte date și nu folosim datele din formular pentru publicitate.",
+      },
+      {
+        h: "De ce le colectăm",
+        p: "Folosim aceste date pentru: procesarea cererii tale de înscriere și contactarea ta telefonică pentru confirmare, întocmirea contractului de școlarizare și a dosarului cerut de lege pentru admiterea la examene, comunicarea informațiilor legate de curs. Temeiul prelucrării este consimțământul tău și încheierea contractului de școlarizare.",
+      },
+      {
+        h: "Cui le transmitem",
+        p: "Datele ajung în sistemul intern de evidență al școlii, accesibil doar personalului autorizat. Le transmitem autorităților publice (de exemplu Agenția Servicii Publice) doar atunci când legea o cere pentru admiterea la examen. Nu vindem și nu transmitem datele tale altor companii în scop de marketing.",
+      },
+      {
+        h: "Cât timp le păstrăm",
+        p: "Păstrăm datele pe durata școlarizării și apoi pe termenul cerut de legislație pentru arhivarea dosarelor de școlarizare. Dacă trimiți formularul dar nu te înscrii, poți cere oricând ștergerea datelor.",
+      },
+      {
+        h: "Cookie-uri și stocare locală",
+        p: "Site-ul folosește doar stocare strict necesară: limba aleasă, închiderea anunțului promoțional și alegerea ta privind cookie-urile. Nu folosim cookie-uri de publicitate sau de urmărire. Harta Google din secțiunea Contact se încarcă doar cu acordul tău pentru media externe; la încărcare, Google poate seta cookie-uri proprii conform politicii sale. Îți poți schimba oricând alegerea din linkul Setări cookies aflat în subsolul paginii.",
+      },
+      {
+        h: "Drepturile tale",
+        p: "Ai dreptul de acces la datele tale, dreptul la rectificare, la ștergere, la restricționarea prelucrării, dreptul de opoziție și dreptul de a-ți retrage oricând consimțământul. Pentru orice solicitare scrie-ne la contact@scoalaautoglg.com sau sună la 069 792 889. Dacă consideri că drepturile tale au fost încălcate, poți depune o plângere la Centrul Național pentru Protecția Datelor cu Caracter Personal al Republicii Moldova (datepersonale.md).",
+      },
+      {
+        h: "Contact",
+        p: "GLG Property SRL, Chișinău, Republica Moldova. E-mail: contact@scoalaautoglg.com. Telefon: 069 792 889.",
+      },
+    ],
+  },
+
+  terms: {
+    title: "Termeni și condiții",
+    updated: "Ultima actualizare: august 2026",
+    sections: [
+      {
+        h: "Cine suntem",
+        p: "Site-ul scoalaautoglg.com este operat de GLG Property SRL, școală auto autorizată din Chișinău, Republica Moldova. Folosind acest site, ești de acord cu termenii de mai jos.",
+      },
+      {
+        h: "Obiectul site-ului",
+        p: "Site-ul prezintă serviciile școlii auto și îți permite să trimiți o cerere de înscriere online. Trimiterea formularului nu creează un contract și nu garantează un loc în grupă: contractul de școlarizare se semnează la sediu, după ce te contactăm telefonic pentru confirmare.",
+      },
+      {
+        h: "Utilizarea site-ului",
+        p: "Te obligi să introduci în formular date reale și complete, care te privesc pe tine. Este interzisă folosirea site-ului în mod abuziv: trimiterea de cereri false sau repetate, încercările de acces neautorizat, perturbarea funcționării site-ului.",
+      },
+      {
+        h: "Prețuri și informații",
+        p: "Informațiile de pe site, inclusiv cele despre cursuri și oferte, au caracter informativ și pot fi actualizate fără preaviz. Prețurile finale și condițiile concrete se confirmă telefonic sau la sediu, înainte de semnarea contractului.",
+      },
+      {
+        h: "Proprietate intelectuală",
+        p: "Conținutul site-ului (texte, imagini, materiale video, logo) aparține GLG Property SRL sau este folosit cu acordul titularilor. Copierea sau republicarea fără acordul nostru scris este interzisă.",
+      },
+      {
+        h: "Date personale și cookie-uri",
+        p: "Modul în care prelucrăm datele personale trimise prin formular și cookie-urile folosite de site sunt descrise în Politica de confidențialitate, disponibilă în subsolul paginii.",
+      },
+      {
+        h: "Răspundere",
+        p: "Ne străduim ca informațiile de pe site să fie corecte și actuale, dar nu răspundem pentru indisponibilități temporare ale site-ului sau ale serviciilor externe integrate (de exemplu harta Google). Site-ul este oferit ca atare, fără garanții suplimentare.",
+      },
+      {
+        h: "Legea aplicabilă",
+        p: "Acești termeni sunt guvernați de legislația Republicii Moldova. Eventualele litigii se soluționează pe cale amiabilă, iar dacă nu este posibil, de instanțele competente din Chișinău.",
+      },
+      {
+        h: "Contact",
+        p: "GLG Property SRL, Chișinău, Republica Moldova. E-mail: contact@scoalaautoglg.com. Telefon: 069 792 889.",
+      },
+    ],
+  },
+
+  cookies: {
+    title: "Cookie-uri și confidențialitate",
+    text: "Folosim doar stocare strict necesară (limba aleasă, această alegere). Harta Google din secțiunea Contact se încarcă doar cu acordul tău și poate seta cookie-uri proprii Google. Detalii în",
+    policyLabel: "Politica de confidențialitate",
+    acceptAll: "Accept toate",
+    necessaryOnly: "Doar necesare",
+    prefs: "Preferințe",
+    save: "Salvează alegerea",
+    categories: {
+      necessary: {
+        label: "Strict necesare",
+        desc: "Limba aleasă, închiderea anunțului și memorarea acestei alegeri. Nu pot fi dezactivate.",
+      },
+      media: {
+        label: "Media externe (Google Maps)",
+        desc: "Încarcă harta Google din secțiunea Contact. Google poate seta cookie-uri proprii.",
+      },
+    },
   },
 };
 
@@ -405,18 +712,18 @@ const ru: Dict = {
     pre: "Подарочный ваучер на",
     amount: "200 леев",
     post: "при записи в секторах Ботаника и Буюканы",
-    cta: "Воспользуйся",
+    cta: "Подробнее",
     close: "Закрыть объявление",
   },
 
   nav: {
     items: [
-      { label: "Главная", href: "#acasa" },
-      { label: "Курсы", href: "#cursuri" },
-      { label: "Цены", href: "#preturi" },
-      { label: "О нас", href: "#despre" },
-      { label: "Контакты", href: "#contact" },
+      { label: "Главная", href: "/#acasa" },
+      { label: "О нас", href: "/#despre" },
+      { label: "Курсы", href: "/#cursuri" },
+      { label: "Контакты", href: "/#contact" },
     ],
+    cta: { label: "Записаться", href: "/inscriere" },
     menuAria: "Меню",
     langAria: "Сменить язык",
   },
@@ -426,9 +733,9 @@ const ru: Dict = {
     titleTop: "Вместе получим",
     titleBottom: "твои водительские права",
     subtitle:
-      "Независимо от выбранной категории, мы обеспечим твой успех на экзамене. Теория и практика с самыми компетентными инструкторами Республики Молдова.",
-    primaryCta: { label: site.phone, href: site.phoneHref },
-    secondaryCta: { label: "Смотреть пакеты", href: "#preturi" },
+      "Теория и практика с аттестованными инструкторами, современные автомобили и 4 филиала в Кишинёве. Группы на румынском и русском языках.",
+    primaryCta: { label: "Записаться онлайн", href: "/inscriere" },
+    secondaryCta: { label: site.phone, href: site.phoneHref },
     chips: [
       "15 000+ выпускников",
       "№1 по проценту сдачи",
@@ -441,7 +748,7 @@ const ru: Dict = {
     {
       icon: "languages",
       title: "Группы на румынском и русском",
-      text: "Учись на том языке, который тебе удобнее. У нас есть отдельные группы на румынском и русском языках.",
+      text: "Отдельные группы на румынском и русском языках. Выбирай язык, на котором учишься.",
       tag: "RO / RU",
     },
     {
@@ -453,7 +760,7 @@ const ru: Dict = {
     {
       icon: "wallet",
       title: "Рассрочка на 25 платежей",
-      text: "Пакеты Standard и Social можно оплатить в рассрочку до 25 платежей — учись без лишних забот о расходах.",
+      text: "Курс можно оплатить в рассрочку до 25 платежей.",
       tag: "0% стресса",
     },
   ],
@@ -470,7 +777,7 @@ const ru: Dict = {
     title: "Современные автомобили в идеальном состоянии",
     text: "Учись на тех же моделях, на которых будешь сдавать экзамен, на реальных экзаменационных маршрутах Кишинёва.",
     chips: ["Skoda Fabia", "Skoda Scala", "Экзаменационные маршруты"],
-    cta: { label: "Смотреть пакеты", href: "#preturi" },
+    cta: { label: "Смотреть пакет", href: "#preturi" },
   },
 
   why: {
@@ -478,7 +785,7 @@ const ru: Dict = {
     title: "Почему стоит выбрать",
     titleAccent: "GLG Property",
     subtitle:
-      "Мы учим по-настоящему водить, а не просто сдавать экзамен. Вот что нас отличает.",
+      "Мы учим по-настоящему водить, а не просто сдавать экзамен.",
     imageAlt: "Ученик за рулём учебного автомобиля GLG Property",
     items: [
       {
@@ -499,7 +806,7 @@ const ru: Dict = {
       {
         icon: "lifebuoy",
         title: "Полное сопровождение",
-        text: "Мы рядом от записи до экзамена — без стресса и со всем необходимым.",
+        text: "Мы рядом от записи до экзамена.",
       },
     ],
   },
@@ -513,87 +820,154 @@ const ru: Dict = {
 
   pricing: {
     eyebrow: "Категории B1 и B включены",
-    title: "Выбери свой пакет",
-    titleAccent: "обучения",
+    title: "Один пакет,",
+    titleAccent: "простой и полный",
     subtitle:
-      "Три пакета — одинаково высокое качество обучения. Выбирай по графику и бюджету.",
+      "Никаких сложных вариантов: все ученики получают один и тот же полный курс с гибким графиком и рассрочкой.",
     categoryLabel: "Категории",
-    plans: [
-      {
-        name: "Premium",
-        badge: "Индивидуально",
-        tagline: "Для тех, кто хочет быстрых результатов и маленьких групп.",
-        category: "B1 · B",
-        features: [
-          "Длительность курса: 3 месяца",
-          "Занятия только по субботам",
-          "24 практических занятия на Skoda Scala по экзаменационным маршрутам",
-          "Всего 12 человек в группе",
-          "Бесплатные учебники",
-          "Бесплатный теоретический и практический экзамен",
-          "Бесплатный сертификат об обучении",
-          "Полная оплата при подаче заявления",
-        ],
-      },
-      {
-        name: "Standard",
-        badge: "Самый популярный",
-        featured: true,
-        tagline: "Идеальный баланс между гибким графиком и ценой.",
-        category: "B1 · B",
-        features: [
-          "Длительность курса: 3 месяца",
-          "Понедельник и среда или вторник и четверг",
-          "Время: 09:30, 16:00, 17:30, 19:00 (18:00 — русская группа)",
-          "15 занятий на Skoda Fabia + 9 на Skoda Scala",
-          "Группа из 30 человек",
-          "Рассрочка на 25 платежей",
-          "Подарочный ваучер на 200 леев",
-        ],
-      },
-      {
-        name: "Social",
-        badge: "Сниженная цена",
-        tagline: "Для людей, получающих социальную поддержку.",
-        category: "B1 · B",
-        features: [
-          "Длительность курса: 3 месяца",
-          "Понедельник и среда или вторник и четверг",
-          "Скидка 50% на теорию",
-          "24 практических занятия на Skoda Fabia",
-          "Группа из 30 человек",
-          "Рассрочка на 25 платежей",
-          "Нужны документы от местных органов власти, подтверждающие социальную уязвимость",
-        ],
-      },
-    ],
+    plan: {
+      name: "Standard",
+      tagline: "Всё необходимое для получения прав, в одном пакете.",
+      category: "B1 · B",
+      features: [
+        "Длительность курса: 3 месяца",
+        "Понедельник и среда или вторник и четверг",
+        "Время: 09:30, 16:00, 17:30, 19:00 (18:00 русская группа)",
+        "24 практических занятия на Skoda Fabia и Skoda Scala",
+        "Группа до 30 человек",
+        "Рассрочка до 25 платежей",
+      ],
+    },
+    enrollCta: { label: "Записаться онлайн", href: "/inscriere" },
     note: "Подробные цены сообщим по телефону или прямо в филиале.",
     noteCta: { label: "Свяжись с нами", href: "#contact" },
   },
 
+  enroll: {
+    eyebrow: "Заявка на запись",
+    title: "Запишись",
+    titleAccent: "онлайн",
+    subtitle:
+      "Заполни заявку-контракт из дома за несколько минут. Выбери филиал и время группы, а мы позвоним, чтобы подтвердить запись.",
+    optional: "(необязательно)",
+    sections: {
+      personal: "Личные данные",
+      contact: "Контактные данные",
+      address: "Место жительства",
+      documents: "Удостоверение личности",
+      course: "Курс обучения",
+    },
+    fields: {
+      lastName: "Фамилия",
+      firstName: "Имя",
+      citizenship: "Гражданство",
+      citizenshipPlaceholder: "Республика Молдова",
+      idnp: "IDNP",
+      idnpHint: "13 цифр, как в удостоверении личности",
+      birthDate: "Дата рождения",
+      sex: "Пол",
+      sexM: "Мужской",
+      sexF: "Женский",
+      email: "E-mail",
+      phoneMobile: "Мобильный телефон",
+      phoneHome: "Домашний телефон",
+      phoneFamily: "Контакт родителей / супруга(и)",
+      phoneFamilyPlaceholder: "имя и телефон",
+      raion: "Район / сектор",
+      locality: "Населённый пункт",
+      street: "Улица",
+      number: "Дом",
+      apartment: "Кв.",
+      idSeries: "Серия",
+      idNumber: "Номер",
+      idIssuedBy: "Кем выдано",
+      idIssuedDate: "Дата выдачи",
+      workplace: "Место работы (учреждение)",
+      referral: "Откуда узнал(а) о школе?",
+      referralRecommendation: "Рекомендация",
+      referralSocial: "Социальные сети",
+      category: "Желаемая категория",
+      studyLanguage: "Язык обучения",
+      langRo: "Румынский",
+      langRu: "Русский",
+      transmission: "Практика на коробке передач",
+      transmissionManual: "Механика",
+      transmissionAuto: "Автомат",
+      sediu: "Филиал (группа теории)",
+      sediuPlaceholder: "Выбери филиал",
+      slot: "Время группы",
+      slotPickSediu: "Сначала выбери филиал",
+      slotSaturday: "Суббота",
+      slotDaysHint:
+        "Дни (понедельник и среда или вторник и четверг) мы согласуем с тобой, когда группа формируется.",
+      scheduleOther: "Другие пожелания по расписанию",
+      schedule: "Удобное время для занятий",
+      schedulePlaceholder: "напр.: после 17:30",
+      practiceLocation: "Место практических занятий",
+      practiceLocationPlaceholder: "Выберите место",
+      license: "Водительское удостоверение (если уже есть)",
+      licenseNumber: "Номер удостоверения",
+      licenseIssued: "Выдано",
+      licenseIssuedPlaceholder: "дата / орган выдачи",
+    },
+    consent:
+      "Я согласен(на) на обработку моих персональных данных компанией GLG Property SRL в целях записи на курсы и оформления договора об обучении, в соответствии с Законом 133/2011 о защите персональных данных. Я ознакомился(лась) с",
+    consentLinkLabel: "политикой конфиденциальности",
+    consentSuffix: ".",
+    submit: "Отправить заявку",
+    submitting: "Отправляем…",
+    callOption: "Удобнее по телефону?",
+    errors: {
+      required: "Обязательное поле",
+      idnp: "IDNP состоит ровно из 13 цифр",
+      email: "Неверный адрес e-mail",
+      phone: "Неверный номер телефона",
+      date: "Неверная дата",
+      consent: "Отметь согласие, чтобы отправить заявку",
+      checkField: "Проверь это поле",
+      noRuGroup:
+        "Группы на русском языке есть только в филиале Buiucani (17:30 и 19:00). Выбери Buiucani или румынский язык.",
+      formInvalid: "Проверь поля, отмеченные красным.",
+      serverInvalid: "Некоторые поля не были приняты. Проверь их и отправь снова.",
+      captcha: "Анти-бот проверка не пройдена. Перезагрузи страницу и попробуй ещё раз.",
+      rateLimited: "Слишком много заявок с этого подключения. Попробуй через час или позвони нам.",
+      generic: "Что-то пошло не так. Попробуй ещё раз или позвони нам: " + site.phone + ".",
+      network: "Не удалось отправить заявку. Проверь подключение к интернету и попробуй снова.",
+    },
+    success: {
+      title: "Заявка отправлена!",
+      text: "Спасибо! Сотрудник GLG скоро позвонит, чтобы подтвердить запись и ответить на твои вопросы.",
+      duplicateTitle: "Твоя заявка уже есть",
+      duplicateText:
+        "Мы уже получили заявку с этим телефоном или IDNP за последние 24 часа. Отправлять повторно не нужно, мы сами позвоним.",
+      back: "Вернуться на главную",
+      call: "Позвонить",
+    },
+  },
+
   steps: {
-    eyebrow: "Просто от начала до конца",
+    eyebrow: "Четыре шага",
     title: "Как записаться,",
     titleAccent: "шаг за шагом",
-    subtitle: "От первого визита до прав в кармане.",
+    subtitle: "От заявки до прав.",
     items: [
       {
-        title: "Выбери подходящий пакет",
-        text: "Сравни пакеты Premium, Standard и Social и выбери тот, что подходит именно тебе.",
-        link: { label: "Смотреть цены", href: "#preturi" },
+        title: "Заполни заявку",
+        text: "Отправь заявку онлайн за несколько минут, или позвони нам, и мы заполним её вместе.",
+        link: { label: "Заполнить заявку", href: "/inscriere" },
       },
       {
-        title: "Подай заявление в филиале",
-        text: "Приходи в один из 4 филиалов в Кишинёве и заполни заявление о записи.",
+        title: "Подтвердим детали",
+        text: "Мы позвоним и согласуем группу, расписание и документы.",
         link: { label: "Где нас найти?", href: "#contact" },
       },
       {
-        title: "Проходи теорию и практику",
-        text: "Учись с опытными инструкторами на современных автомобилях, в группе на румынском или русском языке.",
+        title: "Пройди теорию и практику",
+        text: "Занятия с опытными инструкторами, на современных автомобилях, на румынском или русском.",
       },
       {
-        title: "Сдай экзамен и получи права",
-        text: "Мы основательно готовим к теоретическому и практическому экзамену — чтобы сдать с первой попытки.",
+        title: "Сдай экзамен",
+        text: "Готовим к теории и практике, чтобы сдать с первой попытки.",
       },
     ],
   },
@@ -615,15 +989,19 @@ const ru: Dict = {
     items: [
       {
         q: "Какие категории можно получить в GLG Property?",
-        a: "Мы готовим к категориям B1 и B — самым востребованным для легковых автомобилей.",
+        a: "Мы готовим к категориям B1 и B, самым востребованным для легковых автомобилей.",
+      },
+      {
+        q: "Как записаться?",
+        a: "Заполни заявку онлайн за несколько минут, мы перезвоним для подтверждения. Заявку можно подать и прямо в филиале.",
       },
       {
         q: "Сколько длится курс?",
-        a: "Все пакеты рассчитаны на 3 месяца и включают и теорию, и практику.",
+        a: "Курс длится 3 месяца и включает и теорию, и практику.",
       },
       {
         q: "Можно ли платить в рассрочку?",
-        a: "Да. Пакеты Standard и Social можно оплатить в рассрочку до 25 платежей. Пакет Premium оплачивается полностью при подаче заявления.",
+        a: "Да. Курс можно оплатить в рассрочку до 25 платежей.",
       },
       {
         q: "Есть ли обучение на русском языке?",
@@ -652,9 +1030,12 @@ const ru: Dict = {
       "У нас четыре филиала в Кишинёве, открытых с понедельника по субботу. Позвони или заходи в гости.",
     callUs: "Позвони нам",
     hoursLabel: "График работы",
-    hours: "Понедельник – Суббота",
+    hours: "Понедельник - Суббота",
     followUs: "Подписывайся",
     mapBadge: "4 филиала в Кишинёве",
+    mapTitle: "Карта Google, автошкола GLG Property, Кишинёв",
+    mapConsentText: "Карта Google загружается только с вашего согласия на внешние медиа. При загрузке Google может устанавливать свои cookie.",
+    mapConsentCta: "Показать карту",
     centersTitle: "Наши филиалы",
     callNow: "Звони сейчас",
     sectors: ["Ботаника", "Буюканы", "и ещё 2 филиала в Кишинёве"],
@@ -667,31 +1048,136 @@ const ru: Dict = {
       {
         title: "Курсы",
         links: [
-          { label: "Пакет Premium", href: "#preturi" },
-          { label: "Пакет Standard", href: "#preturi" },
-          { label: "Пакет Social", href: "#preturi" },
+          { label: "Запись онлайн", href: "/inscriere" },
+          { label: "Пакет Standard", href: "/#preturi" },
         ],
       },
       {
         title: "Автошкола",
         links: [
-          { label: "О нас", href: "#despre" },
-          { label: "Как записаться", href: "#cursuri" },
-          { label: "Частые вопросы", href: "#intrebari" },
+          { label: "О нас", href: "/#despre" },
+          { label: "Как записаться", href: "/#cursuri" },
+          { label: "Частые вопросы", href: "/#intrebari" },
         ],
       },
       {
         title: "Контакты",
         links: [
           { label: site.phone, href: site.phoneHref },
-          { label: "Facebook", href: site.social.facebook },
-          { label: "Instagram", href: site.social.instagram },
-          { label: "TikTok", href: site.social.tiktok },
+          { label: site.email, href: `mailto:${site.email}` },
+          { label: "Понедельник - Суббота", href: "/#contact" },
         ],
       },
     ],
-    rights: "Все права защищены. · Автошкола · Кишинёв",
+    rights: "Все права защищены. Автошкола · Кишинёв",
     credit: "Создание сайта - landings.md",
+    privacy: "Политика конфиденциальности",
+    terms: "Условия использования",
+    cookieSettings: "Настройки cookie",
+  },
+
+  floating: { label: "Связаться с нами", call: "Позвонить" },
+
+  privacy: {
+    title: "Политика конфиденциальности",
+    updated: "Последнее обновление: август 2026",
+    sections: [
+      {
+        h: "Кто мы",
+        p: "Оператором ваших данных является GLG Property SRL, лицензированная автошкола в Кишинёве, Республика Молдова (сайт: scoalaautoglg.com). Мы обрабатываем персональные данные в соответствии с Законом № 133/2011 о защите персональных данных и принципами Регламента (ЕС) 2016/679 (GDPR).",
+      },
+      {
+        h: "Какие данные мы собираем",
+        p: "Через форму онлайн-записи мы собираем данные, необходимые для оформления заявления-договора об обучении: фамилию и имя, IDNP, дату рождения, пол, гражданство, данные удостоверения личности (серия, номер, дата и орган выдачи), адрес проживания, номер телефона, адрес электронной почты, место работы (по желанию) и, если есть, данные водительского удостоверения. Другие данные мы не собираем и не используем данные из формы для рекламы.",
+      },
+      {
+        h: "Зачем мы их собираем",
+        p: "Мы используем эти данные для: обработки вашей заявки и телефонного звонка для подтверждения, оформления договора об обучении и досье, требуемого законом для допуска к экзаменам, передачи информации, связанной с курсом. Основание обработки: ваше согласие и заключение договора об обучении.",
+      },
+      {
+        h: "Кому мы их передаём",
+        p: "Данные попадают во внутреннюю систему учёта автошколы, доступную только уполномоченным сотрудникам. Государственным органам (например, Агентству государственных услуг) мы передаём данные только тогда, когда этого требует закон для допуска к экзамену. Мы не продаём и не передаём ваши данные другим компаниям в маркетинговых целях.",
+      },
+      {
+        h: "Как долго мы их храним",
+        p: "Мы храним данные в течение обучения, а затем в течение срока, установленного законодательством для архивирования учебных досье. Если вы отправили форму, но не записались, вы можете в любой момент попросить удалить данные.",
+      },
+      {
+        h: "Cookie и локальное хранилище",
+        p: "Сайт использует только строго необходимое хранилище: выбранный язык, закрытие рекламного объявления и ваш выбор относительно cookie. Мы не используем рекламные или отслеживающие cookie. Карта Google в разделе Контакты загружается только с вашего согласия на внешние медиа; при загрузке Google может устанавливать свои cookie согласно своей политике. Вы можете в любой момент изменить свой выбор по ссылке Настройки cookie внизу страницы.",
+      },
+      {
+        h: "Ваши права",
+        p: "Вы имеете право на доступ к своим данным, на их исправление, удаление, ограничение обработки, право на возражение и право в любой момент отозвать согласие. По любому запросу пишите на contact@scoalaautoglg.com или звоните по номеру 069 792 889. Если вы считаете, что ваши права нарушены, вы можете подать жалобу в Национальный центр по защите персональных данных Республики Молдова (datepersonale.md).",
+      },
+      {
+        h: "Контакты",
+        p: "GLG Property SRL, Кишинёв, Республика Молдова. E-mail: contact@scoalaautoglg.com. Телефон: 069 792 889.",
+      },
+    ],
+  },
+
+  terms: {
+    title: "Условия использования",
+    updated: "Последнее обновление: август 2026",
+    sections: [
+      {
+        h: "Кто мы",
+        p: "Сайт scoalaautoglg.com управляется GLG Property SRL, лицензированной автошколой в Кишинёве, Республика Молдова. Используя этот сайт, вы соглашаетесь с приведёнными ниже условиями.",
+      },
+      {
+        h: "Назначение сайта",
+        p: "Сайт представляет услуги автошколы и позволяет отправить заявку на запись онлайн. Отправка формы не создаёт договор и не гарантирует место в группе: договор об обучении подписывается в офисе, после того как мы свяжемся с вами по телефону для подтверждения.",
+      },
+      {
+        h: "Использование сайта",
+        p: "Вы обязуетесь указывать в форме настоящие и полные данные, относящиеся к вам. Запрещено злоупотреблять сайтом: отправлять ложные или повторные заявки, пытаться получить несанкционированный доступ, нарушать работу сайта.",
+      },
+      {
+        h: "Цены и информация",
+        p: "Информация на сайте, включая сведения о курсах и предложениях, носит информационный характер и может обновляться без предупреждения. Окончательные цены и конкретные условия подтверждаются по телефону или в офисе, до подписания договора.",
+      },
+      {
+        h: "Интеллектуальная собственность",
+        p: "Содержимое сайта (тексты, изображения, видео, логотип) принадлежит GLG Property SRL или используется с согласия правообладателей. Копирование или публикация без нашего письменного согласия запрещены.",
+      },
+      {
+        h: "Персональные данные и cookie",
+        p: "То, как мы обрабатываем персональные данные из формы и какие cookie использует сайт, описано в Политике конфиденциальности, доступной внизу страницы.",
+      },
+      {
+        h: "Ответственность",
+        p: "Мы стараемся, чтобы информация на сайте была точной и актуальной, но не отвечаем за временную недоступность сайта или внешних встроенных сервисов (например, карты Google). Сайт предоставляется как есть, без дополнительных гарантий.",
+      },
+      {
+        h: "Применимое право",
+        p: "Настоящие условия регулируются законодательством Республики Молдова. Возможные споры решаются мирным путём, а если это невозможно, компетентными судами Кишинёва.",
+      },
+      {
+        h: "Контакты",
+        p: "GLG Property SRL, Кишинёв, Республика Молдова. E-mail: contact@scoalaautoglg.com. Телефон: 069 792 889.",
+      },
+    ],
+  },
+
+  cookies: {
+    title: "Cookie и конфиденциальность",
+    text: "Мы используем только строго необходимое хранилище (выбранный язык, этот выбор). Карта Google в разделе Контакты загружается только с вашего согласия и может устанавливать cookie Google. Подробнее в",
+    policyLabel: "Политике конфиденциальности",
+    acceptAll: "Принять все",
+    necessaryOnly: "Только необходимые",
+    prefs: "Настройки",
+    save: "Сохранить выбор",
+    categories: {
+      necessary: {
+        label: "Строго необходимые",
+        desc: "Выбранный язык, закрытие объявления и сохранение этого выбора. Нельзя отключить.",
+      },
+      media: {
+        label: "Внешние медиа (Google Maps)",
+        desc: "Загружает карту Google в разделе Контакты. Google может устанавливать свои cookie.",
+      },
+    },
   },
 };
 

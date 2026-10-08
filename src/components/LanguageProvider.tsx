@@ -1,9 +1,42 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useSyncExternalStore } from "react";
 import { dictionaries, type Dict, type Lang } from "@/lib/content";
 
 const STORAGE_KEY = "glg-lang";
+const LANG_EVENT = "glg-lang-change";
+
+/** In-memory fallback so the switch still works when storage is blocked. */
+let memoryLang: Lang | null = null;
+
+function subscribe(onChange: () => void) {
+  window.addEventListener(LANG_EVENT, onChange);
+  window.addEventListener("storage", onChange);
+  return () => {
+    window.removeEventListener(LANG_EVENT, onChange);
+    window.removeEventListener("storage", onChange);
+  };
+}
+
+function readLang(): Lang {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved === "ro" || saved === "ru") return saved;
+  } catch {
+    /* privacy mode, fall through to the in-memory value */
+  }
+  return memoryLang ?? "ro";
+}
+
+function setLang(l: Lang) {
+  memoryLang = l;
+  try {
+    localStorage.setItem(STORAGE_KEY, l);
+  } catch {
+    /* preference just won't persist */
+  }
+  window.dispatchEvent(new Event(LANG_EVENT));
+}
 
 const LangContext = createContext<{
   lang: Lang;
@@ -13,32 +46,15 @@ const LangContext = createContext<{
 
 /**
  * Client-side language switch. Romanian is always what gets prerendered;
- * the saved preference is applied after mount so hydration stays clean.
+ * the saved preference is read through useSyncExternalStore, so hydration
+ * starts from the server snapshot ("ro") and updates cleanly right after.
  */
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLangState] = useState<Lang>("ro");
-
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved === "ro" || saved === "ru") setLangState(saved);
-    } catch {
-      /* privacy mode — stay on Romanian */
-    }
-  }, []);
+  const lang = useSyncExternalStore(subscribe, readLang, () => "ro" as Lang);
 
   useEffect(() => {
     document.documentElement.lang = lang;
   }, [lang]);
-
-  const setLang = (l: Lang) => {
-    setLangState(l);
-    try {
-      localStorage.setItem(STORAGE_KEY, l);
-    } catch {
-      /* preference just won't persist */
-    }
-  };
 
   return (
     <LangContext.Provider value={{ lang, setLang, t: dictionaries[lang] }}>

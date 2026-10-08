@@ -14,12 +14,13 @@ export function Faq() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="intrebari" className="scroll-mt-24 py-20 sm:py-28">
+    <section id="intrebari" className="scroll-mt-24 py-14 sm:py-20">
       <Container>
         <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
           {/* Left */}
           <div className="lg:sticky lg:top-28 lg:self-start">
             <SectionHeading
+              index="05"
               eyebrow={faq.eyebrow}
               title={faq.title}
               accent={faq.titleAccent}
@@ -27,10 +28,10 @@ export function Faq() {
             />
             <a
               href={site.phoneHref}
-              className="mt-8 inline-flex items-center gap-3 rounded-2xl border border-line bg-surface px-5 py-4 transition-colors hover:border-brand-200"
+              className="card mt-8 inline-flex items-center gap-3 px-5 py-4 transition-colors duration-200 hover:border-faint"
             >
-              <span className="grid size-11 place-items-center rounded-xl bg-brand text-white">
-                <Phone className="size-5" />
+              <span className="chip-3d grid size-9 place-items-center rounded-[10px] text-ink">
+                <Phone className="size-4" strokeWidth={1.5} />
               </span>
               <span className="text-left">
                 <span className="block text-sm text-muted">{faq.cardQuestion}</span>
@@ -39,46 +40,41 @@ export function Faq() {
             </a>
           </div>
 
-          {/* Right — accordion */}
-          <Reveal as="ul" stagger className="flex flex-col gap-3">
+          {/* Right, accordion */}
+          <Reveal as="ul" stagger className="flex flex-col divide-y divide-line border-y border-line">
             {faq.items.map((item, i) => {
               const isOpen = open === i;
               return (
-                <li
-                  key={item.q}
-                  className={clsx(
-                    "rounded-2xl border transition-colors",
-                    isOpen ? "border-brand-200 bg-brand-50/40" : "border-line bg-white"
-                  )}
-                >
+                <li key={item.q}>
                   <button
                     onClick={() => setOpen(isOpen ? null : i)}
-                    className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left"
+                    className="flex w-full items-center justify-between gap-4 py-5 text-left"
                     aria-expanded={isOpen}
                   >
-                    <span className="text-[1.05rem] font-semibold text-ink">{item.q}</span>
-                    <span
-                      className={clsx(
-                        "grid size-8 shrink-0 place-items-center rounded-full transition-all duration-300",
-                        isOpen ? "rotate-45 bg-brand text-white" : "bg-surface text-brand"
-                      )}
-                    >
-                      <Plus className="size-4" strokeWidth={2.5} />
+                    <span className="text-base font-semibold tracking-tight text-ink">
+                      {item.q}
                     </span>
+                    <Plus
+                      className={clsx(
+                        "size-4 shrink-0 text-muted transition-transform duration-150",
+                        isOpen && "rotate-45"
+                      )}
+                      strokeWidth={1.5}
+                    />
                   </button>
                   <div
                     className={clsx(
-                      "grid transition-[grid-template-rows] duration-300 ease-out",
+                      "grid transition-[grid-template-rows] duration-200 ease-out",
                       isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
                     )}
                   >
                     <div
                       className={clsx(
-                        "overflow-hidden transition-opacity duration-500",
+                        "overflow-hidden transition-opacity duration-200",
                         isOpen ? "opacity-100" : "opacity-0"
                       )}
                     >
-                      <p className="px-6 pb-6 text-[0.975rem] leading-relaxed text-muted">
+                      <p className="pb-5 pr-8 text-sm leading-relaxed text-muted">
                         {item.a}
                       </p>
                     </div>
