@@ -273,25 +273,28 @@ export function EnrollForm() {
     return (
       <section className="bg-white py-14 sm:py-20">
         <Container>
-          <div className="card mx-auto max-w-md p-6 text-center sm:p-8">
-            <CheckCircle2 className="mx-auto size-8 text-brand" strokeWidth={1.5} />
-            <h1 className="mt-4 text-xl font-semibold tracking-tight text-ink sm:text-2xl">
+          <div className="card mx-auto max-w-xl px-6 py-10 text-center sm:px-12 sm:py-12">
+            <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-brand/10">
+              <CheckCircle2 className="size-7 text-brand" strokeWidth={1.75} />
+            </div>
+            <h1 className="mt-5 text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
               {status.duplicate ? s.duplicateTitle : s.title}
             </h1>
-            <p className="mt-2 text-sm leading-relaxed text-muted">
+            <p className="mx-auto mt-3 max-w-md text-base leading-relaxed text-muted">
               {status.duplicate ? s.duplicateText : s.text}
             </p>
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+            {/* Pe telefon butoanele stau unul sub altul, pe toată lățimea; pe desktop, unul lângă altul, fără text rupt pe două rânduri. */}
+            <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:justify-center">
               <a
                 href={site.phoneHref}
-                className="btn-3d inline-flex h-10 items-center justify-center gap-2 rounded-[10px] px-5 text-sm font-medium text-white transition-colors duration-200"
+                className="btn-3d inline-flex h-11 items-center justify-center gap-2 whitespace-nowrap rounded-[10px] px-6 text-sm font-medium text-white transition-colors duration-200"
               >
-                <Phone className="size-4" strokeWidth={1.5} />
+                <Phone className="size-4" strokeWidth={1.75} />
                 {s.call} · {site.phone}
               </a>
               <Link
                 href="/"
-                className="btn-3d-light inline-flex h-10 items-center justify-center gap-2 rounded-[10px] px-5 text-sm font-medium text-ink transition-colors duration-200"
+                className="btn-3d-light inline-flex h-11 items-center justify-center whitespace-nowrap rounded-[10px] px-6 text-sm font-medium text-ink transition-colors duration-200"
               >
                 {s.back}
               </Link>
