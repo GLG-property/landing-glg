@@ -112,8 +112,13 @@ function PillGroup({
           key={o.value}
           className={clsx(
             "flex cursor-pointer items-center px-3.5 text-sm font-medium transition-colors duration-200",
+            // Chip-ul selectat NU primește input-3d: gradientul lui alb ar acoperi
+            // fundalul negru și textul alb ar rămâne pe alb.
             chips
-              ? ["input-3d h-9 rounded-[10px] border", invalid ? "border-red-400" : "border-line"]
+              ? [
+                  "h-9 rounded-[10px] border",
+                  value === o.value ? "border-ink" : ["input-3d", invalid ? "border-red-400" : "border-line"],
+                ]
               : i > 0 && "border-l border-line",
             value === o.value ? "bg-ink text-white" : "text-muted hover:text-ink"
           )}
