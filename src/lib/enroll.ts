@@ -136,7 +136,6 @@ const REQUIRED: (keyof EnrollValues)[] = [
   "transmission",
   "location",
   "slot",
-  "practice_location",
 ];
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -231,8 +230,9 @@ export function buildEnrollPayload(v: EnrollValues): Record<string, unknown> {
     transmission: v.transmission || undefined,
     location: opt(v.location),
     slot: opt(v.slot),
-    preferred_schedule: opt(v.preferred_schedule),
-    practice_location: opt(v.practice_location),
+    // Orarul se alege doar din orarul fix (sediu + oră); lecțiile practice se țin la sediul ales.
+    preferred_schedule: undefined,
+    practice_location: opt(v.location),
     language: v.language,
     consent_gdpr: v.consent,
 

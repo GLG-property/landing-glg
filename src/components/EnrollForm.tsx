@@ -19,14 +19,6 @@ import { LOCATION_SCHEDULES, slotsFor } from "@/lib/schedule";
 import { useI18n } from "./LanguageProvider";
 import { Container, SectionHeading } from "./primitives";
 
-/** Locațiile unde se pot efectua lecțiile practice (nume proprii, identice RO/RU). */
-const PRACTICE_LOCATIONS = [
-  "Buiucani Alfa",
-  "Buiucani Sculeni",
-  "Botanica Franzeluța",
-  "Buiucani-Botanica",
-] as const;
-
 /* ---------- stiluri comune ---------- */
 
 // text-base pe mobil e obligatoriu: sub 16px, iOS face zoom automat la focus.
@@ -694,41 +686,6 @@ export function EnrollForm() {
                   ]}
                   onChange={(v) => set("transmission", v as EnrollValues["transmission"])}
                 />
-              </Field>
-              <Field
-                label={f.scheduleOther}
-                htmlFor="preferred_schedule"
-                optionalLabel={e.optional}
-                error={msg("preferred_schedule")}
-              >
-                <input
-                  id="preferred_schedule"
-                  className={inputClass(!!errors.preferred_schedule)}
-                  value={values.preferred_schedule}
-                  onChange={(ev) => set("preferred_schedule", ev.target.value)}
-                  placeholder={f.schedulePlaceholder}
-                  maxLength={120}
-                />
-              </Field>
-              <Field
-                label={f.practiceLocation}
-                htmlFor="practice_location"
-                error={msg("practice_location")}
-              >
-                <select
-                  id="practice_location"
-                  className={selectClass(!!errors.practice_location)}
-                  style={selectStyle}
-                  value={values.practice_location}
-                  onChange={(ev) => set("practice_location", ev.target.value)}
-                >
-                  <option value="">{f.practiceLocationPlaceholder}</option>
-                  {PRACTICE_LOCATIONS.map((loc) => (
-                    <option key={loc} value={loc}>
-                      {loc}
-                    </option>
-                  ))}
-                </select>
               </Field>
               <Field
                 label={f.workplace}
