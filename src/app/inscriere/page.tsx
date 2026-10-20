@@ -8,11 +8,12 @@ import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { pageMetadata } from "@/lib/seo";
 import type { EnrollOptions } from "@/lib/schedule";
 
-/** Grupele deschise (sediu → zile/oră/limbă) din aplicația internă; lipsă = formular fără ore. */
+/** Grupele deschise (sediu → zile/oră/limbă) din aplicația internă, citite la fiecare cerere (fără cache: ce deschide/arhivează adminul se vede imediat); lipsă = formular fără ore. */
+export const dynamic = "force-dynamic";
 async function loadOptions(): Promise<EnrollOptions | null> {
   const upstream = (process.env.ENROLL_UPSTREAM ?? "http://app:3000/api/inscriere").replace(/\/$/, "") + "/optiuni";
   try {
-    const r = await fetch(upstream, { next: { revalidate: 60 } });
+    const r = await fetch(upstream, { cache: "no-store" });
     if (!r.ok) return null;
     return (await r.json()) as EnrollOptions;
   } catch {
