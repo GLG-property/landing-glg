@@ -446,7 +446,7 @@ const ro: Dict = {
       slotSaturday: "Sâmbătă",
       slotDaysHint:
         "Zilele (Luni și Miercuri sau Marți și Joi) le stabilim împreună cu tine când grupa se formează.",
-      noOpenGroups: "Сейчас в этом филиале нет открытой группы. Отправьте заявку, и мы позвоним, когда стартует следующая.",
+      noOpenGroups: "Momentan nu e deschisă nicio grupă la acest sediu. Trimite cererea și te sunăm când pornește următoarea.",
       scheduleOther: "Altă preferință de orar",
       schedule: "Ora disponibilă pentru cursuri",
       schedulePlaceholder: "ex.: după 17:30",
