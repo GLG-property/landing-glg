@@ -1,34 +1,44 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Onest } from "next/font/google";
 import { JsonLd } from "@/components/JsonLd";
+import { AnalyticsEvents } from "@/components/AnalyticsEvents";
+import { brandSuffix, homeDescription, homeTitle, ogImage, siteName, siteUrl } from "@/lib/seo";
 import "./globals.css";
 
 const onest = Onest({
-  subsets: ["latin", "latin-ext"],
+  subsets: ["latin", "latin-ext", "cyrillic"],
   variable: "--font-onest",
   display: "swap",
 });
 
-const siteUrl = "https://scoalaautoglg.com";
-
+/**
+ * Metadata implicită (moștenită de paginile fără metadata proprie, ex. 404).
+ * Canonical-ul și og:url se setează PER PAGINĂ (src/lib/seo.ts, pageMetadata),
+ * ca să nu moștenească toate paginile canonical-ul paginii principale.
+ */
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  applicationName: siteName,
   title: {
-    default: "Școala Auto GLG Property | Permis categoria B în Chișinău",
-    template: "%s | GLG Property",
+    default: homeTitle,
+    template: `%s | ${brandSuffix}`,
   },
-  description:
-    "Școală auto în Chișinău pentru categoria B. Instructori cu experiență, mașini moderne, plata în rate și înscriere online. Patru centre în oraș.",
+  description: homeDescription,
   keywords: [
-    "scoala auto Chisinau",
-    "permis de conducere",
-    "categoria B",
+    "școala auto Chișinău",
+    "școală auto",
+    "permis de conducere categoria B",
+    "școala auto Buiucani",
+    "școala auto Botanica",
+    "școala auto Strășeni",
+    "școala auto Vorniceni",
     "GLG Property",
-    "inscriere online scoala auto",
+    "înscriere online școala auto",
   ],
-  alternates: {
-    canonical: "/",
-  },
+  authors: [{ name: siteName, url: siteUrl }],
+  creator: siteName,
+  publisher: siteName,
+  category: "education",
   formatDetection: {
     email: false,
     address: false,
@@ -42,33 +52,36 @@ export const metadata: Metadata = {
       follow: true,
       "max-image-preview": "large",
       "max-snippet": -1,
+      "max-video-preview": -1,
     },
   },
   openGraph: {
     type: "website",
     locale: "ro_RO",
-    url: siteUrl,
-    siteName: "Școala Auto GLG Property",
-    title: "Școala Auto GLG Property | Permis categoria B în Chișinău",
-    description:
-      "Școală auto în Chișinău pentru categoria B. Instructori cu experiență, mașini moderne, plata în rate și înscriere online.",
-    images: [
-      {
-        url: "/masina-glg.jpg",
-        width: 1500,
-        height: 1125,
-        alt: "Mașinile școlii auto GLG Property",
-      },
-    ],
+    alternateLocale: ["ru_RU"],
+    siteName,
+    title: homeTitle,
+    description: homeDescription,
+    images: [ogImage],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Școala Auto GLG Property | Permis categoria B în Chișinău",
-    description:
-      "Școală auto în Chișinău pentru categoria B. Instructori cu experiență, mașini moderne, plata în rate și înscriere online.",
-    images: ["/masina-glg.jpg"],
+    title: homeTitle,
+    description: homeDescription,
+    images: [ogImage.url],
   },
 };
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  // Bara browserului urmează fundalul alb al site-ului (paleta din DESIGN.md).
+  themeColor: "#ffffff",
+  colorScheme: "light",
+};
+
+/** Id-ul site-ului în Umami (din mediul containerului); lipsă = fără urmărire. */
+const UMAMI_WEBSITE_ID = process.env.UMAMI_WEBSITE_ID?.trim() || "";
 
 export default function RootLayout({
   children,
@@ -87,7 +100,12 @@ export default function RootLayout({
           }}
         />
         <JsonLd />
+        <AnalyticsEvents />
         {children}
+        {/* Analiză vizitatori (Umami, self-hosted, fără cookie-uri): pagini, surse, durată, evenimente. */}
+        {UMAMI_WEBSITE_ID && (
+          <script defer src="/u/script.js" data-website-id={UMAMI_WEBSITE_ID} data-host-url="/u" data-do-not-track="true" />
+        )}
       </body>
     </html>
   );

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { LanguageProvider } from "@/components/LanguageProvider";
 import { TopBanner } from "@/components/TopBanner";
 import { Navbar } from "@/components/Navbar";
@@ -12,13 +13,24 @@ import { Steps } from "@/components/Steps";
 import { Testimonials } from "@/components/Testimonials";
 import { Faq } from "@/components/Faq";
 import { Contact } from "@/components/Contact";
+import { CityGuide } from "@/components/CityGuide";
 import { Footer } from "@/components/Footer";
 import { FloatingContact } from "@/components/FloatingContact";
 import { CookieConsent } from "@/components/CookieConsent";
+import { FaqJsonLd } from "@/components/JsonLd";
+import { homeDescription, homeTitle, pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  title: homeTitle,
+  absoluteTitle: true,
+  description: homeDescription,
+  path: "/",
+});
 
 export default function Home() {
   return (
     <LanguageProvider>
+      <FaqJsonLd />
       <TopBanner />
       <Navbar />
       <main>
@@ -33,6 +45,7 @@ export default function Home() {
         <Testimonials />
         <Faq />
         <Contact />
+        <CityGuide />
       </main>
       <Footer />
       <FloatingContact />

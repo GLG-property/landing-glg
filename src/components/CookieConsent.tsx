@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
-import clsx from "clsx";
 import { useI18n } from "./LanguageProvider";
 
 /* ---------- starea consimtamantului, partajata prin localStorage + eveniment ---------- */
@@ -44,24 +43,34 @@ export function openCookiePrefs() {
 
 /* ---------- bannerul ---------- */
 
+function subscribeConsent(onChange: () => void) {
+  window.addEventListener(CONSENT_CHANGE_EVENT, onChange);
+  return () => window.removeEventListener(CONSENT_CHANGE_EVENT, onChange);
+}
+const readUndecided = () => readCookieConsent() === null;
+// Pe server (și la hidratare) bannerul e ascuns; apare imediat după, dacă nu există o alegere.
+const serverUndecided = () => false;
+
 export function CookieConsent() {
   const { t } = useI18n();
   const c = t.cookies;
-  const [visible, setVisible] = useState(false);
+  // „nedecis" vine din stocare, prin useSyncExternalStore (fără setState în efect)
+  const undecided = useSyncExternalStore(subscribeConsent, readUndecided, serverUndecided);
+  const [forcedOpen, setForcedOpen] = useState(false);
   const [showPrefs, setShowPrefs] = useState(false);
   const [media, setMedia] = useState(false);
+  const visible = undecided || forcedOpen;
 
   useEffect(() => {
-    if (readCookieConsent() === null) setVisible(true);
     const onOpen = () => {
       setMedia(readCookieConsent()?.media === true);
       setShowPrefs(true);
-      setVisible(true);
+      setForcedOpen(true);
     };
     window.addEventListener(OPEN_PREFS_EVENT, onOpen);
     // alegerea facuta din alta parte (ex. butonul de harta) inchide bannerul
     const onChange = () => {
-      setVisible(false);
+      setForcedOpen(false);
       setShowPrefs(false);
     };
     window.addEventListener(CONSENT_CHANGE_EVENT, onChange);
@@ -75,7 +84,7 @@ export function CookieConsent() {
 
   const decide = (value: CookieConsentValue) => {
     writeCookieConsent(value);
-    setVisible(false);
+    setForcedOpen(false);
     setShowPrefs(false);
   };
 

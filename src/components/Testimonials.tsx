@@ -34,7 +34,8 @@ export function Testimonials() {
                 className="aspect-[20/11] w-full bg-ink"
                 controls
                 playsInline
-                preload="metadata"
+                // Posterul e suficient până la click; patru fișiere video nu se mai descarcă la încărcarea paginii.
+                preload="none"
                 poster={r.poster}
               >
                 <source src={r.src} type="video/mp4" />

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X, ChevronDown, Globe, Phone } from "lucide-react";
 import clsx from "clsx";
 import { site, langs, langNames } from "@/lib/content";
@@ -14,6 +15,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [active, setActive] = useState<string | null>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -67,8 +69,13 @@ export function Navbar() {
 
         <nav className="hidden items-center gap-1 lg:flex">
           {t.nav.items.map((item) => {
+            // Ancorele urmăresc scroll-spy-ul pe pagina principală; paginile
+            // proprii (ex. /blog) sunt active după calea curentă.
+            const isAnchor = item.href.includes("#");
             const anchor = item.href.replace(/^\/?#/, "");
-            const isActive = anchor === active;
+            const isActive = isAnchor
+              ? pathname === "/" && anchor === active
+              : pathname === item.href || pathname.startsWith(`${item.href}/`);
             return (
               <Link
                 key={item.href}

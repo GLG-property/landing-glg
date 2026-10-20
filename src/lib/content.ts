@@ -136,6 +136,7 @@ export type Dict = {
     titleTop: string;
     titleBottom: string;
     subtitle: string;
+    imageAlt: string;
     primaryCta: Cta;
     secondaryCta: Cta;
     chips: string[];
@@ -208,6 +209,22 @@ export type Dict = {
     cookieSettings: string;
   };
   floating: { label: string; call: string };
+  /** Secțiunea „Școală auto în Chișinău": text local, cu linkuri interne în notația [text](href). */
+  guide: {
+    eyebrow: string;
+    title: string;
+    titleAccent: string;
+    paragraphs: string[];
+  };
+  notFound: {
+    eyebrow: string;
+    title: string;
+    text: string;
+    cta: Cta;
+    home: Cta;
+    linksTitle: string;
+    links: NavItem[];
+  };
   privacy: {
     title: string;
     updated: string;
@@ -247,6 +264,7 @@ const ro: Dict = {
       { label: "Acasă", href: "/#acasa" },
       { label: "Despre noi", href: "/#despre" },
       { label: "Cursuri", href: "/#cursuri" },
+      { label: "Blog", href: "/blog" },
       { label: "Contact", href: "/#contact" },
     ],
     cta: { label: "Înscrie-te", href: "/inscriere" },
@@ -255,11 +273,12 @@ const ro: Dict = {
   },
 
   hero: {
-    eyebrow: "Toate categoriile",
-    titleTop: "Obținem împreună",
-    titleBottom: "permisul tău de conducere",
+    eyebrow: "Școala Auto GLG Property",
+    titleTop: "Școala auto din Chișinău",
+    titleBottom: "cu care obții permisul categoria B",
     subtitle:
       "Teorie și practică cu instructori atestați, mașini moderne și 4 centre în Chișinău. Grupe în română și rusă.",
+    imageAlt: "Skoda Fabia, mașină de instruire a Școlii Auto GLG Property din Chișinău",
     primaryCta: { label: "Înscrie-te online", href: "/inscriere" },
     secondaryCta: { label: site.phone, href: site.phoneHref },
     chips: [
@@ -584,6 +603,7 @@ const ro: Dict = {
           { label: "Despre noi", href: "/#despre" },
           { label: "Cum te înscrii", href: "/#cursuri" },
           { label: "Întrebări frecvente", href: "/#intrebari" },
+          { label: "Blog", href: "/blog" },
         ],
       },
       {
@@ -603,6 +623,34 @@ const ro: Dict = {
   },
 
   floating: { label: "Contactează-ne", call: "Sună-ne" },
+
+  guide: {
+    eyebrow: "Școală auto în Chișinău",
+    title: "Cum obții permisul",
+    titleAccent: "categoria B în Moldova",
+    paragraphs: [
+      "GLG Property este o școală auto din Chișinău, cu sedii în sectoarele Buiucani și Botanica și grupe de teorie la Strășeni și Vorniceni. De 8 ani pregătim viitori șoferi pentru permisul de conducere categoria B, în română și în rusă, cu instructori atestați și mașini Skoda Fabia și Skoda Scala, pe traseele reale de examinare.",
+      "Pașii sunt simpli. Te înscrii la o școală auto autorizată, urmezi cursul de teorie (3 luni, luni și miercuri sau marți și joi) și cele 24 de lecții practice din [pachetul Standard](/#preturi), apoi susții examenul teoretic și cel practic la Agenția Servicii Publice. Pentru dosar ai nevoie de buletin și de certificat medical, iar vârsta minimă pentru categoria B este de 18 ani.",
+      "Alegi sediul și ora grupei direct din [formularul de înscriere online](/inscriere), iar noi te sunăm ca să confirmăm. Cursul se achită în până la 25 de rate, iar la înscrierea în sectoarele Botanica și Buiucani primești un voucher cadou de 200 lei. Sfaturi pentru examen și noutăți găsești pe [blogul școlii](/blog), iar adresele și programul, în secțiunea [Contact](/#contact).",
+    ],
+  },
+
+  notFound: {
+    eyebrow: "Eroare 404",
+    title: "Pagina nu există",
+    text: "Linkul poate fi greșit sau pagina a fost mutată. Te poți întoarce pe pagina principală sau poți trimite direct cererea de înscriere la școala auto.",
+    cta: { label: "Înscrie-te online", href: "/inscriere" },
+    home: { label: "Pagina principală", href: "/" },
+    linksTitle: "Poate te interesează",
+    links: [
+      { label: "Despre școala auto", href: "/#despre" },
+      { label: "Pachetul Standard, categoria B", href: "/#preturi" },
+      { label: "Cum te înscrii", href: "/#cursuri" },
+      { label: "Întrebări frecvente", href: "/#intrebari" },
+      { label: "Blog", href: "/blog" },
+      { label: "Contact și sedii", href: "/#contact" },
+    ],
+  },
 
   privacy: {
     title: "Politica de confidențialitate",
@@ -721,6 +769,7 @@ const ru: Dict = {
       { label: "Главная", href: "/#acasa" },
       { label: "О нас", href: "/#despre" },
       { label: "Курсы", href: "/#cursuri" },
+      { label: "Блог", href: "/blog" },
       { label: "Контакты", href: "/#contact" },
     ],
     cta: { label: "Записаться", href: "/inscriere" },
@@ -729,11 +778,12 @@ const ru: Dict = {
   },
 
   hero: {
-    eyebrow: "Все категории",
-    titleTop: "Вместе получим",
-    titleBottom: "твои водительские права",
+    eyebrow: "Автошкола GLG Property",
+    titleTop: "Автошкола в Кишинёве,",
+    titleBottom: "с которой ты получишь права категории B",
     subtitle:
       "Теория и практика с аттестованными инструкторами, современные автомобили и 4 филиала в Кишинёве. Группы на румынском и русском языках.",
+    imageAlt: "Skoda Fabia, учебный автомобиль автошколы GLG Property в Кишинёве",
     primaryCta: { label: "Записаться онлайн", href: "/inscriere" },
     secondaryCta: { label: site.phone, href: site.phoneHref },
     chips: [
@@ -1058,6 +1108,7 @@ const ru: Dict = {
           { label: "О нас", href: "/#despre" },
           { label: "Как записаться", href: "/#cursuri" },
           { label: "Частые вопросы", href: "/#intrebari" },
+          { label: "Блог", href: "/blog" },
         ],
       },
       {
@@ -1077,6 +1128,34 @@ const ru: Dict = {
   },
 
   floating: { label: "Связаться с нами", call: "Позвонить" },
+
+  guide: {
+    eyebrow: "Автошкола в Кишинёве",
+    title: "Как получить права",
+    titleAccent: "категории B в Молдове",
+    paragraphs: [
+      "GLG Property, автошкола в Кишинёве с филиалами в секторах Буюканы и Ботаника и группами теории в Стрэшенах и Ворниченах. Уже 8 лет мы готовим будущих водителей к получению прав категории B, на румынском и русском языках, с аттестованными инструкторами и автомобилями Skoda Fabia и Skoda Scala, на реальных экзаменационных маршрутах.",
+      "Шаги простые. Записываешься в лицензированную автошколу, проходишь курс теории (3 месяца, понедельник и среда или вторник и четверг) и 24 практических занятия из [пакета Standard](/#preturi), затем сдаёшь теоретический и практический экзамены в Агентстве государственных услуг. Для досье нужны удостоверение личности и медицинская справка, а минимальный возраст для категории B составляет 18 лет.",
+      "Филиал и время группы выбираешь прямо в [форме онлайн-записи](/inscriere), а мы перезвоним для подтверждения. Курс можно оплатить в рассрочку до 25 платежей, а при записи в секторах Ботаника и Буюканы ты получаешь подарочный ваучер на 200 леев. Советы к экзамену и новости читай в [блоге автошколы](/blog), а адреса и график работы смотри в разделе [Контакты](/#contact).",
+    ],
+  },
+
+  notFound: {
+    eyebrow: "Ошибка 404",
+    title: "Страница не найдена",
+    text: "Возможно, ссылка неверна или страница была перемещена. Вернись на главную или сразу отправь заявку на запись в автошколу.",
+    cta: { label: "Записаться онлайн", href: "/inscriere" },
+    home: { label: "На главную", href: "/" },
+    linksTitle: "Возможно, тебе пригодится",
+    links: [
+      { label: "Об автошколе", href: "/#despre" },
+      { label: "Пакет Standard, категория B", href: "/#preturi" },
+      { label: "Как записаться", href: "/#cursuri" },
+      { label: "Частые вопросы", href: "/#intrebari" },
+      { label: "Блог", href: "/blog" },
+      { label: "Контакты и филиалы", href: "/#contact" },
+    ],
+  },
 
   privacy: {
     title: "Политика конфиденциальности",

@@ -68,7 +68,7 @@ export function Hero() {
           <div className="overflow-hidden rounded-xl border border-line">
             <Image
               src="/masina-glg.jpg"
-              alt="Skoda GLG Property"
+              alt={hero.imageAlt}
               width={1280}
               height={960}
               priority

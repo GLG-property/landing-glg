@@ -16,6 +16,7 @@ import {
   type EnrollValues,
 } from "@/lib/enroll";
 import { LOCATION_SCHEDULES, slotsFor } from "@/lib/schedule";
+import { EV, track } from "@/lib/analytics";
 import { useI18n } from "./LanguageProvider";
 import { Container, SectionHeading } from "./primitives";
 
@@ -242,6 +243,7 @@ export function EnrollForm() {
       case "ok":
       case "duplicate":
         setStatus({ phase: "success", duplicate: outcome.kind === "duplicate" });
+        track(EV.inscriereTrimisa, { sediu: values.location, ora: values.slot, categorie: values.category, limba: values.language, duplicat: outcome.kind === "duplicate" });
         return;
       case "invalid": {
         const fieldErrors: EnrollErrors = {};
@@ -327,6 +329,7 @@ export function EnrollForm() {
       <Container>
         <div className="mx-auto max-w-4xl">
           <SectionHeading
+            as="h1"
             eyebrow={e.eyebrow}
             title={e.title}
             accent={e.titleAccent}

@@ -9,7 +9,7 @@ export function PrivacyClient() {
   return (
     <section className="py-14 sm:py-20">
       <Container>
-        <SectionHeading title={privacy.title} />
+        <SectionHeading as="h1" title={privacy.title} />
         <div className="mt-2 max-w-2xl">
           <p className="text-sm text-faint">{privacy.updated}</p>
           {privacy.sections.map((s) => (

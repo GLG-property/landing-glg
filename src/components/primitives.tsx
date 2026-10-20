@@ -27,7 +27,7 @@ export function Logo({ className }: { className?: string }) {
     >
       <Image
         src="/logo.png"
-        alt=""
+        alt="Logo Școala Auto GLG Property"
         width={150}
         height={150}
         priority
@@ -62,6 +62,7 @@ export function SectionHeading({
   subtitle,
   align = "left",
   className,
+  as: Heading = "h2",
 }: {
   index?: string;
   eyebrow?: string;
@@ -70,6 +71,8 @@ export function SectionHeading({
   subtitle?: string;
   align?: "left" | "center";
   className?: string;
+  /** "h1" doar pentru titlul principal al unei subpagini (un singur h1 pe pagină). */
+  as?: "h1" | "h2";
 }) {
   return (
     <Reveal
@@ -85,11 +88,11 @@ export function SectionHeading({
           {eyebrow}
         </Eyebrow>
       ) : null}
-      <h2 className="text-balance text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
+      <Heading className="text-balance text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
         {title}
         {accent ? <> {accent}</> : null}
         <span className="dot">.</span>
-      </h2>
+      </Heading>
       {subtitle ? (
         <p
           className={clsx(

@@ -9,7 +9,7 @@ export function TermsClient() {
   return (
     <section className="py-14 sm:py-20">
       <Container>
-        <SectionHeading title={terms.title} />
+        <SectionHeading as="h1" title={terms.title} />
         <div className="mt-2 max-w-2xl">
           <p className="text-sm text-faint">{terms.updated}</p>
           {terms.sections.map((s) => (
