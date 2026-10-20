@@ -6,6 +6,19 @@ import { Footer } from "@/components/Footer";
 import { CookieConsent } from "@/components/CookieConsent";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { pageMetadata } from "@/lib/seo";
+import type { EnrollOptions } from "@/lib/schedule";
+
+/** Grupele deschise (sediu → zile/oră/limbă) din aplicația internă; lipsă = formular fără ore. */
+async function loadOptions(): Promise<EnrollOptions | null> {
+  const upstream = (process.env.ENROLL_UPSTREAM ?? "http://app:3000/api/inscriere").replace(/\/$/, "") + "/optiuni";
+  try {
+    const r = await fetch(upstream, { next: { revalidate: 60 } });
+    if (!r.ok) return null;
+    return (await r.json()) as EnrollOptions;
+  } catch {
+    return null;
+  }
+}
 
 export const metadata: Metadata = pageMetadata({
   title: "Înscriere online la școala auto din Chișinău",
@@ -14,13 +27,14 @@ export const metadata: Metadata = pageMetadata({
   path: "/inscriere",
 });
 
-export default function InscrierePage() {
+export default async function InscrierePage() {
+  const options = await loadOptions();
   return (
     <LanguageProvider>
       <BreadcrumbJsonLd items={[{ name: "Înscriere online", path: "/inscriere" }]} />
       <Navbar />
       <main>
-        <EnrollForm />
+        <EnrollForm options={options} />
       </main>
       <Footer />
       <CookieConsent />

@@ -5,7 +5,7 @@
  */
 
 import type { Lang } from "./content";
-import { slotsFor } from "./schedule";
+import { optionsFor, type EnrollOptions } from "./schedule";
 
 /**
  * Endpoint-ul de înscriere, SAME-ORIGIN. Formularul postează aici, iar ruta
@@ -56,7 +56,8 @@ export type EnrollValues = {
   category: string;
   language: Lang;
   transmission: "" | "manual" | "automatic";
-  location: string; // sediul grupei de teorie, unul din LOCATION_SCHEDULES
+  location: string; // sediul grupei de teorie
+  group_id: string; // grupa deschisă aleasă (opțiune publică), id opac
   slot: string; // cheia orei grupei (Slot.key), validă pentru sediu + limbă
   preferred_schedule: string; // altă preferință de orar, text liber opțional
   practice_location: string;
@@ -93,6 +94,7 @@ export function emptyEnrollValues(lang: Lang): EnrollValues {
     transmission: "",
     location: "",
     slot: "",
+    group_id: "",
     preferred_schedule: "",
     practice_location: "",
     license_number: "",
@@ -135,7 +137,6 @@ const REQUIRED: (keyof EnrollValues)[] = [
   "category",
   "transmission",
   "location",
-  "slot",
 ];
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -151,7 +152,7 @@ function isValidPastDate(v: string): boolean {
   return Number.isFinite(t) && t < Date.now() && v >= "1900-01-01";
 }
 
-export function validateEnroll(v: EnrollValues): EnrollErrors {
+export function validateEnroll(v: EnrollValues, options: EnrollOptions | null = null): EnrollErrors {
   const errors: EnrollErrors = {};
 
   for (const key of REQUIRED) {
@@ -182,10 +183,13 @@ export function validateEnroll(v: EnrollValues): EnrollErrors {
 
   // Grupa de teorie: sediul trebuie să aibă grupe în limba aleasă, iar ora
   // trebuie să fie una din orarul fix al sediului pentru limba respectivă.
-  if (v.location) {
-    const slots = slotsFor(v.location, v.language);
-    if (v.language === "ru" && slots.length === 0) errors.location = "noRuGroup";
-    if (v.slot && !slots.some((s) => s.key === v.slot)) errors.slot = "required";
+  // Grupa aleasă trebuie să fie una din opțiunile deschise la sediu, în limba aleasă.
+  if (v.location && options) {
+    const opts = optionsFor(options, v.location, v.language);
+    const anyAtLocation = options.locations.find((l) => l.name === v.location)?.options.length ?? 0;
+    if (v.language === "ru" && anyAtLocation > 0 && opts.length === 0) errors.location = "noRuGroup";
+    if (v.group_id && !opts.some((o) => o.id === v.group_id)) errors.group_id = "required";
+    if (!v.group_id && opts.length > 0) errors.group_id = "required";
   }
 
   if (v.consent !== true) errors.consent = "consent";
@@ -230,6 +234,7 @@ export function buildEnrollPayload(v: EnrollValues): Record<string, unknown> {
     transmission: v.transmission || undefined,
     location: opt(v.location),
     slot: opt(v.slot),
+    group_id: opt(v.group_id),
     // Orarul se alege doar din orarul fix (sediu + oră); lecțiile practice se țin la sediul ales.
     preferred_schedule: undefined,
     practice_location: opt(v.location),

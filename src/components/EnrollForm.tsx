@@ -15,7 +15,7 @@ import {
   type EnrollErrors,
   type EnrollValues,
 } from "@/lib/enroll";
-import { LOCATION_SCHEDULES, slotsFor } from "@/lib/schedule";
+import { LOCATION_NAMES, optionsFor, type EnrollOptions } from "@/lib/schedule";
 import { EV, track } from "@/lib/analytics";
 import { useI18n } from "./LanguageProvider";
 import { Container, SectionHeading } from "./primitives";
@@ -162,7 +162,7 @@ function FormSection({
 
 type Status = { phase: "idle" | "submitting" } | { phase: "success"; duplicate: boolean };
 
-export function EnrollForm() {
+export function EnrollForm({ options }: { options: EnrollOptions | null }) {
   const { t, lang } = useI18n();
   const e = t.enroll;
 
@@ -213,7 +213,7 @@ export function EnrollForm() {
     ev.preventDefault();
     if (status.phase === "submitting") return;
 
-    const clientErrors = validateEnroll(values);
+    const clientErrors = validateEnroll(values, options);
     if (Object.keys(clientErrors).length > 0) {
       setErrors(clientErrors);
       setBanner(e.errors.formInvalid);
@@ -310,18 +310,17 @@ export function EnrollForm() {
   const submitting = status.phase === "submitting";
   const f = e.fields;
 
-  // Orele grupei de teorie depind de sediu ȘI de limba de studii.
-  const slots = values.location ? slotsFor(values.location, values.language) : [];
-  const noRuGroup = !!values.location && values.language === "ru" && slots.length === 0;
-  const slotOptions = slots.map((s) => ({
-    value: s.key,
-    label: s.saturday ? `${f.slotSaturday} ${s.hour}` : s.hour,
-  }));
+  // Grupele DESCHISE la sediul ales, în limba aleasă (din aplicație, prin API).
+  const groupOpts = values.location ? optionsFor(options, values.location, values.language) : [];
+  const anyAtLocation = values.location ? (options?.locations.find((l) => l.name === values.location)?.options.length ?? 0) : 0;
+  const noRuGroup = !!values.location && values.language === "ru" && anyAtLocation > 0 && groupOpts.length === 0;
+  const noOpenGroup = !!values.location && anyAtLocation === 0;
+  const slotOptions = groupOpts.map((o) => ({ value: o.id, label: lang === "ru" ? o.labelRu : o.label }));
 
-  // Când se schimbă sediul sau limba, ora aleasă rămâne doar dacă mai există în noul orar.
+  // Când se schimbă sediul sau limba, grupa aleasă rămâne doar dacă mai e printre opțiuni.
   const keepSlotIfValid = (location: string, language: EnrollValues["language"]) => {
-    const valid = slotsFor(location, language).some((s) => s.key === values.slot);
-    if (!valid && values.slot) set("slot", "");
+    const valid = optionsFor(options, location, language).some((o) => o.id === values.group_id);
+    if (!valid && values.group_id) set("group_id", "");
   };
 
   return (
@@ -624,9 +623,9 @@ export function EnrollForm() {
                   }}
                 >
                   <option value="">{f.sediuPlaceholder}</option>
-                  {LOCATION_SCHEDULES.map((l) => (
-                    <option key={l.name} value={l.name}>
-                      {l.name}
+                  {LOCATION_NAMES.map((name) => (
+                    <option key={name} value={name}>
+                      {name}
                     </option>
                   ))}
                 </select>
@@ -656,18 +655,20 @@ export function EnrollForm() {
               </Field>
               <Field
                 label={f.slot}
-                hint={f.slotDaysHint}
-                error={noRuGroup ? e.errors.noRuGroup : msg("slot")}
+                hint={noOpenGroup ? undefined : f.slotDaysHint}
+                error={noRuGroup ? e.errors.noRuGroup : msg("group_id")}
               >
                 {!values.location ? (
                   <p className="flex h-9 items-center text-sm text-faint">{f.slotPickSediu}</p>
+                ) : noOpenGroup ? (
+                  <p className="text-sm text-muted">{f.noOpenGroups}</p>
                 ) : noRuGroup ? null : (
                   <PillGroup
-                    name="slot"
-                    value={values.slot}
-                    invalid={!!errors.slot}
+                    name="group_id"
+                    value={values.group_id}
+                    invalid={!!errors.group_id}
                     options={slotOptions}
-                    onChange={(v) => set("slot", v)}
+                    onChange={(v) => set("group_id", v)}
                   />
                 )}
               </Field>

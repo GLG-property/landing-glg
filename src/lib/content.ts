@@ -85,6 +85,7 @@ export type EnrollDict = {
     slot: string;
     slotPickSediu: string;
     slotSaturday: string;
+    noOpenGroups: string;
     slotDaysHint: string;
     scheduleOther: string;
     schedule: string;
@@ -440,11 +441,12 @@ const ro: Dict = {
       transmissionAuto: "Automată",
       sediu: "Sediul (grupa de teorie)",
       sediuPlaceholder: "Alege sediul",
-      slot: "Ora grupei",
+      slot: "Grupa (zilele și ora)",
       slotPickSediu: "Alege întâi sediul",
       slotSaturday: "Sâmbătă",
       slotDaysHint:
         "Zilele (Luni și Miercuri sau Marți și Joi) le stabilim împreună cu tine când grupa se formează.",
+      noOpenGroups: "Сейчас в этом филиале нет открытой группы. Отправьте заявку, и мы позвоним, когда стартует следующая.",
       scheduleOther: "Altă preferință de orar",
       schedule: "Ora disponibilă pentru cursuri",
       schedulePlaceholder: "ex.: după 17:30",
@@ -948,8 +950,8 @@ const ru: Dict = {
       slot: "Время группы",
       slotPickSediu: "Сначала выбери филиал",
       slotSaturday: "Суббота",
-      slotDaysHint:
-        "Дни (понедельник и среда или вторник и четверг) мы согласуем с тобой, когда группа формируется.",
+      slotDaysHint: "Выбери подходящую группу: дни и время указаны для группы, которая набирается сейчас.",
+      noOpenGroups: "Сейчас в этом филиале нет открытой группы. Отправь заявку, и мы позвоним, когда стартует следующая.",
       scheduleOther: "Другие пожелания по расписанию",
       schedule: "Удобное время для занятий",
       schedulePlaceholder: "напр.: после 17:30",
