@@ -172,6 +172,22 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
   const [status, setStatus] = useState<Status>({ phase: "idle" });
   const formRef = useRef<HTMLFormElement>(null);
   const langTouched = useRef(false);
+  // Analiză: „formular început” la primul câmp atins și „secțiune” la prima atingere a fiecărei secțiuni.
+  const started = useRef(false);
+  const sectionsSeen = useRef(new Set<string>());
+  const onFieldFocus = (ev: React.FocusEvent<HTMLFormElement>) => {
+    const t = ev.target as HTMLElement | null;
+    if (!t || !/^(INPUT|SELECT|TEXTAREA)$/.test(t.tagName)) return;
+    if (!started.current) {
+      started.current = true;
+      track(EV.formularInceput, {});
+    }
+    const h = t.closest("section")?.querySelector("h2")?.textContent?.replace(/\s+/g, " ").trim().slice(0, 40) ?? "";
+    if (h && !sectionsSeen.current.has(h)) {
+      sectionsSeen.current.add(h);
+      track(EV.formularSectiune, { sectiune: h });
+    }
+  };
 
   // Limba de studii pornește pe limba interfeței, până când omul alege singur.
   useEffect(() => {
@@ -215,6 +231,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
 
     const clientErrors = validateEnroll(values, options);
     if (Object.keys(clientErrors).length > 0) {
+      track(EV.formularEroare, { campuri: Object.keys(clientErrors).slice(0, 8).join(","), numar: Object.keys(clientErrors).length });
       setErrors(clientErrors);
       setBanner(e.errors.formInvalid);
       scrollToFirstError();
@@ -338,6 +355,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
           <form
             ref={formRef}
             onSubmit={onSubmit}
+            onFocusCapture={onFieldFocus}
             noValidate
             className="mt-6 flex flex-col gap-4"
           >

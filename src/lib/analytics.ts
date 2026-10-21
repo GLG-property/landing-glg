@@ -19,8 +19,23 @@ export function track(event: string, data?: Record<string, string | number | boo
 
 /** Numele evenimentelor (aceleași etichete apar în panoul de admin). */
 export const EV = {
+  // conversii
   inscriereTrimisa: "inscriere-trimisa",
   inscriereEroare: "inscriere-eroare",
   apelTelefon: "apel-telefon",
   clickInscrieTe: "click-inscrie-te",
+  // de unde vine
+  dinAplicatie: "din-aplicatie",
+  campanie: "campanie",
+  // comportament
+  click: "click",
+  faqDeschisa: "faq-deschisa",
+  videoStart: "video-start",
+  linkExtern: "link-extern",
+  scroll: "scroll",
+  timpPePagina: "timp-pe-pagina",
+  // formular
+  formularInceput: "formular-inceput",
+  formularSectiune: "formular-sectiune",
+  formularEroare: "formular-eroare",
 } as const;
