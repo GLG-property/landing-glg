@@ -63,7 +63,9 @@ function HelpTip({ text, label }: { text: string; label: string }) {
     return () => document.removeEventListener("pointerdown", close);
   }, [open]);
   return (
-    <span ref={ref} className="group/help relative inline-flex">
+    // Fără „relative” aici: explicația se așază față de câmp (Field e relative),
+    // sub input, pe toată lățimea lui — altfel ar ieși din ecran pe telefon.
+    <span ref={ref} className="group/help inline-flex">
       <button
         type="button"
         aria-label={label}
@@ -79,7 +81,7 @@ function HelpTip({ text, label }: { text: string; label: string }) {
       <span
         role="tooltip"
         className={clsx(
-          "card absolute left-0 top-full z-20 mt-1.5 w-64 max-w-[80vw] p-2.5 text-xs font-normal leading-relaxed text-ink shadow-lg",
+          "card absolute left-0 right-0 top-full z-20 mt-1 p-2.5 text-xs font-normal leading-relaxed text-ink shadow-lg",
           open ? "block" : "hidden group-hover/help:block"
         )}
       >
@@ -112,7 +114,7 @@ function Field({
   children: React.ReactNode;
 }) {
   return (
-    <div className={clsx("group", className)} data-invalid={error ? "" : undefined}>
+    <div className={clsx("group relative", className)} data-invalid={error ? "" : undefined}>
       <div className="mb-1 flex items-center gap-1.5">
         <label
           htmlFor={htmlFor}
