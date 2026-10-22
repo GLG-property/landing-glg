@@ -127,8 +127,7 @@ const REQUIRED: (keyof EnrollValues)[] = [
   "phone",
   "address_raion",
   "address_locality",
-  "address_street",
-  "address_number",
+  // strada și numărul: opționale (cerința școlii, 22.10.2026) — la sate nu există mereu
   "id_series",
   "id_number",
   "id_issued_by",
@@ -221,7 +220,7 @@ export function buildEnrollPayload(v: EnrollValues): Record<string, unknown> {
   const address = [
     v.address_raion.trim(),
     v.address_locality.trim(),
-    `str. ${v.address_street.trim()} ${v.address_number.trim()}`.trim(),
+    v.address_street.trim() ? `str. ${v.address_street.trim()} ${v.address_number.trim()}`.trim() : v.address_number.trim() ? `nr. ${v.address_number.trim()}` : "",
     apartment ? `ap. ${apartment}` : "",
   ]
     .filter(Boolean)

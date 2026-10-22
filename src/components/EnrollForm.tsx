@@ -563,7 +563,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                 />
               </Field>
               <div className="grid grid-cols-[minmax(0,1fr)_4.5rem_4.5rem] gap-3 sm:col-span-2">
-                <Field label={f.street} help={e.help.street} helpLabel={e.helpLabel} htmlFor="address_street" error={msg("address_street")}>
+                <Field label={f.street} help={e.help.street} helpLabel={e.helpLabel} htmlFor="address_street" optionalLabel={e.optional} error={msg("address_street")}>
                   <input
                     id="address_street"
                     className={inputClass(!!errors.address_street)}
@@ -572,7 +572,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                     maxLength={160}
                   />
                 </Field>
-                <Field label={f.number} help={e.help.number} helpLabel={e.helpLabel} htmlFor="address_number" error={msg("address_number")}>
+                <Field label={f.number} help={e.help.number} helpLabel={e.helpLabel} htmlFor="address_number" optionalLabel={e.optional} error={msg("address_number")}>
                   <input
                     id="address_number"
                     className={inputClass(!!errors.address_number)}
