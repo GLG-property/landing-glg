@@ -37,6 +37,38 @@ export type EnrollDict = {
   titleAccent: string;
   subtitle: string;
   optional: string;
+  /** Eticheta butonului „?” (accesibilitate) și explicațiile per câmp. */
+  helpLabel: string;
+  help: {
+    lastName: string;
+    firstName: string;
+    idnp: string;
+    birthDate: string;
+    sex: string;
+    citizenship: string;
+    phoneMobile: string;
+    email: string;
+    phoneHome: string;
+    phoneFamily: string;
+    raion: string;
+    locality: string;
+    street: string;
+    number: string;
+    apartment: string;
+    idSeries: string;
+    idNumber: string;
+    idIssuedDate: string;
+    idIssuedBy: string;
+    licenseNumber: string;
+    licenseIssued: string;
+    sediu: string;
+    studyLanguage: string;
+    slot: string;
+    category: string;
+    transmission: string;
+    workplace: string;
+    referral: string;
+  };
   sections: {
     personal: string;
     contact: string;
@@ -396,6 +428,37 @@ const ro: Dict = {
     subtitle:
       "Completează cererea-contract de acasă, în câteva minute. Alegi sediul și ora grupei, iar noi te sunăm ca să confirmăm înscrierea.",
     optional: "(opțional)",
+    helpLabel: "Explicație",
+    help: {
+      lastName: "Aici scrii numele de familie, exact cum este în buletin.",
+      firstName: "Aici scrii prenumele, exact cum este în buletin.",
+      idnp: "Codul personal de 13 cifre de pe buletin (IDNP). Fără spații.",
+      birthDate: "Data nașterii, ca în buletin. Te poți înscrie și înainte de 18 ani; examenul la ASP se dă de la 18 ani.",
+      sex: "Alege așa cum apare în buletin.",
+      citizenship: "Țara al cărei cetățean ești, de regulă Republica Moldova. Dacă ai alt buletin, scrie cetățenia de pe el.",
+      phoneMobile: "Numărul tău de mobil. Pe el te sunăm ca să confirmăm înscrierea și grupa.",
+      email: "Adresa ta de e-mail. Aici primești confirmarea și informațiile despre curs.",
+      phoneHome: "Telefonul fix de acasă, dacă ai. Poți lăsa gol.",
+      phoneFamily: "Numele și telefonul unei persoane apropiate (rudă, prieten, cunoscut) pe care o putem suna dacă nu răspunzi tu. Este obligatoriu.",
+      raion: "Raionul sau municipiul din adresa de domiciliu, de exemplu Chișinău sau Strășeni.",
+      locality: "Orașul, satul sau comuna din adresa de domiciliu.",
+      street: "Strada din adresa de domiciliu, fără număr.",
+      number: "Numărul casei sau al blocului.",
+      apartment: "Numărul apartamentului, dacă locuiești la bloc. Poți lăsa gol.",
+      idSeries: "Seria buletinului: litera de la început (de exemplu A sau B).",
+      idNumber: "Numărul buletinului: cifrele de după serie.",
+      idIssuedDate: "Data eliberării, scrisă pe buletin.",
+      idIssuedBy: "Instituția care a eliberat buletinul, așa cum scrie pe act (de exemplu ASP, oficiul 01).",
+      licenseNumber: "Doar dacă ai deja permis de conducere: numărul lui. Dacă nu ai permis, lasă gol.",
+      licenseIssued: "Data și locul eliberării permisului pe care îl ai deja. Lasă gol dacă nu ai permis.",
+      sediu: "Sediul unde vrei să faci cursul de teorie: Buiucani sau Botanica în Chișinău, Strășeni sau Vorniceni.",
+      studyLanguage: "Limba în care vrei să înveți. Grupe în română sunt la toate sediile; în rusă doar la Buiucani.",
+      slot: "Grupa deschisă acum la sediul ales: zilele și ora cursului de teorie. Dacă nu îți convine, alege alt sediu sau te sunăm când pornește următoarea.",
+      category: "Categoria pe care vrei să o obții. Pentru autoturism alegi B.",
+      transmission: "Cutia de viteze pe care faci practica. Cu permis luat pe automată nu ai voie să conduci mașină cu cutie mecanică.",
+      workplace: "Locul de muncă sau instituția unde înveți. Opțional, apare în cererea-contract.",
+      referral: "De unde ai aflat de noi. Ne ajută să știm ce funcționează.",
+    },
     sections: {
       personal: "Date personale",
       contact: "Date de contact",
@@ -902,6 +965,37 @@ const ru: Dict = {
     subtitle:
       "Заполни заявку-контракт из дома за несколько минут. Выбери филиал и время группы, а мы позвоним, чтобы подтвердить запись.",
     optional: "(необязательно)",
+    helpLabel: "Подсказка",
+    help: {
+      lastName: "Здесь пишешь фамилию, точно как в удостоверении личности.",
+      firstName: "Здесь пишешь имя, точно как в удостоверении личности.",
+      idnp: "Персональный код из 13 цифр с удостоверения (IDNP). Без пробелов.",
+      birthDate: "Дата рождения, как в удостоверении. Записаться можно и до 18 лет; экзамен в ASP сдают с 18 лет.",
+      sex: "Выбери так, как указано в удостоверении.",
+      citizenship: "Страна, гражданином которой ты являешься, обычно Республика Молдова. Если у тебя другой документ, укажи гражданство из него.",
+      phoneMobile: "Твой мобильный номер. По нему мы позвоним, чтобы подтвердить запись и группу.",
+      email: "Твой адрес электронной почты. Сюда придут подтверждение и информация о курсе.",
+      phoneHome: "Домашний стационарный телефон, если есть. Можно оставить пустым.",
+      phoneFamily: "Имя и телефон близкого человека (родственник, друг, знакомый), которому мы можем позвонить, если ты не отвечаешь. Обязательно.",
+      raion: "Район или муниципий из адреса проживания, например Кишинёв или Стрэшены.",
+      locality: "Город, село или коммуна из адреса проживания.",
+      street: "Улица из адреса проживания, без номера.",
+      number: "Номер дома.",
+      apartment: "Номер квартиры, если живёшь в многоквартирном доме. Можно оставить пустым.",
+      idSeries: "Серия удостоверения: буква в начале (например A или B).",
+      idNumber: "Номер удостоверения: цифры после серии.",
+      idIssuedDate: "Дата выдачи, указанная в удостоверении.",
+      idIssuedBy: "Орган, выдавший удостоверение, как написано в документе (например ASP, офис 01).",
+      licenseNumber: "Только если у тебя уже есть водительское удостоверение: его номер. Если прав нет, оставь пустым.",
+      licenseIssued: "Дата и место выдачи имеющихся прав. Оставь пустым, если прав нет.",
+      sediu: "Филиал, где хочешь проходить теорию: Буюканы или Ботаника в Кишинёве, Стрэшены или Ворничены.",
+      studyLanguage: "Язык обучения. Группы на румынском есть во всех филиалах; на русском только в Буюканах.",
+      slot: "Открытая сейчас группа в выбранном филиале: дни и время занятий по теории. Если не подходит, выбери другой филиал или мы позвоним, когда стартует следующая.",
+      category: "Категория, которую хочешь получить. Для легкового автомобиля выбирай B.",
+      transmission: "Коробка передач, на которой проходишь практику. С правами на автомат нельзя водить машину с механикой.",
+      workplace: "Место работы или учёбы. Необязательно, указывается в заявлении-договоре.",
+      referral: "Откуда ты узнал о нас. Помогает понять, что работает.",
+    },
     sections: {
       personal: "Личные данные",
       contact: "Контактные данные",

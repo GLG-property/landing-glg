@@ -47,11 +47,55 @@ const selectStyle: React.CSSProperties = {
 
 /* ---------- primitve de formular (la nivel de modul, ca să nu se remonteze) ---------- */
 
+/**
+ * Semnul „?” de lângă eticheta câmpului: explicația apare la hover (desktop)
+ * și la apăsare (telefon); se închide la apăsare oriunde în afara ei.
+ */
+function HelpTip({ text, label }: { text: string; label: string }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const close = (ev: PointerEvent) => {
+      if (!ref.current?.contains(ev.target as Node)) setOpen(false);
+    };
+    document.addEventListener("pointerdown", close);
+    return () => document.removeEventListener("pointerdown", close);
+  }, [open]);
+  return (
+    <span ref={ref} className="group/help relative inline-flex">
+      <button
+        type="button"
+        aria-label={label}
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+        className={clsx(
+          "flex size-[18px] items-center justify-center rounded-full border text-[11px] font-bold leading-none transition-colors duration-150",
+          open ? "border-ink bg-ink text-white" : "border-line text-muted hover:border-ink hover:text-ink"
+        )}
+      >
+        ?
+      </button>
+      <span
+        role="tooltip"
+        className={clsx(
+          "card absolute left-0 top-full z-20 mt-1.5 w-64 max-w-[80vw] p-2.5 text-xs font-normal leading-relaxed text-ink shadow-lg",
+          open ? "block" : "hidden group-hover/help:block"
+        )}
+      >
+        {text}
+      </span>
+    </span>
+  );
+}
+
 function Field({
   label,
   htmlFor,
   optionalLabel,
   hint,
+  help,
+  helpLabel,
   error,
   className,
   children,
@@ -60,22 +104,28 @@ function Field({
   htmlFor?: string;
   optionalLabel?: string;
   hint?: string;
+  /** Explicația de la semnul „?” (ce scrii aici). */
+  help?: string;
+  helpLabel?: string;
   error?: string;
   className?: string;
   children: React.ReactNode;
 }) {
   return (
     <div className={clsx("group", className)} data-invalid={error ? "" : undefined}>
-      <label
-        htmlFor={htmlFor}
-        className={clsx(
-          "mb-1 block text-[13px] font-semibold text-ink transition-colors duration-150",
-          !error && "group-focus-within:text-brand"
-        )}
-      >
-        {label}
-        {optionalLabel ? <span className="ml-1 font-normal text-faint">{optionalLabel}</span> : null}
-      </label>
+      <div className="mb-1 flex items-center gap-1.5">
+        <label
+          htmlFor={htmlFor}
+          className={clsx(
+            "block text-[13px] font-semibold text-ink transition-colors duration-150",
+            !error && "group-focus-within:text-brand"
+          )}
+        >
+          {label}
+          {optionalLabel ? <span className="ml-1 font-normal text-faint">{optionalLabel}</span> : null}
+        </label>
+        {help ? <HelpTip text={help} label={`${helpLabel ?? "?"}: ${label}`} /> : null}
+      </div>
       {children}
       {!error && hint ? <p className="mt-1 text-xs text-faint">{hint}</p> : null}
       {error ? <p className="mt-1 text-xs font-medium text-red-600">{error}</p> : null}
@@ -362,7 +412,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
             {/* 1. Date personale */}
             <FormSection n={1} title={e.sections.personal}>
               <div className="grid gap-3 sm:col-span-2 sm:grid-cols-3">
-                <Field label={f.lastName} htmlFor="last_name" error={msg("last_name")}>
+                <Field label={f.lastName} help={e.help.lastName} helpLabel={e.helpLabel} htmlFor="last_name" error={msg("last_name")}>
                   <input
                     id="last_name"
                     className={inputClass(!!errors.last_name)}
@@ -372,7 +422,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                     maxLength={80}
                   />
                 </Field>
-                <Field label={f.firstName} htmlFor="first_name" error={msg("first_name")}>
+                <Field label={f.firstName} help={e.help.firstName} helpLabel={e.helpLabel} htmlFor="first_name" error={msg("first_name")}>
                   <input
                     id="first_name"
                     className={inputClass(!!errors.first_name)}
@@ -382,7 +432,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                     maxLength={80}
                   />
                 </Field>
-                <Field label={f.idnp} htmlFor="idnp" hint={f.idnpHint} error={msg("idnp")}>
+                <Field label={f.idnp} help={e.help.idnp} helpLabel={e.helpLabel} htmlFor="idnp" hint={f.idnpHint} error={msg("idnp")}>
                   <input
                     id="idnp"
                     className={inputClass(!!errors.idnp)}
@@ -395,7 +445,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                 </Field>
               </div>
               <div className="grid gap-3 sm:col-span-2 sm:grid-cols-3">
-                <Field label={f.birthDate} htmlFor="birth_date" error={msg("birth_date")}>
+                <Field label={f.birthDate} help={e.help.birthDate} helpLabel={e.helpLabel} htmlFor="birth_date" error={msg("birth_date")}>
                   <input
                     id="birth_date"
                     type="date"
@@ -406,7 +456,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                     max={new Date().toISOString().slice(0, 10)}
                   />
                 </Field>
-                <Field label={f.sex} error={msg("sex")}>
+                <Field label={f.sex} help={e.help.sex} helpLabel={e.helpLabel} error={msg("sex")}>
                   <PillGroup
                     name="sex"
                     value={values.sex}
@@ -418,7 +468,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                     onChange={(v) => set("sex", v as EnrollValues["sex"])}
                   />
                 </Field>
-                <Field label={f.citizenship} htmlFor="citizenship" error={msg("citizenship")}>
+                <Field label={f.citizenship} help={e.help.citizenship} helpLabel={e.helpLabel} htmlFor="citizenship" error={msg("citizenship")}>
                   <input
                     id="citizenship"
                     className={inputClass(!!errors.citizenship)}
@@ -434,7 +484,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
 
             {/* 2. Date de contact */}
             <FormSection n={2} title={e.sections.contact}>
-              <Field label={f.phoneMobile} htmlFor="phone" error={msg("phone")}>
+              <Field label={f.phoneMobile} help={e.help.phoneMobile} helpLabel={e.helpLabel} htmlFor="phone" error={msg("phone")}>
                 <input
                   id="phone"
                   type="tel"
@@ -447,7 +497,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                   maxLength={40}
                 />
               </Field>
-              <Field label={f.email} htmlFor="email" error={msg("email")}>
+              <Field label={f.email} help={e.help.email} helpLabel={e.helpLabel} htmlFor="email" error={msg("email")}>
                 <input
                   id="email"
                   type="email"
@@ -461,7 +511,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                 />
               </Field>
               <Field
-                label={f.phoneHome}
+                label={f.phoneHome} help={e.help.phoneHome} helpLabel={e.helpLabel}
                 htmlFor="phone_home"
                 optionalLabel={e.optional}
                 error={msg("phone_home")}
@@ -476,7 +526,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                   maxLength={40}
                 />
               </Field>
-              <Field label={f.phoneFamily} htmlFor="phone_family" error={msg("phone_family")}>
+              <Field label={f.phoneFamily} help={e.help.phoneFamily} helpLabel={e.helpLabel} htmlFor="phone_family" error={msg("phone_family")}>
                 <input
                   id="phone_family"
                   className={inputClass(!!errors.phone_family)}
@@ -490,7 +540,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
 
             {/* 3. Domiciliul */}
             <FormSection n={3} title={e.sections.address}>
-              <Field label={f.raion} htmlFor="address_raion" error={msg("address_raion")}>
+              <Field label={f.raion} help={e.help.raion} helpLabel={e.helpLabel} htmlFor="address_raion" error={msg("address_raion")}>
                 <input
                   id="address_raion"
                   className={inputClass(!!errors.address_raion)}
@@ -500,7 +550,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                   maxLength={120}
                 />
               </Field>
-              <Field label={f.locality} htmlFor="address_locality" error={msg("address_locality")}>
+              <Field label={f.locality} help={e.help.locality} helpLabel={e.helpLabel} htmlFor="address_locality" error={msg("address_locality")}>
                 <input
                   id="address_locality"
                   className={inputClass(!!errors.address_locality)}
@@ -511,7 +561,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                 />
               </Field>
               <div className="grid grid-cols-[minmax(0,1fr)_4.5rem_4.5rem] gap-3 sm:col-span-2">
-                <Field label={f.street} htmlFor="address_street" error={msg("address_street")}>
+                <Field label={f.street} help={e.help.street} helpLabel={e.helpLabel} htmlFor="address_street" error={msg("address_street")}>
                   <input
                     id="address_street"
                     className={inputClass(!!errors.address_street)}
@@ -520,7 +570,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                     maxLength={160}
                   />
                 </Field>
-                <Field label={f.number} htmlFor="address_number" error={msg("address_number")}>
+                <Field label={f.number} help={e.help.number} helpLabel={e.helpLabel} htmlFor="address_number" error={msg("address_number")}>
                   <input
                     id="address_number"
                     className={inputClass(!!errors.address_number)}
@@ -529,7 +579,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                     maxLength={10}
                   />
                 </Field>
-                <Field label={f.apartment} htmlFor="address_apartment">
+                <Field label={f.apartment} help={e.help.apartment} helpLabel={e.helpLabel} htmlFor="address_apartment">
                   <input
                     id="address_apartment"
                     className={inputClass(false)}
@@ -544,7 +594,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
             {/* 4. Actul de identitate */}
             <FormSection n={4} title={e.sections.documents}>
               <div className="grid grid-cols-[6rem_minmax(0,1fr)] gap-3 sm:col-span-2 sm:grid-cols-[6rem_minmax(0,1fr)_minmax(0,1fr)]">
-                <Field label={f.idSeries} htmlFor="id_series" error={msg("id_series")}>
+                <Field label={f.idSeries} help={e.help.idSeries} helpLabel={e.helpLabel} htmlFor="id_series" error={msg("id_series")}>
                   <input
                     id="id_series"
                     className={inputClass(!!errors.id_series)}
@@ -554,7 +604,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                     maxLength={4}
                   />
                 </Field>
-                <Field label={f.idNumber} htmlFor="id_number" error={msg("id_number")}>
+                <Field label={f.idNumber} help={e.help.idNumber} helpLabel={e.helpLabel} htmlFor="id_number" error={msg("id_number")}>
                   <input
                     id="id_number"
                     className={inputClass(!!errors.id_number)}
@@ -565,7 +615,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                   />
                 </Field>
                 <Field
-                  label={f.idIssuedDate}
+                  label={f.idIssuedDate} help={e.help.idIssuedDate} helpLabel={e.helpLabel}
                   htmlFor="id_issued_date"
                   error={msg("id_issued_date")}
                   className="col-span-2 sm:col-span-1"
@@ -581,7 +631,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                 </Field>
               </div>
               <Field
-                label={f.idIssuedBy}
+                label={f.idIssuedBy} help={e.help.idIssuedBy} helpLabel={e.helpLabel}
                 htmlFor="id_issued_by"
                 error={msg("id_issued_by")}
                 className="sm:col-span-2"
@@ -601,7 +651,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                   {f.license} <span className="font-normal text-faint">{e.optional}</span>
                 </p>
               </div>
-              <Field label={f.licenseNumber} htmlFor="license_number">
+              <Field label={f.licenseNumber} help={e.help.licenseNumber} helpLabel={e.helpLabel} htmlFor="license_number">
                 <input
                   id="license_number"
                   className={inputClass(false)}
@@ -610,7 +660,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                   maxLength={40}
                 />
               </Field>
-              <Field label={f.licenseIssued} htmlFor="license_issued">
+              <Field label={f.licenseIssued} help={e.help.licenseIssued} helpLabel={e.helpLabel} htmlFor="license_issued">
                 <input
                   id="license_issued"
                   className={inputClass(false)}
@@ -626,7 +676,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
             <FormSection n={5} title={e.sections.course}>
               {/* Grupa de teorie: sediul, apoi ora din orarul fix al sediului (depinde și de limbă) */}
               <Field
-                label={f.sediu}
+                label={f.sediu} help={e.help.sediu} helpLabel={e.helpLabel}
                 htmlFor="location"
                 error={errors.location === "noRuGroup" ? undefined : msg("location")}
               >
@@ -648,7 +698,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                   ))}
                 </select>
               </Field>
-              <Field label={f.studyLanguage} error={msg("language")}>
+              <Field label={f.studyLanguage} help={e.help.studyLanguage} helpLabel={e.helpLabel} error={msg("language")}>
                 <PillGroup
                   name="language"
                   value={values.language}
@@ -672,7 +722,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                 />
               </Field>
               <Field
-                label={f.slot}
+                label={f.slot} help={e.help.slot} helpLabel={e.helpLabel}
                 hint={noOpenGroup ? undefined : f.slotDaysHint}
                 error={noRuGroup ? e.errors.noRuGroup : msg("group_id")}
               >
@@ -690,7 +740,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                   />
                 )}
               </Field>
-              <Field label={f.category} htmlFor="category" error={msg("category")}>
+              <Field label={f.category} help={e.help.category} helpLabel={e.helpLabel} htmlFor="category" error={msg("category")}>
                 <select
                   id="category"
                   className={selectClass(!!errors.category)}
@@ -705,7 +755,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                   ))}
                 </select>
               </Field>
-              <Field label={f.transmission} error={msg("transmission")}>
+              <Field label={f.transmission} help={e.help.transmission} helpLabel={e.helpLabel} error={msg("transmission")}>
                 <PillGroup
                   name="transmission"
                   value={values.transmission}
@@ -718,7 +768,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                 />
               </Field>
               <Field
-                label={f.workplace}
+                label={f.workplace} help={e.help.workplace} helpLabel={e.helpLabel}
                 htmlFor="workplace"
                 optionalLabel={e.optional}
                 className="sm:col-span-2"
@@ -731,7 +781,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                   maxLength={160}
                 />
               </Field>
-              <Field label={f.referral} error={msg("referral")} className="sm:col-span-2">
+              <Field label={f.referral} help={e.help.referral} helpLabel={e.helpLabel} error={msg("referral")} className="sm:col-span-2">
                 <PillGroup
                   name="referral"
                   value={values.referral}
