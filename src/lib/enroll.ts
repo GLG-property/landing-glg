@@ -236,7 +236,8 @@ export function buildEnrollPayload(v: EnrollValues): Record<string, unknown> {
     birth_date: v.birth_date,
     address,
     id_document: `${v.id_series.trim()} ${v.id_number.trim()}`.trim().slice(0, 40),
-    package: "Standard",
+    // fără pachete (22.10.2026): nu mai trimitem „package”
+    package: undefined,
     transmission: v.transmission || undefined,
     location: opt(v.location),
     slot: opt(v.slot),
