@@ -476,10 +476,10 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                   maxLength={40}
                 />
               </Field>
-              <Field label={f.phoneFamily} htmlFor="phone_family" optionalLabel={e.optional}>
+              <Field label={f.phoneFamily} htmlFor="phone_family" error={msg("phone_family")}>
                 <input
                   id="phone_family"
-                  className={inputClass(false)}
+                  className={inputClass(!!errors.phone_family)}
                   value={values.phone_family}
                   onChange={(ev) => set("phone_family", ev.target.value)}
                   placeholder={f.phoneFamilyPlaceholder}

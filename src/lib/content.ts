@@ -278,7 +278,7 @@ const ro: Dict = {
     titleTop: "Școala auto pentru toate categoriile",
     titleBottom: "A1 · A2 · A · B1 · B · C · CE · D",
     subtitle:
-      "Pentru cei care vor să învețe să conducă sigur: instructori atestați, mașini moderne și cele mai avantajoase prețuri din Republica Moldova. Centre în Chișinău, Strășeni și Vorniceni. Grupe în română și rusă.",
+      "Pentru cei care vor să învețe să conducă sigur: instructori atestați, mașini moderne și cele mai avantajoase prețuri din Republica Moldova. 4 centre: 2 în Chișinău, Strășeni și Vorniceni. Grupe în română și rusă.",
     imageAlt: "Skoda Fabia, mașină de instruire a Școlii Auto GLG Property din Chișinău",
     primaryCta: { label: "Înscrie-te online", href: "/inscriere" },
     secondaryCta: { label: site.phone, href: site.phoneHref },
@@ -315,7 +315,7 @@ const ro: Dict = {
     { value: 20000, suffix: "+", label: "Absolvenți" },
     { value: 10, suffix: "", label: "Ani de experiență" },
     { value: 80, suffix: "+", label: "Instructori" },
-    { value: 4, suffix: "", label: "Centre: Chișinău, Strășeni, Vorniceni" },
+    { value: 4, suffix: "", label: "Centre: 2 în Chișinău, Strășeni, Vorniceni" },
   ],
 
   cars: {
@@ -417,8 +417,8 @@ const ro: Dict = {
       email: "E-mail",
       phoneMobile: "Telefon mobil",
       phoneHome: "Telefon domiciliu",
-      phoneFamily: "Contact părinți / soț(ie)",
-      phoneFamilyPlaceholder: "nume și telefon",
+      phoneFamily: "Telefonul unei rude / prieten / cunoscut",
+      phoneFamilyPlaceholder: "nume și telefon, ex. mama, 069 000 000",
       raion: "Raion / sector",
       locality: "Localitate",
       street: "Strada",
@@ -574,7 +574,7 @@ const ro: Dict = {
     title: "Află unde poți depune",
     titleAccent: "cererea",
     subtitle:
-      "Avem centre în Chișinău, Strășeni și Vorniceni, deschise de luni până sâmbătă. Sună-ne sau treci pe la noi.",
+      "Avem 4 centre: 2 în Chișinău (Buiucani, Botanica), Strășeni și Vorniceni, deschise de luni până sâmbătă. Sună-ne sau treci pe la noi.",
     callUs: "Sună-ne",
     hoursLabel: "Program",
     hours: "Luni - Sâmbătă",
@@ -784,7 +784,7 @@ const ru: Dict = {
     titleTop: "Автошкола для всех категорий",
     titleBottom: "A1 · A2 · A · B1 · B · C · CE · D",
     subtitle:
-      "Для тех, кто хочет научиться водить уверенно и безопасно: аттестованные инструкторы, современные автомобили и самые выгодные цены в Республике Молдова. Филиалы в Кишинёве, Стрэшенах и Ворниченах. Группы на румынском и русском языках.",
+      "Для тех, кто хочет научиться водить уверенно и безопасно: аттестованные инструкторы, современные автомобили и самые выгодные цены в Республике Молдова. 4 филиала: 2 в Кишинёве, Стрэшены и Ворничены. Группы на румынском и русском языках.",
     imageAlt: "Skoda Fabia, учебный автомобиль автошколы GLG Property в Кишинёве",
     primaryCta: { label: "Записаться онлайн", href: "/inscriere" },
     secondaryCta: { label: site.phone, href: site.phoneHref },
@@ -821,7 +821,7 @@ const ru: Dict = {
     { value: 20000, suffix: "+", label: "Выпускников" },
     { value: 10, suffix: "", label: "Лет опыта" },
     { value: 80, suffix: "+", label: "Инструкторов" },
-    { value: 4, suffix: "", label: "Филиала: Кишинёв, Стрэшены, Ворничены" },
+    { value: 4, suffix: "", label: "Филиала: 2 в Кишинёве, Стрэшены, Ворничены" },
   ],
 
   cars: {
@@ -923,8 +923,8 @@ const ru: Dict = {
       email: "E-mail",
       phoneMobile: "Мобильный телефон",
       phoneHome: "Домашний телефон",
-      phoneFamily: "Контакт родителей / супруга(и)",
-      phoneFamilyPlaceholder: "имя и телефон",
+      phoneFamily: "Телефон родственника / друга / знакомого",
+      phoneFamilyPlaceholder: "имя и телефон, напр. мама, 069 000 000",
       raion: "Район / сектор",
       locality: "Населённый пункт",
       street: "Улица",
@@ -1079,7 +1079,7 @@ const ru: Dict = {
     title: "Узнай, где подать",
     titleAccent: "заявление",
     subtitle:
-      "У нас филиалы в Кишинёве, Стрэшенах и Ворниченах, открытые с понедельника по субботу. Позвони или заходи в гости.",
+      "У нас 4 филиала: 2 в Кишинёве (Буюканы, Ботаника), Стрэшены и Ворничены, открытые с понедельника по субботу. Позвони или заходи в гости.",
     callUs: "Позвони нам",
     hoursLabel: "График работы",
     hours: "Понедельник - Суббота",

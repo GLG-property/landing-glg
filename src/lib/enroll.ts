@@ -137,6 +137,8 @@ const REQUIRED: (keyof EnrollValues)[] = [
   "category",
   "transmission",
   "location",
+  // Telefonul unei rude / prieten / cunoscut: obligatoriu (cerința școlii, 22.10.2026).
+  "phone_family",
 ];
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -172,6 +174,11 @@ export function validateEnroll(v: EnrollValues, options: EnrollOptions | null = 
   if (v.phone_home.trim() !== "") {
     const n = digitCount(v.phone_home);
     if (n < 5 || n > 15) errors.phone_home = "phone";
+  }
+  // Persoana de contact: „nume și telefon” — trebuie să conțină un număr de telefon.
+  if (!errors.phone_family) {
+    const n = digitCount(v.phone_family);
+    if (n < 8 || n > 15) errors.phone_family = "phone";
   }
 
   if (!errors.birth_date && !isValidPastDate(v.birth_date)) errors.birth_date = "date";
