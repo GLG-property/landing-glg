@@ -91,7 +91,7 @@ export const post: Post = {
           },
           {
             type: "p",
-            text: "Prețul exact ți-l comunicăm la telefon sau la unul dintre cele 4 centre, pentru că depinde de cutia de viteze aleasă (mecanică sau automată) și de ofertele active. [Completează cererea online](/inscriere) și te sunăm noi, sau citește înainte despre [diferența dintre mecanică și automată](/blog/mecanica-sau-automata-ce-alegi).",
+            text: "Prețul exact ți-l comunicăm la telefon sau la unul dintre centrele noastre, pentru că depinde de cutia de viteze aleasă (mecanică sau automată) și de ofertele active. [Completează cererea online](/inscriere) și te sunăm noi, sau citește înainte despre [diferența dintre mecanică și automată](/blog/mecanica-sau-automata-ce-alegi).",
           },
         ],
       },

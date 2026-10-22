@@ -84,7 +84,7 @@ const ro: BlogDict = {
   cta: {
     eyebrow: "Școala Auto GLG Property",
     title: "Gata să începi? Înscrie-te la școala auto",
-    text: "Grupe în română și rusă, mașini moderne Skoda, 4 centre în Chișinău și plata în până la 25 de rate. Completezi cererea online în câteva minute și te sunăm noi.",
+    text: "Grupe în română și rusă, mașini moderne Skoda, centre în Chișinău, Strășeni și Vorniceni și plata în până la 25 de rate. Completezi cererea online în câteva minute și te sunăm noi.",
     button: "Înscrie-te la școala auto",
     call: "Sună-ne",
     short: "Vrei permisul? Te pregătim din prima.",
@@ -135,7 +135,7 @@ const ru: BlogDict = {
   cta: {
     eyebrow: "Автошкола GLG Property",
     title: "Готовы начать? Запишитесь в автошколу",
-    text: "Группы на румынском и русском, современные Skoda, 4 филиала в Кишинёве и рассрочка до 25 платежей. Заполните заявку онлайн за пару минут, и мы перезвоним.",
+    text: "Группы на румынском и русском, современные Skoda, филиалы в Кишинёве, Стрэшенах и Ворниченах и рассрочка до 25 платежей. Заполните заявку онлайн за пару минут, и мы перезвоним.",
     button: "Записаться в автошколу",
     call: "Позвонить",
     short: "Хотите права? Подготовим с первого раза.",

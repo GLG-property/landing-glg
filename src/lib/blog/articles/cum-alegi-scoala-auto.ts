@@ -87,7 +87,7 @@ export const post: Post = {
         blocks: [
           {
             type: "p",
-            text: "Teoria trebuie să o înțelegi, nu doar să o asculți. Verifică dacă există grupe în limba română și în limba rusă, la ce ore (dimineața, seara, sâmbăta) și unde este sediul față de casă sau serviciu. O școală cu mai multe centre în oraș îți dă flexibilitate. Noi avem 4 centre în Chișinău, cu grupe de la 09:30 până seara.",
+            text: "Teoria trebuie să o înțelegi, nu doar să o asculți. Verifică dacă există grupe în limba română și în limba rusă, la ce ore (dimineața, seara, sâmbăta) și unde este sediul față de casă sau serviciu. O școală cu mai multe centre în oraș îți dă flexibilitate. Noi avem centre în Chișinău, Strășeni și Vorniceni, cu grupe de la 09:30 până seara.",
           },
         ],
       },
@@ -210,7 +210,7 @@ export const post: Post = {
         blocks: [
           {
             type: "p",
-            text: "Теорию нужно понимать. Есть ли группы на румынском и русском, в какое время, где филиал. У нас 4 филиала в Кишинёве с группами с 09:30 до вечера.",
+            text: "Теорию нужно понимать. Есть ли группы на румынском и русском, в какое время, где филиал. У нас филиалы в Кишинёве, Стрэшенах и Ворниченах с группами с 09:30 до вечера.",
           },
         ],
       },

@@ -68,7 +68,7 @@ export const post: Post = {
           },
           {
             type: "p",
-            text: "La [Școala Auto GLG Property](/#despre), cursul durează aproximativ 3 luni și include 24 de lecții practice pe Skoda Fabia și Skoda Scala. Grupele de teorie sunt în limba română sau rusă, cu orare dimineața și seara, în 4 centre din Chișinău. La final primești certificatul de absolvire (fișa de școlarizare), fără de care nu te poți programa la ASP.",
+            text: "La [Școala Auto GLG Property](/#despre), cursul durează aproximativ 3 luni și include 24 de lecții practice pe Skoda Fabia și Skoda Scala. Grupele de teorie sunt în limba română sau rusă, cu orare dimineața și seara, în centrele din Chișinău, Strășeni și Vorniceni. La final primești certificatul de absolvire (fișa de școlarizare), fără de care nu te poți programa la ASP.",
           },
           {
             type: "note",
@@ -203,7 +203,7 @@ export const post: Post = {
         blocks: [
           {
             type: "p",
-            text: "Курс состоит из теории (правила дорожного движения, знаки, приоритет, безопасное вождение, первая помощь) и практики с инструктором: сначала на спокойных улицах, потом в реальном трафике и на экзаменационных маршрутах. В [GLG Property](/#despre) курс длится около 3 месяцев и включает 24 практических занятия на Skoda Fabia и Skoda Scala, группы на румынском и русском языках, 4 филиала в Кишинёве.",
+            text: "Курс состоит из теории (правила дорожного движения, знаки, приоритет, безопасное вождение, первая помощь) и практики с инструктором: сначала на спокойных улицах, потом в реальном трафике и на экзаменационных маршрутах. В [GLG Property](/#despre) курс длится около 3 месяцев и включает 24 практических занятия на Skoda Fabia и Skoda Scala, группы на румынском и русском языках, филиалы в Кишинёве, Стрэшенах и Ворниченах.",
           },
           {
             type: "note",
