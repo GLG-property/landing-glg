@@ -8,6 +8,12 @@ export type StudyLang = "ro" | "ru";
 
 export const LOCATION_NAMES = ["Buiucani", "Botanica", "Strășeni", "Vorniceni"] as const;
 
+/**
+ * Gradul de umplere al grupei (capacitate 30 RO / 15 RU): verde = mai sunt
+ * locuri (< 80 %), galben = aproape plină (≥ 80 %), roșu = plină (nu se poate alege).
+ */
+export type GroupFill = "verde" | "galben" | "rosu";
+
 /** O grupă deschisă, cum o vede publicul (fără cabinet). */
 export interface GroupOption {
   id: string;
@@ -17,6 +23,12 @@ export interface GroupOption {
   label: string;
   labelRu: string;
   startDate: string | null;
+  /** Cursanți deja înscriși (poate lipsi la un API mai vechi). */
+  count?: number;
+  /** Capacitatea grupei. */
+  capacity?: number;
+  /** Umplerea; lipsă = tratată ca „verde”. */
+  fill?: GroupFill;
 }
 export interface LocationOptions {
   name: string;
@@ -29,4 +41,14 @@ export interface EnrollOptions {
 export function optionsFor(all: EnrollOptions | null, location: string, lang: StudyLang): GroupOption[] {
   const loc = all?.locations.find((l) => l.name === location);
   return (loc?.options ?? []).filter((o) => o.language === lang);
+}
+
+/** Umplerea unei opțiuni (API-ul vechi, fără câmp, înseamnă „mai sunt locuri”). */
+export function fillOf(o: GroupOption): GroupFill {
+  return o.fill ?? "verde";
+}
+
+/** O grupă plină nu se poate alege. */
+export function isSelectable(o: GroupOption): boolean {
+  return fillOf(o) !== "rosu";
 }

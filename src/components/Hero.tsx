@@ -40,10 +40,11 @@ export function Hero() {
             className="animate-rise mt-8 flex flex-col gap-3 sm:flex-row sm:items-center"
             style={{ animationDelay: "210ms" }}
           >
-            <Button href={hero.primaryCta.href} withArrow>
+            {/* CTA-ul principal, mai mare și mai clar (cerința patronului, 22.10.2026) */}
+            <Button href={hero.primaryCta.href} size="lg" withArrow className="sm:min-w-56">
               {hero.primaryCta.label}
             </Button>
-            <Button href={hero.secondaryCta.href} variant="secondary">
+            <Button href={hero.secondaryCta.href} variant="secondary" className="h-12 sm:h-14">
               <Phone className="size-4 text-muted" strokeWidth={1.5} />
               {hero.secondaryCta.label}
             </Button>

@@ -38,4 +38,8 @@ export const EV = {
   formularInceput: "formular-inceput",
   formularSectiune: "formular-sectiune",
   formularEroare: "formular-eroare",
+  /** A deschis contractul de studii (PDF) din formular. */
+  contractVazut: "contract-vazut",
+  /** A adăugat o poză a buletinului în formular (fata / verso). */
+  pozaBuletin: "poza-buletin",
 } as const;

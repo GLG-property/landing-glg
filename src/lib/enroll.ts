@@ -5,7 +5,7 @@
  */
 
 import type { Lang } from "./content";
-import { optionsFor, type EnrollOptions } from "./schedule";
+import { isSelectable, optionsFor, type EnrollOptions } from "./schedule";
 
 /**
  * Endpoint-ul de înscriere, SAME-ORIGIN. Formularul postează aici, iar ruta
@@ -63,6 +63,11 @@ export type EnrollValues = {
   practice_location: string;
   license_number: string;
   license_issued: string;
+  /** Pozele buletinului ca data URL (jpeg comprimat sau pdf), vezi imageCompress.ts; "" = lipsă. */
+  id_photo_front: string;
+  id_photo_back: string;
+  /** „Am citit și sunt de acord cu prevederile contractului de studii” (obligatoriu). */
+  contract_read: boolean;
   consent: boolean;
 };
 
@@ -99,6 +104,9 @@ export function emptyEnrollValues(lang: Lang): EnrollValues {
     practice_location: "",
     license_number: "",
     license_issued: "",
+    id_photo_front: "",
+    id_photo_back: "",
+    contract_read: false,
     consent: false,
   };
 }
@@ -111,6 +119,10 @@ export type EnrollErrorCode =
   | "phone"
   | "date"
   | "consent"
+  | "contract"
+  | "photoMissing"
+  | "fileTooBig"
+  | "fileType"
   | "checkField"
   | "noRuGroup";
 
@@ -189,18 +201,40 @@ export function validateEnroll(v: EnrollValues, options: EnrollOptions | null = 
 
   // Grupa de teorie: sediul trebuie să aibă grupe în limba aleasă, iar ora
   // trebuie să fie una din orarul fix al sediului pentru limba respectivă.
-  // Grupa aleasă trebuie să fie una din opțiunile deschise la sediu, în limba aleasă.
+  // Grupa aleasă trebuie să fie una din opțiunile deschise la sediu, în limba
+  // aleasă, și să NU fie plină (capacitate 30 RO / 15 RU).
   if (v.location && options) {
     const opts = optionsFor(options, v.location, v.language);
     const anyAtLocation = options.locations.find((l) => l.name === v.location)?.options.length ?? 0;
     if (v.language === "ru" && anyAtLocation > 0 && opts.length === 0) errors.location = "noRuGroup";
-    if (v.group_id && !opts.some((o) => o.id === v.group_id)) errors.group_id = "required";
+    if (v.group_id && !opts.some((o) => o.id === v.group_id && isSelectable(o))) errors.group_id = "required";
     if (!v.group_id && opts.length > 0) errors.group_id = "required";
   }
 
+  // Poza buletinului: cel puțin fața (cerința patronului, 22.10.2026).
+  if (v.id_photo_front.trim() === "") errors.id_photo_front = "photoMissing";
+
+  if (v.contract_read !== true) errors.contract_read = "contract";
   if (v.consent !== true) errors.consent = "consent";
 
   return errors;
+}
+
+/**
+ * Numele câmpurilor respinse de API -> cheia din EnrollValues (unde diferă).
+ * Necunoscutele rămân cum sunt; componenta le ignoră dacă nu există în valori.
+ */
+export function apiFieldToKey(field: string): string {
+  switch (field) {
+    case "consent_gdpr":
+      return "consent";
+    case "id_photo_front_b64":
+      return "id_photo_front";
+    case "id_photo_back_b64":
+      return "id_photo_back";
+    default:
+      return field;
+  }
 }
 
 /** Șir opțional: gol => omis din payload (JSON.stringify sare peste undefined). */
@@ -247,6 +281,10 @@ export function buildEnrollPayload(v: EnrollValues): Record<string, unknown> {
     practice_location: opt(v.location),
     language: v.language,
     consent_gdpr: v.consent,
+    contract_read: v.contract_read,
+    // Pozele buletinului (data URL base64; aplicația taie prefixul și verifică tipul/mărimea).
+    id_photo_front_b64: opt(v.id_photo_front),
+    id_photo_back_b64: opt(v.id_photo_back),
 
     category: opt(v.category),
     citizenship: opt(v.citizenship),

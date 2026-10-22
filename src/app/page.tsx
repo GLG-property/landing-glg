@@ -12,6 +12,7 @@ import { Pricing } from "@/components/Pricing";
 import { Steps } from "@/components/Steps";
 import { Testimonials } from "@/components/Testimonials";
 import { Faq } from "@/components/Faq";
+import { Team } from "@/components/Team";
 import { Contact } from "@/components/Contact";
 import { CityGuide } from "@/components/CityGuide";
 import { Footer } from "@/components/Footer";
@@ -35,15 +36,17 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
+        {/* Videoclipul cu mașinile imediat sub hero, în prim-plan (cerința patronului, 22.10.2026). */}
+        <CarsVideo />
         <Benefits />
         <Stats />
-        <CarsVideo />
         <WhyUs />
         <Voucher />
         <Pricing />
         <Steps />
         <Testimonials />
         <Faq />
+        <Team />
         <Contact />
         <CityGuide />
       </main>

@@ -111,6 +111,8 @@ type ButtonProps = {
   href: string;
   children: React.ReactNode;
   variant?: "primary" | "secondary" | "ghost";
+  /** "lg" doar pentru CTA-ul principal din hero: mai înalt, text mai mare, lățime completă pe mobil. */
+  size?: "md" | "lg";
   className?: string;
   withArrow?: boolean;
 };
@@ -119,11 +121,14 @@ export function Button({
   href,
   children,
   variant = "primary",
+  size = "md",
   className,
   withArrow = false,
 }: ButtonProps) {
-  const base =
-    "inline-flex items-center justify-center gap-2 rounded-[10px] px-5 py-3 text-[0.95rem] font-medium transition-colors duration-200";
+  const base = clsx(
+    "inline-flex items-center justify-center gap-2 rounded-[10px] font-medium transition-colors duration-200",
+    size === "lg" ? "h-14 w-full px-8 text-lg sm:w-auto" : "px-5 py-3 text-[0.95rem]"
+  );
   const styles = {
     primary: "btn-3d text-white",
     secondary: "btn-3d-light text-ink",

@@ -2,20 +2,23 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { CheckCircle2, Loader2, Phone } from "lucide-react";
+import { Camera, CheckCircle2, FileText, ImagePlus, Loader2, Phone, X } from "lucide-react";
 import clsx from "clsx";
 import { site } from "@/lib/content";
 import {
   ENROLL_API,
+  apiFieldToKey,
   enrollCategories,
   buildEnrollPayload,
   emptyEnrollValues,
   interpretEnrollResponse,
   validateEnroll,
+  type EnrollErrorCode,
   type EnrollErrors,
   type EnrollValues,
 } from "@/lib/enroll";
-import { LOCATION_NAMES, optionsFor, type EnrollOptions } from "@/lib/schedule";
+import { preparePhoto } from "@/lib/imageCompress";
+import { LOCATION_NAMES, fillOf, isSelectable, optionsFor, type EnrollOptions, type GroupFill } from "@/lib/schedule";
 import { EV, track } from "@/lib/analytics";
 import { useI18n } from "./LanguageProvider";
 import { Container, SectionHeading } from "./primitives";
@@ -135,22 +138,43 @@ function Field({
   );
 }
 
+/** Punctul colorat al umplerii grupei (verde / galben / roșu). */
+const FILL_DOT: Record<GroupFill, string> = {
+  verde: "bg-emerald-500",
+  galben: "bg-amber-500",
+  rosu: "bg-red-500",
+};
+
+type PillOption = {
+  value: string;
+  label: string;
+  /** Text secundar (ex. „mai sunt locuri”), afișat mai mic lângă etichetă. */
+  sub?: string;
+  /** Punct colorat înaintea etichetei. */
+  dot?: GroupFill;
+  /** Opțiune care nu se poate alege (ex. grupă plină). */
+  disabled?: boolean;
+};
+
 function PillGroup({
   name,
   value,
   options,
   onChange,
   invalid,
+  chips: forceChips,
 }: {
   name: string;
   value: string;
-  options: { value: string; label: string }[];
+  options: PillOption[];
   onChange: (v: string) => void;
   invalid?: boolean;
+  /** Forțează chip-uri separate (și sub 4 opțiuni) — util când au text secundar. */
+  chips?: boolean;
 }) {
   // Peste 3 opțiuni, grupul compact ar ieși din coloană pe telefon: fiecare
   // opțiune devine un chip de sine stătător și rândul se poate rupe.
-  const chips = options.length > 3;
+  const chips = forceChips || options.length > 3;
   return (
     <div
       className={clsx(
@@ -160,33 +184,158 @@ function PillGroup({
         !chips && (invalid ? "border-red-400" : "border-line")
       )}
     >
-      {options.map((o, i) => (
-        <label
-          key={o.value}
-          className={clsx(
-            "flex cursor-pointer items-center px-3.5 text-sm font-medium transition-colors duration-200",
-            // Chip-ul selectat NU primește input-3d: gradientul lui alb ar acoperi
-            // fundalul negru și textul alb ar rămâne pe alb.
-            chips
-              ? [
-                  "h-9 rounded-[10px] border",
-                  value === o.value ? "border-ink" : ["input-3d", invalid ? "border-red-400" : "border-line"],
-                ]
-              : i > 0 && "border-l border-line",
-            value === o.value ? "bg-ink text-white" : "text-muted hover:text-ink"
+      {options.map((o, i) => {
+        const selected = value === o.value;
+        return (
+          <label
+            key={o.value}
+            aria-disabled={o.disabled || undefined}
+            className={clsx(
+              "flex items-center gap-2 px-3.5 text-sm font-medium transition-colors duration-200",
+              o.disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer",
+              // Chip-ul selectat NU primește input-3d: gradientul lui alb ar acoperi
+              // fundalul negru și textul alb ar rămâne pe alb.
+              chips
+                ? [
+                    "h-9 rounded-[10px] border",
+                    selected ? "border-ink" : ["input-3d", invalid ? "border-red-400" : "border-line"],
+                  ]
+                : i > 0 && "border-l border-line",
+              selected ? "bg-ink text-white" : ["text-muted", !o.disabled && "hover:text-ink"]
+            )}
+          >
+            <input
+              type="radio"
+              name={name}
+              value={o.value}
+              checked={selected}
+              disabled={o.disabled}
+              onChange={() => onChange(o.value)}
+              className="sr-only"
+            />
+            {o.dot ? <span className={clsx("size-2.5 shrink-0 rounded-full", FILL_DOT[o.dot])} aria-hidden="true" /> : null}
+            <span>
+              {o.label}
+              {o.sub ? <span className={clsx("ml-1.5 text-xs font-normal", selected ? "text-white/80" : "text-faint")}>· {o.sub}</span> : null}
+            </span>
+          </label>
+        );
+      })}
+    </div>
+  );
+}
+
+/**
+ * Poza buletinului (față / verso): „Fotografiază" (camera telefonului, doar
+ * pe ecrane mici) sau „Alege o poză sau un PDF" (galerie / fișiere). Imaginea
+ * se micșorează pe loc (lib/imageCompress.ts) și rămâne ca data URL în
+ * valori, deci previzualizarea e chiar ce se trimite.
+ */
+function PhotoField({
+  id,
+  value,
+  onChange,
+  onError,
+  labels,
+}: {
+  id: string;
+  /** data URL (imagine jpeg sau pdf) sau "" */
+  value: string;
+  onChange: (dataUrl: string) => void;
+  onError: (code: EnrollErrorCode) => void;
+  labels: { take: string; choose: string; processing: string; change: string; remove: string; pdf: string };
+}) {
+  const [busy, setBusy] = useState(false);
+  const chooseRef = useRef<HTMLInputElement>(null);
+  const cameraRef = useRef<HTMLInputElement>(null);
+
+  const onFile = async (ev: React.ChangeEvent<HTMLInputElement>) => {
+    const file = ev.target.files?.[0];
+    // același fișier ales a doua oară trebuie să declanșeze iar onChange
+    ev.target.value = "";
+    if (!file) return;
+    setBusy(true);
+    try {
+      const res = await preparePhoto(file);
+      if ("error" in res) {
+        onError(res.error);
+        return;
+      }
+      onChange(res.dataUrl);
+      track(EV.pozaBuletin, { camp: id, tip: res.kind });
+    } catch {
+      onError("fileType");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const isPdf = value.startsWith("data:application/pdf");
+  const btn =
+    "btn-3d-light inline-flex h-10 items-center justify-center gap-2 rounded-[10px] px-3.5 text-sm font-medium text-ink transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-60";
+
+  return (
+    <div>
+      {/* Inputurile reale, ascunse: unul cu camera (telefon), unul cu galeria / fișierele */}
+      <input
+        ref={cameraRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        className="sr-only"
+        tabIndex={-1}
+        onChange={onFile}
+      />
+      <input
+        ref={chooseRef}
+        id={id}
+        type="file"
+        accept="image/*,.pdf,application/pdf"
+        className="sr-only"
+        tabIndex={-1}
+        onChange={onFile}
+      />
+
+      {value ? (
+        <div className="flex items-center gap-3">
+          {isPdf ? (
+            <span className="chip-3d grid h-20 w-24 shrink-0 place-items-center rounded-[10px] text-muted">
+              <span className="flex flex-col items-center gap-1 text-[11px] font-medium">
+                <FileText className="size-5" strokeWidth={1.5} />
+                {labels.pdf}
+              </span>
+            </span>
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element -- data URL local, nu trece prin optimizatorul Next
+            <img
+              src={value}
+              alt=""
+              className="h-20 w-24 shrink-0 rounded-[10px] border border-line bg-surface object-cover"
+            />
           )}
-        >
-          <input
-            type="radio"
-            name={name}
-            value={o.value}
-            checked={value === o.value}
-            onChange={() => onChange(o.value)}
-            className="sr-only"
-          />
-          {o.label}
-        </label>
-      ))}
+          <div className="flex flex-wrap gap-2">
+            <button type="button" className={btn} disabled={busy} onClick={() => chooseRef.current?.click()}>
+              {busy ? <Loader2 className="size-4 animate-spin" strokeWidth={1.5} /> : <ImagePlus className="size-4" strokeWidth={1.5} />}
+              {labels.change}
+            </button>
+            <button type="button" className={btn} disabled={busy} onClick={() => onChange("")}>
+              <X className="size-4" strokeWidth={1.5} />
+              {labels.remove}
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-wrap gap-2">
+          <button type="button" className={clsx(btn, "sm:hidden")} disabled={busy} onClick={() => cameraRef.current?.click()}>
+            <Camera className="size-4" strokeWidth={1.5} />
+            {labels.take}
+          </button>
+          <button type="button" className={btn} disabled={busy} onClick={() => chooseRef.current?.click()}>
+            {busy ? <Loader2 className="size-4 animate-spin" strokeWidth={1.5} /> : <ImagePlus className="size-4" strokeWidth={1.5} />}
+            {busy ? labels.processing : labels.choose}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -317,8 +466,15 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
       case "invalid": {
         const fieldErrors: EnrollErrors = {};
         for (const f of outcome.fields) {
-          const key = f === "consent_gdpr" ? "consent" : f;
-          if (key in values) fieldErrors[key as keyof EnrollValues] = "checkField";
+          const key = apiFieldToKey(f);
+          if (!(key in values)) continue;
+          const k = key as keyof EnrollValues;
+          // Codul potrivit pentru câmpurile speciale; restul: „verifică acest câmp”
+          fieldErrors[k] =
+            k === "contract_read" ? "contract"
+            : k === "id_photo_front" || k === "id_photo_back" ? (values[k] ? "fileType" : "photoMissing")
+            : k === "consent" ? "consent"
+            : "checkField";
         }
         setErrors(fieldErrors);
         setBanner(e.errors.serverInvalid);
@@ -378,17 +534,34 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
 
   const submitting = status.phase === "submitting";
   const f = e.fields;
+  const photoLabels = {
+    take: f.idPhotoTake,
+    choose: f.idPhotoChoose,
+    processing: f.idPhotoProcessing,
+    change: f.idPhotoChange,
+    remove: f.idPhotoRemove,
+    pdf: f.idPhotoPdf,
+  };
+  // Eroare la alegerea fișierului (tip / mărime): pe câmp, fără să atingem restul.
+  const photoError = (key: "id_photo_front" | "id_photo_back") => (code: EnrollErrorCode) =>
+    setErrors((prev) => ({ ...prev, [key]: code }));
 
   // Grupele DESCHISE la sediul ales, în limba aleasă (din aplicație, prin API).
   const groupOpts = values.location ? optionsFor(options, values.location, values.language) : [];
   const anyAtLocation = values.location ? (options?.locations.find((l) => l.name === values.location)?.options.length ?? 0) : 0;
   const noRuGroup = !!values.location && values.language === "ru" && anyAtLocation > 0 && groupOpts.length === 0;
   const noOpenGroup = !!values.location && anyAtLocation === 0;
-  const slotOptions = groupOpts.map((o) => ({ value: o.id, label: lang === "ru" ? o.labelRu : o.label }));
+  // Fiecare grupă vine cu umplerea ei (capacitate 30 RO / 15 RU): punct verde /
+  // galben / roșu + „mai sunt locuri” / „aproape plină” / „plină”; cele pline nu se pot alege.
+  const fillText: Record<GroupFill, string> = { verde: f.fillSpots, galben: f.fillAlmost, rosu: f.fillFull };
+  const slotOptions = groupOpts.map((o) => {
+    const fill = fillOf(o);
+    return { value: o.id, label: lang === "ru" ? o.labelRu : o.label, dot: fill, sub: fillText[fill], disabled: !isSelectable(o) };
+  });
 
-  // Când se schimbă sediul sau limba, grupa aleasă rămâne doar dacă mai e printre opțiuni.
+  // Când se schimbă sediul sau limba, grupa aleasă rămâne doar dacă mai e printre opțiuni (și nu e plină).
   const keepSlotIfValid = (location: string, language: EnrollValues["language"]) => {
-    const valid = optionsFor(options, location, language).some((o) => o.id === values.group_id);
+    const valid = optionsFor(options, location, language).some((o) => o.id === values.group_id && isSelectable(o));
     if (!valid && values.group_id) set("group_id", "");
   };
 
@@ -648,6 +821,30 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                 />
               </Field>
 
+              {/* Pozele buletinului: fața obligatorie, verso opțional (cerința patronului, 22.10.2026) */}
+              <div className="border-t border-line pt-3 sm:col-span-2">
+                <p className="text-[13px] font-medium text-ink">{f.idPhoto}</p>
+                <p className="mt-1 text-xs text-faint">{f.idPhotoHint}</p>
+              </div>
+              <Field label={f.idPhotoFront} htmlFor="id_photo_front" error={msg("id_photo_front")}>
+                <PhotoField
+                  id="id_photo_front"
+                  value={values.id_photo_front}
+                  onChange={(v) => set("id_photo_front", v)}
+                  onError={photoError("id_photo_front")}
+                  labels={photoLabels}
+                />
+              </Field>
+              <Field label={f.idPhotoBack} htmlFor="id_photo_back" optionalLabel={e.optional} error={msg("id_photo_back")}>
+                <PhotoField
+                  id="id_photo_back"
+                  value={values.id_photo_back}
+                  onChange={(v) => set("id_photo_back", v)}
+                  onError={photoError("id_photo_back")}
+                  labels={photoLabels}
+                />
+              </Field>
+
               <div className="border-t border-line pt-3 sm:col-span-2">
                 <p className="text-[13px] font-medium text-muted">
                   {f.license} <span className="font-normal text-faint">{e.optional}</span>
@@ -738,6 +935,7 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                     value={values.group_id}
                     invalid={!!errors.group_id}
                     options={slotOptions}
+                    chips
                     onChange={(v) => set("group_id", v)}
                   />
                 )}
@@ -796,6 +994,36 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
                 />
               </Field>
             </FormSection>
+
+            {/* Contractul de studii (de citit, PDF gol) + bifa obligatorie */}
+            <div className="group/section card p-4 sm:p-5" data-invalid={errors.contract_read ? "" : undefined}>
+              <h2 className="text-xs font-semibold uppercase tracking-[0.14em] text-muted transition-colors duration-200 group-focus-within/section:text-ink">
+                {e.contract.title}
+              </h2>
+              <p className="mt-2 text-[13px] leading-relaxed text-muted">{e.contract.text}</p>
+              <a
+                href="/api/inscriere/contract"
+                target="_blank"
+                rel="noopener"
+                onClick={() => track(EV.contractVazut, { limba: lang })}
+                className="btn-3d-light mt-3 inline-flex h-10 items-center gap-2 rounded-[10px] px-4 text-sm font-medium text-ink transition-colors duration-200"
+              >
+                <FileText className="size-4 text-muted" strokeWidth={1.5} />
+                {e.contract.view}
+              </a>
+              <label className="mt-4 flex cursor-pointer items-start gap-2.5">
+                <input
+                  type="checkbox"
+                  checked={values.contract_read}
+                  onChange={(ev) => set("contract_read", ev.target.checked)}
+                  className="mt-0.5 size-4 shrink-0 accent-brand"
+                />
+                <span className="text-[13px] font-medium leading-relaxed text-ink">{e.contract.agree}</span>
+              </label>
+              {errors.contract_read ? (
+                <p className="mt-1.5 text-xs font-medium text-red-600">{e.errors.contract}</p>
+              ) : null}
+            </div>
 
             {/* Consimțământ + trimitere */}
             <div className="card p-4 sm:p-5">

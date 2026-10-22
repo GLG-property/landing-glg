@@ -18,6 +18,14 @@ export const runtime = "nodejs";
 const UPSTREAM =
   process.env.ENROLL_UPSTREAM ?? "http://app:3000/api/inscriere";
 
+/**
+ * Corpul: formularul + pozele buletinului (față + verso) ca base64, fiecare
+ * comprimată pe client la ~1,5 MB (aplicația acceptă max 2 MB decodat).
+ * Peste 6 MB nu e formularul nostru; tăiem aici, înainte de a citi tot corpul.
+ * Route handler-ele Next nu au limită proprie de body (stream Node).
+ */
+const MAX_BODY_BYTES = 6_000_000;
+
 function clientIp(req: Request): string {
   const cf = req.headers.get("cf-connecting-ip");
   if (cf) return cf.trim();
@@ -27,7 +35,20 @@ function clientIp(req: Request): string {
 }
 
 export async function POST(req: Request): Promise<Response> {
+  const declared = Number(req.headers.get("content-length") ?? 0);
+  if (declared > MAX_BODY_BYTES) {
+    return new Response(JSON.stringify({ ok: false, error: "invalid", fields: ["id_photo_front"] }), {
+      status: 413,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
   const body = await req.text();
+  if (body.length > MAX_BODY_BYTES) {
+    return new Response(JSON.stringify({ ok: false, error: "invalid", fields: ["id_photo_front"] }), {
+      status: 413,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
   const ip = clientIp(req);
 
   try {

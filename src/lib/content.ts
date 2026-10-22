@@ -22,6 +22,8 @@ export const langNames: Record<Lang, string> = { ro: "Română", ru: "Русск
 
 type Cta = { label: string; href: string };
 type NavItem = { label: string; href: string };
+/** O persoană din organigramă; `initials` lipsă = se deduc din nume. */
+export type TeamPerson = { name: string; role: string; initials?: string };
 
 export type Plan = {
   name: string;
@@ -119,6 +121,10 @@ export type EnrollDict = {
     slotSaturday: string;
     noOpenGroups: string;
     slotDaysHint: string;
+    /** Umplerea grupei (punct colorat): verde / galben / roșu. */
+    fillSpots: string;
+    fillAlmost: string;
+    fillFull: string;
     scheduleOther: string;
     schedule: string;
     schedulePlaceholder: string;
@@ -128,6 +134,24 @@ export type EnrollDict = {
     licenseNumber: string;
     licenseIssued: string;
     licenseIssuedPlaceholder: string;
+    /** Pozele buletinului (față obligatorie, verso opțional). */
+    idPhoto: string;
+    idPhotoFront: string;
+    idPhotoBack: string;
+    idPhotoHint: string;
+    idPhotoTake: string;
+    idPhotoChoose: string;
+    idPhotoProcessing: string;
+    idPhotoChange: string;
+    idPhotoRemove: string;
+    idPhotoPdf: string;
+  };
+  /** Blocul „Contractul de studii”: PDF gol de citit + bifa obligatorie. */
+  contract: {
+    title: string;
+    text: string;
+    view: string;
+    agree: string;
   };
   consent: string;
   consentLinkLabel: string;
@@ -142,6 +166,10 @@ export type EnrollDict = {
     phone: string;
     date: string;
     consent: string;
+    contract: string;
+    photoMissing: string;
+    fileTooBig: string;
+    fileType: string;
     checkField: string;
     noRuGroup: string;
     formInvalid: string;
@@ -176,7 +204,20 @@ export type Dict = {
   };
   benefits: { icon: string; title: string; text: string; tag: string }[];
   stats: { value: number; suffix: string; label: string }[];
-  cars: { badge: string; title: string; text: string; chips: string[]; cta: Cta };
+  cars: { badge: string; title: string; text: string; chips: string[]; cta: Cta; enrollCta: Cta };
+  /** „Echipa noastră”: organigrama pe nivele, fără poze (carduri cu inițiale). */
+  team: {
+    eyebrow: string;
+    title: string;
+    titleAccent: string;
+    subtitle: string;
+    /** Vârful organigramei (administrația). */
+    root: TeamPerson;
+    /** Nivelurile cu persoane numite (manageri, secretariat), de sus în jos. */
+    levels: { label: string; people: TeamPerson[] }[];
+    /** Echipele mari, doar cu număr (profesori, operatori, instructori). */
+    groups: { label: string; count: string; note: string }[];
+  };
   why: {
     eyebrow: string;
     title: string;
@@ -297,6 +338,7 @@ const ro: Dict = {
       { label: "Acasă", href: "/#acasa" },
       { label: "Despre noi", href: "/#despre" },
       { label: "Cursuri", href: "/#cursuri" },
+      { label: "Echipa", href: "/#echipa" },
       { label: "Blog", href: "/blog" },
       { label: "Contact", href: "/#contact" },
     ],
@@ -356,6 +398,38 @@ const ro: Dict = {
     text: "Înveți pe aceleași modele pe care vei susține examenul, pe traseele reale de examinare din Chișinău.",
     chips: ["Skoda Fabia", "Skoda Scala", "Trasee de examinare"],
     cta: { label: "Vezi pachetul", href: "#preturi" },
+    enrollCta: { label: "Înscrie-te online", href: "/inscriere" },
+  },
+
+  team: {
+    eyebrow: "Oamenii din spatele școlii",
+    title: "Echipa",
+    titleAccent: "noastră",
+    subtitle:
+      "De la administrație până la instructorul de lângă tine în mașină: o echipă mare, organizată pe niveluri, ca fiecare cursant să aibă pe cineva care răspunde.",
+    root: { name: "Școala Auto GLG Property", role: "Administrația", initials: "GLG" },
+    levels: [
+      {
+        label: "Manageri",
+        people: [
+          { name: "Vlad", role: "Manager 1" },
+          { name: "Cristian", role: "Manager 2" },
+          { name: "Ion", role: "Manager 3" },
+        ],
+      },
+      {
+        label: "Secretariat administrativ",
+        people: [
+          { name: "Viorica", role: "Secretar" },
+          { name: "Rebeca", role: "Secretar" },
+        ],
+      },
+    ],
+    groups: [
+      { label: "Profesori de teorie", count: "10", note: "Cursuri în română și rusă, la toate sediile." },
+      { label: "Operatori", count: "5", note: "Programează lecțiile practice și țin legătura cu tine." },
+      { label: "Instructori", count: "80+", note: "Atestați, pe Skoda Fabia și Skoda Scala." },
+    ],
   },
 
   why: {
@@ -510,6 +584,9 @@ const ro: Dict = {
       slotDaysHint:
         "Zilele (Luni și Miercuri sau Marți și Joi) le stabilim împreună cu tine când grupa se formează.",
       noOpenGroups: "Momentan nu e deschisă nicio grupă la acest sediu. Trimite cererea și te sunăm când pornește următoarea.",
+      fillSpots: "mai sunt locuri",
+      fillAlmost: "aproape plină",
+      fillFull: "plină",
       scheduleOther: "Altă preferință de orar",
       schedule: "Ora disponibilă pentru cursuri",
       schedulePlaceholder: "ex.: după 17:30",
@@ -519,6 +596,22 @@ const ro: Dict = {
       licenseNumber: "Nr. permisului",
       licenseIssued: "Eliberat",
       licenseIssuedPlaceholder: "data / autoritatea",
+      idPhoto: "Poza buletinului",
+      idPhotoFront: "Fața buletinului",
+      idPhotoBack: "Verso buletinului",
+      idPhotoHint: "Fotografiază buletinul cu telefonul sau alege o poză / PDF. Fața este obligatorie, verso-ul opțional. Poza se micșorează automat.",
+      idPhotoTake: "Fotografiază",
+      idPhotoChoose: "Alege o poză sau un PDF",
+      idPhotoProcessing: "Se pregătește poza…",
+      idPhotoChange: "Schimbă",
+      idPhotoRemove: "Șterge",
+      idPhotoPdf: "Fișier PDF",
+    },
+    contract: {
+      title: "Contractul de studii",
+      text: "Înainte de a trimite cererea, citește contractul de studii al școlii (model gol, fără datele tale). Îl semnezi la sediu, la înscriere.",
+      view: "Vezi contractul (PDF)",
+      agree: "Am citit și sunt de acord cu prevederile contractului de studii.",
     },
     consent:
       "Sunt de acord cu prelucrarea datelor mele personale de către GLG Property SRL în scopul înscrierii la cursuri și al întocmirii contractului de școlarizare, conform Legii 133/2011 privind protecția datelor cu caracter personal. Am citit",
@@ -534,6 +627,10 @@ const ro: Dict = {
       phone: "Număr de telefon invalid",
       date: "Dată invalidă",
       consent: "Bifează acordul ca să poți trimite cererea",
+      contract: "Citește contractul de studii și bifează că ești de acord cu prevederile lui",
+      photoMissing: "Poza buletinului lipsește: adaugă cel puțin fața buletinului",
+      fileTooBig: "Fișier prea mare: alege o poză sau un PDF de cel mult 2 MB",
+      fileType: "Fișier neacceptat: alege o poză (JPG, PNG) sau un PDF",
       checkField: "Verifică acest câmp",
       noRuGroup:
         "Grupe în limba rusă avem doar la Buiucani (17:30 și 19:00). Alege Buiucani sau limba română.",
@@ -834,6 +931,7 @@ const ru: Dict = {
       { label: "Главная", href: "/#acasa" },
       { label: "О нас", href: "/#despre" },
       { label: "Курсы", href: "/#cursuri" },
+      { label: "Команда", href: "/#echipa" },
       { label: "Блог", href: "/blog" },
       { label: "Контакты", href: "/#contact" },
     ],
@@ -893,6 +991,38 @@ const ru: Dict = {
     text: "Учись на тех же моделях, на которых будешь сдавать экзамен, на реальных экзаменационных маршрутах Кишинёва.",
     chips: ["Skoda Fabia", "Skoda Scala", "Экзаменационные маршруты"],
     cta: { label: "Смотреть пакет", href: "#preturi" },
+    enrollCta: { label: "Записаться онлайн", href: "/inscriere" },
+  },
+
+  team: {
+    eyebrow: "Люди, которые стоят за школой",
+    title: "Наша",
+    titleAccent: "команда",
+    subtitle:
+      "От администрации до инструктора рядом с тобой в машине: большая команда, организованная по уровням, чтобы у каждого ученика был тот, кто отвечает.",
+    root: { name: "Автошкола GLG Property", role: "Администрация", initials: "GLG" },
+    levels: [
+      {
+        label: "Менеджеры",
+        people: [
+          { name: "Влад", role: "Менеджер 1" },
+          { name: "Кристиан", role: "Менеджер 2" },
+          { name: "Ион", role: "Менеджер 3" },
+        ],
+      },
+      {
+        label: "Административный секретариат",
+        people: [
+          { name: "Виорика", role: "Секретарь" },
+          { name: "Ребека", role: "Секретарь" },
+        ],
+      },
+    ],
+    groups: [
+      { label: "Преподаватели теории", count: "10", note: "Занятия на румынском и русском, во всех филиалах." },
+      { label: "Операторы", count: "5", note: "Планируют практические занятия и держат с тобой связь." },
+      { label: "Инструкторы", count: "80+", note: "Аттестованные, на Skoda Fabia и Skoda Scala." },
+    ],
   },
 
   why: {
@@ -1046,6 +1176,9 @@ const ru: Dict = {
       slotSaturday: "Суббота",
       slotDaysHint: "Выбери подходящую группу: дни и время указаны для группы, которая набирается сейчас.",
       noOpenGroups: "Сейчас в этом филиале нет открытой группы. Отправь заявку, и мы позвоним, когда стартует следующая.",
+      fillSpots: "есть места",
+      fillAlmost: "почти заполнена",
+      fillFull: "заполнена",
       scheduleOther: "Другие пожелания по расписанию",
       schedule: "Удобное время для занятий",
       schedulePlaceholder: "напр.: после 17:30",
@@ -1055,6 +1188,22 @@ const ru: Dict = {
       licenseNumber: "Номер удостоверения",
       licenseIssued: "Выдано",
       licenseIssuedPlaceholder: "дата / орган выдачи",
+      idPhoto: "Фото удостоверения личности",
+      idPhotoFront: "Лицевая сторона",
+      idPhotoBack: "Оборотная сторона",
+      idPhotoHint: "Сфотографируй удостоверение телефоном или выбери фото / PDF. Лицевая сторона обязательна, оборотная по желанию. Фото уменьшается автоматически.",
+      idPhotoTake: "Сфотографировать",
+      idPhotoChoose: "Выбрать фото или PDF",
+      idPhotoProcessing: "Готовим фото…",
+      idPhotoChange: "Заменить",
+      idPhotoRemove: "Удалить",
+      idPhotoPdf: "Файл PDF",
+    },
+    contract: {
+      title: "Договор об обучении",
+      text: "Перед отправкой заявки прочитай договор об обучении школы (пустой образец, без твоих данных). Подписывается в офисе при записи.",
+      view: "Посмотреть договор (PDF)",
+      agree: "Я прочитал(а) и согласен(на) с условиями договора об обучении.",
     },
     consent:
       "Я согласен(на) на обработку моих персональных данных компанией GLG Property SRL в целях записи на курсы и оформления договора об обучении, в соответствии с Законом 133/2011 о защите персональных данных. Я ознакомился(лась) с",
@@ -1070,6 +1219,10 @@ const ru: Dict = {
       phone: "Неверный номер телефона",
       date: "Неверная дата",
       consent: "Отметь согласие, чтобы отправить заявку",
+      contract: "Прочитай договор об обучении и отметь, что согласен(на) с его условиями",
+      photoMissing: "Нет фото удостоверения: добавь хотя бы лицевую сторону",
+      fileTooBig: "Файл слишком большой: выбери фото или PDF не больше 2 МБ",
+      fileType: "Неподдерживаемый файл: выбери фото (JPG, PNG) или PDF",
       checkField: "Проверь это поле",
       noRuGroup:
         "Группы на русском языке есть только в филиале Buiucani (17:30 и 19:00). Выбери Buiucani или румынский язык.",

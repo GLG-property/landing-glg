@@ -38,7 +38,7 @@ export function CityGuide() {
       <Container>
         <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
           <SectionHeading
-            index="07"
+            index="08"
             eyebrow={guide.eyebrow}
             title={guide.title}
             accent={guide.titleAccent}

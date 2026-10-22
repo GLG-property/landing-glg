@@ -41,7 +41,7 @@ export function Contact() {
           {/* Details */}
           <div>
             <SectionHeading
-              index="06"
+              index="07"
               eyebrow={contact.eyebrow}
               title={contact.title}
               accent={contact.titleAccent}
