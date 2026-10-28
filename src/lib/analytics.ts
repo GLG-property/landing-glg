@@ -24,6 +24,13 @@ export const EV = {
   inscriereEroare: "inscriere-eroare",
   apelTelefon: "apel-telefon",
   clickInscrieTe: "click-inscrie-te",
+  /** A deschis conversația pe WhatsApp (antet, bara de mobil, Contact, buton plutitor). */
+  whatsapp: "whatsapp",
+  /** A deschis conversația pe Telegram (apare doar dacă școala are cont public). */
+  telegram: "telegram",
+  /** Formularul scurt de pe prima pagină: trimis / respins la validare. */
+  cerereRapida: "cerere-rapida",
+  cerereRapidaEroare: "cerere-rapida-eroare",
   // de unde vine
   dinAplicatie: "din-aplicatie",
   campanie: "campanie",

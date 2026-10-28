@@ -8,13 +8,36 @@ export const site = {
   shortName: "GLG",
   phone: "069 792 889",
   phoneHref: "tel:+37369792889",
+  /** Numărul în format internațional, fără semne (pentru wa.me / t.me). */
+  phoneDigits: "37369792889",
   email: "contact@scoalaautoglg.com",
+  emailHref: "mailto:contact@scoalaautoglg.com",
   social: {
     facebook: "https://www.facebook.com/scoalaautoBuiucani/",
     instagram: "https://www.instagram.com/glgproperty/?hl=ro",
     tiktok: "https://www.tiktok.com/@glgproperty",
   },
 };
+
+/**
+ * Mesagerie. WhatsApp merge pe numărul școlii (wa.me deschide chat-ul chiar
+ * dacă aplicația nu e instalată, din browser).
+ *
+ * Telegram rămâne GOL intenționat: școala nu are (încă) un cont public
+ * confirmat, iar un link `t.me` greșit duce la „user not found”, adică un link
+ * mort în antet, în bara de mobil și în secțiunea Contact. Când există contul,
+ * se pune aici adresa lui (ex. "https://t.me/scoalaautoglg") și butoanele apar
+ * singure în toate cele patru locuri, fără alte modificări.
+ */
+export const messengers: { whatsapp: string; telegram: string } = {
+  whatsapp: `https://wa.me/37369792889`,
+  telegram: "",
+};
+
+/** Linkul de WhatsApp cu mesajul deja scris (în limba paginii). */
+export function whatsappHref(text: string): string {
+  return `${messengers.whatsapp}?text=${encodeURIComponent(text)}`;
+}
 
 export type Lang = "ro" | "ru";
 export const langs: Lang[] = ["ro", "ru"];
@@ -159,6 +182,8 @@ export type EnrollDict = {
   submit: string;
   submitting: string;
   callOption: string;
+  /** Mesajul de sus când datele vin din formularul scurt al primei pagini. */
+  prefillNotice: string;
   errors: {
     required: string;
     idnp: string;
@@ -200,7 +225,21 @@ export type Dict = {
     imageAlt: string;
     primaryCta: Cta;
     secondaryCta: Cta;
+    /** Ce putem susține despre plată (fără cifre inventate) + linkul la pachet. */
+    priceLine: string;
+    priceCta: Cta;
+    /** Categoriile predate, ca etichete mici sub titlu (nu în titlu). */
+    categoriesLabel: string;
+    categories: string[];
     chips: string[];
+  };
+  /** Butoanele de mesagerie și bara fixă de pe telefon. */
+  messengers: {
+    whatsapp: string;
+    /** Mesajul deja scris în WhatsApp. */
+    whatsappText: string;
+    telegram: string;
+    bar: { call: string; enroll: string };
   };
   benefits: { icon: string; title: string; text: string; tag: string }[];
   stats: { value: number; suffix: string; label: string }[];
@@ -237,6 +276,28 @@ export type Dict = {
     enrollCta: Cta;
     note: string;
     noteCta: Cta;
+    /** Categoriile din afara pachetului Standard: preț la telefon sau la sediu. */
+    other: { title: string; text: string; categories: string[]; cta: Cta };
+  };
+  /** Formularul scurt de pe prima pagină (nume, telefon, sediu). */
+  quick: {
+    eyebrow: string;
+    title: string;
+    titleAccent: string;
+    subtitle: string;
+    name: string;
+    namePlaceholder: string;
+    phone: string;
+    phonePlaceholder: string;
+    sediu: string;
+    sediuPlaceholder: string;
+    consent: string;
+    consentLinkLabel: string;
+    consentSuffix: string;
+    submit: string;
+    note: string;
+    callLabel: string;
+    errors: { name: string; phone: string; sediu: string; consent: string };
   };
   enroll: EnrollDict;
   steps: {
@@ -263,6 +324,8 @@ export type Dict = {
     callUs: string;
     hoursLabel: string;
     hours: string;
+    /** Eticheta cardului de e-mail (adresa e scrisă vizibil lângă ea). */
+    writeUs: string;
     followUs: string;
     mapBadge: string;
     mapTitle: string;
@@ -312,7 +375,12 @@ export type Dict = {
   cookies: {
     title: string;
     text: string;
+    /** Textul scurt al benzii de jos (un rând pe desktop, maximum două pe mobil). */
+    short: string;
+    /** Linkul scurt din bandă („Detalii”), cu titlul complet în aria-label. */
+    more: string;
     policyLabel: string;
+    accept: string;
     acceptAll: string;
     necessaryOnly: string;
     prefs: string;
@@ -349,19 +417,30 @@ const ro: Dict = {
 
   hero: {
     eyebrow: "Școala Auto GLG Property din Republica Moldova",
-    titleTop: "Școala auto pentru toate categoriile",
-    titleBottom: "A1 · A2 · A · B1 · B · C · CE · D",
+    titleTop: "Școală auto în Chișinău",
+    titleBottom: "pentru toate categoriile de permis",
     subtitle:
-      "Pentru cei care vor să învețe să conducă sigur: instructori atestați, mașini moderne și cele mai avantajoase prețuri din Republica Moldova. 4 centre: 2 în Chișinău, Strășeni și Vorniceni. Grupe în română și rusă.",
+      "Instructori atestați, mașini moderne și grupe în română și rusă, în 4 centre: 2 în Chișinău, Strășeni și Vorniceni.",
     imageAlt: "Skoda Fabia, mașină de instruire a Școlii Auto GLG Property din Chișinău",
     primaryCta: { label: "Înscrie-te online", href: "/inscriere" },
     secondaryCta: { label: site.phone, href: site.phoneHref },
+    priceLine: "Pachetul Standard se achită în până la 25 de rate.",
+    priceCta: { label: "Vezi prețul", href: "#preturi" },
+    categoriesLabel: "Categorii",
+    categories: ["A1", "A2", "A", "B1", "B", "C", "CE", "D"],
     chips: [
       "20.000+ absolvenți",
-      "TOP cele mai bune școli auto",
       "10 ani de experiență",
       "80+ instructori",
+      "4 centre de instruire",
     ],
+  },
+
+  messengers: {
+    whatsapp: "WhatsApp",
+    whatsappText: "Bună ziua! Vreau detalii despre cursuri.",
+    telegram: "Telegram",
+    bar: { call: "Sună", enroll: "Înscrie-te" },
   },
 
   benefits: [
@@ -442,8 +521,8 @@ const ro: Dict = {
     items: [
       {
         icon: "trophy",
-        title: "În TOP-ul celor mai bune școli auto",
-        text: "Printre cele mai bune rate de promovare a examenelor teoretice și practice din prima încercare.",
+        title: "20.000+ absolvenți în 10 ani",
+        text: "Experiență adunată în 10 ani de activitate, cu peste 20.000 de absolvenți și 80+ instructori atestați.",
       },
       {
         icon: "userCheck",
@@ -471,20 +550,20 @@ const ro: Dict = {
   },
 
   pricing: {
-    eyebrow: "Categoriile B1 și B incluse",
+    eyebrow: "Pachetul Standard, categoriile B1 și B",
     title: "Un singur pachet,",
     titleAccent: "simplu și complet",
     subtitle:
-      "Fără opțiuni complicate: toți cursanții primesc același curs complet, cu program flexibil și plata în rate.",
+      "Pachetul Standard este pentru categoriile B1 și B, cu program flexibil și plata în rate. Pregătim și categoriile A1, A2, A, C, CE și D, iar prețul lor ți-l spunem la telefon sau la sediu.",
     categoryLabel: "Categoriile",
     plan: {
       name: "Standard",
-      tagline: "Tot ce ai nevoie ca să obții permisul, într-un singur pachet.",
+      tagline: "Tot ce ai nevoie ca să obții permisul categoria B, într-un singur pachet.",
       category: "B1 · B",
       features: [
         "Durată curs: 3 luni",
         "Luni & miercuri sau marți & joi",
-        "Orare: 09:30, 16:00, 17:30, 19:00 (18:00 grupa rusă)",
+        "Orare: 09:30, 16:00, 17:30, 19:00 (grupele în limba rusă: 17:30 și 19:00, la Buiucani)",
         "24 de lecții practice cu Skoda Fabia și Skoda Scala",
         "Grup de maximum 30 de persoane",
         "Achitare în până la 25 de rate",
@@ -493,6 +572,39 @@ const ro: Dict = {
     enrollCta: { label: "Înscrie-te online", href: "/inscriere" },
     note: "Prețurile detaliate ți le comunicăm la telefon sau direct la centru.",
     noteCta: { label: "Contactează-ne", href: "#contact" },
+    other: {
+      title: "Celelalte categorii",
+      text: "Pregătim și categoriile A1, A2, A, C, CE și D. Pentru ele, prețul și orarul depind de categorie, așa că ți le spunem la telefon sau la sediu.",
+      categories: ["A1", "A2", "A", "C", "CE", "D"],
+      cta: { label: site.phone, href: site.phoneHref },
+    },
+  },
+
+  quick: {
+    eyebrow: "Cerere rapidă",
+    title: "Gata să obții",
+    titleAccent: "permisul",
+    subtitle:
+      "Lasă-ne numele, telefonul și sediul. Continui cererea cu aceste câmpuri deja completate, iar noi te sunăm ca să confirmăm înscrierea.",
+    name: "Nume și prenume",
+    namePlaceholder: "ex. Popescu Ion",
+    phone: "Telefon",
+    phonePlaceholder: "069 000 000",
+    sediu: "Sediul",
+    sediuPlaceholder: "Alege sediul",
+    consent:
+      "Sunt de acord cu prelucrarea datelor mele personale ca să fiu contactat despre cursuri. Am citit",
+    consentLinkLabel: "politica de confidențialitate",
+    consentSuffix: ".",
+    submit: "Continuă cererea",
+    note: "Mai departe îți cerem doar datele din buletin, ca să putem întocmi cererea-contract.",
+    callLabel: "Preferi să vorbim la telefon?",
+    errors: {
+      name: "Scrie numele și prenumele",
+      phone: "Număr de telefon invalid",
+      sediu: "Alege sediul",
+      consent: "Bifează acordul ca să poți continua",
+    },
   },
 
   enroll: {
@@ -620,6 +732,8 @@ const ro: Dict = {
     submit: "Trimite cererea",
     submitting: "Se trimite…",
     callOption: "Preferi să vorbim la telefon?",
+    prefillNotice:
+      "Am preluat datele din formularul scurt. Verifică-le și completează restul câmpurilor, ca să putem întocmi cererea-contract.",
     errors: {
       required: "Câmp obligatoriu",
       idnp: "IDNP-ul are exact 13 cifre",
@@ -674,7 +788,7 @@ const ro: Dict = {
       },
       {
         title: "Susții examenul",
-        text: "Te pregătim pentru proba teoretică și practică, ca să promovezi din prima.",
+        text: "Te pregătim pentru proba teoretică și pentru cea practică, cu lecții pe traseele reale de examinare.",
       },
     ],
   },
@@ -696,7 +810,7 @@ const ro: Dict = {
     items: [
       {
         q: "Ce categorii pot obține la GLG Property?",
-        a: "Te pregătim pentru categoriile B1 și B, cele mai solicitate pentru autoturisme.",
+        a: "Pregătim categoriile A1, A2, A, B1, B, C, CE și D. Pachetul Standard de pe site este pentru categoriile B1 și B (autoturism); pentru A1, A2, A, C, CE și D, prețul și orarul ți le spunem la telefon sau la sediu.",
       },
       {
         q: "Cum mă înscriu?",
@@ -712,7 +826,7 @@ const ro: Dict = {
       },
       {
         q: "Se predă și în limba rusă?",
-        a: "Da, avem grupe în limba rusă (ora 18:00), pe lângă grupele în limba română.",
+        a: "Da, avem grupe în limba rusă la sediul Buiucani, la orele 17:30 și 19:00, pe lângă grupele în limba română de la toate sediile.",
       },
       {
         q: "Cu ce mașini se fac orele de practică?",
@@ -738,6 +852,7 @@ const ro: Dict = {
     callUs: "Sună-ne",
     hoursLabel: "Program",
     hours: "Luni - Sâmbătă",
+    writeUs: "Scrie-ne",
     followUs: "Urmărește-ne",
     mapBadge: "Chișinău · Strășeni · Vorniceni",
     mapTitle: "Harta Google, Școala Auto GLG Property, Chișinău",
@@ -749,7 +864,7 @@ const ro: Dict = {
   },
 
   footer: {
-    heading: "Gata să obții permisul",
+    heading: "Te așteptăm la GLG",
     text: "Fă primul pas spre carnetul de conducere. Te așteptăm la unul dintre centrele noastre din Chișinău, Strășeni sau Vorniceni.",
     columns: [
       {
@@ -899,7 +1014,10 @@ const ro: Dict = {
   cookies: {
     title: "Cookie-uri și confidențialitate",
     text: "Folosim doar stocare strict necesară (limba aleasă, această alegere). Harta Google din secțiunea Contact se încarcă doar cu acordul tău și poate seta cookie-uri proprii Google. Detalii în",
+    short: "Folosim cookie-uri strict necesare și, cu acordul tău, harta Google.",
+    more: "Detalii",
     policyLabel: "Politica de confidențialitate",
+    accept: "Accept",
     acceptAll: "Accept toate",
     necessaryOnly: "Doar necesare",
     prefs: "Preferințe",
@@ -942,19 +1060,30 @@ const ru: Dict = {
 
   hero: {
     eyebrow: "Автошкола GLG Property",
-    titleTop: "Автошкола для всех категорий",
-    titleBottom: "A1 · A2 · A · B1 · B · C · CE · D",
+    titleTop: "Автошкола в Кишинёве",
+    titleBottom: "для всех категорий прав",
     subtitle:
-      "Для тех, кто хочет научиться водить уверенно и безопасно: аттестованные инструкторы, современные автомобили и самые выгодные цены в Республике Молдова. 4 филиала: 2 в Кишинёве, Стрэшены и Ворничены. Группы на румынском и русском языках.",
+      "Аттестованные инструкторы, современные автомобили и группы на румынском и русском языках, в 4 филиалах: 2 в Кишинёве, Стрэшены и Ворничены.",
     imageAlt: "Skoda Fabia, учебный автомобиль автошколы GLG Property в Кишинёве",
     primaryCta: { label: "Записаться онлайн", href: "/inscriere" },
     secondaryCta: { label: site.phone, href: site.phoneHref },
+    priceLine: "Пакет Standard можно оплатить в рассрочку до 25 платежей.",
+    priceCta: { label: "Смотреть цену", href: "#preturi" },
+    categoriesLabel: "Категории",
+    categories: ["A1", "A2", "A", "B1", "B", "C", "CE", "D"],
     chips: [
       "20 000+ выпускников",
-      "ТОП лучших автошкол",
       "10 лет опыта",
       "80+ инструкторов",
+      "4 центра обучения",
     ],
+  },
+
+  messengers: {
+    whatsapp: "WhatsApp",
+    whatsappText: "Здравствуйте! Хочу узнать подробнее о курсах.",
+    telegram: "Telegram",
+    bar: { call: "Позвонить", enroll: "Записаться" },
   },
 
   benefits: [
@@ -1035,8 +1164,8 @@ const ru: Dict = {
     items: [
       {
         icon: "trophy",
-        title: "В ТОПе лучших автошкол Молдовы",
-        text: "Один из лучших в стране процентов сдачи теоретического и практического экзаменов с первой попытки.",
+        title: "20 000+ выпускников за 10 лет",
+        text: "Опыт, накопленный за 10 лет работы: более 20 000 выпускников и 80+ аттестованных инструкторов.",
       },
       {
         icon: "userCheck",
@@ -1064,20 +1193,20 @@ const ru: Dict = {
   },
 
   pricing: {
-    eyebrow: "Категории B1 и B включены",
+    eyebrow: "Пакет Standard, категории B1 и B",
     title: "Один пакет,",
     titleAccent: "простой и полный",
     subtitle:
-      "Никаких сложных вариантов: все ученики получают один и тот же полный курс с гибким графиком и рассрочкой.",
+      "Пакет Standard предназначен для категорий B1 и B, с гибким графиком и рассрочкой. Мы готовим также к категориям A1, A2, A, C, CE и D, а их цену сообщим по телефону или в филиале.",
     categoryLabel: "Категории",
     plan: {
       name: "Standard",
-      tagline: "Всё необходимое для получения прав, в одном пакете.",
+      tagline: "Всё необходимое для получения прав категории B, в одном пакете.",
       category: "B1 · B",
       features: [
         "Длительность курса: 3 месяца",
         "Понедельник и среда или вторник и четверг",
-        "Время: 09:30, 16:00, 17:30, 19:00 (18:00 русская группа)",
+        "Время: 09:30, 16:00, 17:30, 19:00 (группы на русском: 17:30 и 19:00, филиал Буюканы)",
         "24 практических занятия на Skoda Fabia и Skoda Scala",
         "Группа до 30 человек",
         "Рассрочка до 25 платежей",
@@ -1086,6 +1215,39 @@ const ru: Dict = {
     enrollCta: { label: "Записаться онлайн", href: "/inscriere" },
     note: "Подробные цены сообщим по телефону или прямо в филиале.",
     noteCta: { label: "Свяжись с нами", href: "#contact" },
+    other: {
+      title: "Остальные категории",
+      text: "Мы готовим также к категориям A1, A2, A, C, CE и D. Для них цена и расписание зависят от категории, поэтому сообщим их по телефону или в филиале.",
+      categories: ["A1", "A2", "A", "C", "CE", "D"],
+      cta: { label: site.phone, href: site.phoneHref },
+    },
+  },
+
+  quick: {
+    eyebrow: "Быстрая заявка",
+    title: "Пора получить",
+    titleAccent: "права",
+    subtitle:
+      "Оставь имя, телефон и филиал. Заявку продолжишь с уже заполненными полями, а мы позвоним, чтобы подтвердить запись.",
+    name: "Фамилия и имя",
+    namePlaceholder: "напр. Попеску Ион",
+    phone: "Телефон",
+    phonePlaceholder: "069 000 000",
+    sediu: "Филиал",
+    sediuPlaceholder: "Выбери филиал",
+    consent:
+      "Я согласен(на) на обработку моих персональных данных, чтобы со мной связались по поводу курсов. Я ознакомился(лась) с",
+    consentLinkLabel: "политикой конфиденциальности",
+    consentSuffix: ".",
+    submit: "Продолжить заявку",
+    note: "Дальше попросим только данные из удостоверения личности, чтобы оформить заявление-договор.",
+    callLabel: "Удобнее по телефону?",
+    errors: {
+      name: "Укажи фамилию и имя",
+      phone: "Неверный номер телефона",
+      sediu: "Выбери филиал",
+      consent: "Отметь согласие, чтобы продолжить",
+    },
   },
 
   enroll: {
@@ -1212,6 +1374,8 @@ const ru: Dict = {
     submit: "Отправить заявку",
     submitting: "Отправляем…",
     callOption: "Удобнее по телефону?",
+    prefillNotice:
+      "Мы перенесли данные из короткой формы. Проверь их и заполни остальные поля, чтобы мы могли оформить заявление-договор.",
     errors: {
       required: "Обязательное поле",
       idnp: "IDNP состоит ровно из 13 цифр",
@@ -1266,7 +1430,7 @@ const ru: Dict = {
       },
       {
         title: "Сдай экзамен",
-        text: "Готовим к теории и практике, чтобы сдать с первой попытки.",
+        text: "Готовим к теоретической и практической части, с занятиями на реальных экзаменационных маршрутах.",
       },
     ],
   },
@@ -1288,7 +1452,7 @@ const ru: Dict = {
     items: [
       {
         q: "Какие категории можно получить в GLG Property?",
-        a: "Мы готовим к категориям B1 и B, самым востребованным для легковых автомобилей.",
+        a: "Мы готовим к категориям A1, A2, A, B1, B, C, CE и D. Пакет Standard на сайте предназначен для категорий B1 и B (легковой автомобиль); для A1, A2, A, C, CE и D цену и расписание сообщим по телефону или в филиале.",
       },
       {
         q: "Как записаться?",
@@ -1304,7 +1468,7 @@ const ru: Dict = {
       },
       {
         q: "Есть ли обучение на русском языке?",
-        a: "Да, помимо групп на румынском, у нас есть группы на русском языке (в 18:00).",
+        a: "Да, у нас есть группы на русском языке в филиале Буюканы, в 17:30 и 19:00, помимо групп на румынском во всех филиалах.",
       },
       {
         q: "На каких автомобилях проходит практика?",
@@ -1330,6 +1494,7 @@ const ru: Dict = {
     callUs: "Позвони нам",
     hoursLabel: "График работы",
     hours: "Понедельник - Суббота",
+    writeUs: "Напиши нам",
     followUs: "Подписывайся",
     mapBadge: "Кишинёв · Стрэшены · Ворничены",
     mapTitle: "Карта Google, автошкола GLG Property, Кишинёв",
@@ -1341,7 +1506,7 @@ const ru: Dict = {
   },
 
   footer: {
-    heading: "Пора получить права",
+    heading: "Ждём тебя в GLG",
     text: "Сделай первый шаг к водительскому удостоверению. Ждём тебя в одном из наших филиалов в Кишинёве, Стрэшенах или Ворниченах.",
     columns: [
       {
@@ -1491,7 +1656,10 @@ const ru: Dict = {
   cookies: {
     title: "Cookie и конфиденциальность",
     text: "Мы используем только строго необходимое хранилище (выбранный язык, этот выбор). Карта Google в разделе Контакты загружается только с вашего согласия и может устанавливать cookie Google. Подробнее в",
+    short: "Используем только необходимые cookie и, с твоего согласия, карту Google.",
+    more: "Подробнее",
     policyLabel: "Политике конфиденциальности",
+    accept: "Принять",
     acceptAll: "Принять все",
     necessaryOnly: "Только необходимые",
     prefs: "Настройки",

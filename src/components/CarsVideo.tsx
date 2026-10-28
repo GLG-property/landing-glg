@@ -28,7 +28,9 @@ export function CarsVideo() {
               muted
               loop
               playsInline
-              preload="auto"
+              // Fundal decorativ: posterul se vede imediat, filmul se încarcă după.
+              // Cu „auto" întârzia afișarea primului ecran pe telefon cu ~0,3 s.
+              preload="none"
               poster="/masini-poster.jpg"
               aria-hidden="true"
             >

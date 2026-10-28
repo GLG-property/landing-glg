@@ -2,7 +2,9 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
+import clsx from "clsx";
 import { useI18n } from "./LanguageProvider";
+import { Container } from "./primitives";
 
 /* ---------- starea consimtamantului, partajata prin localStorage + eveniment ---------- */
 
@@ -51,7 +53,14 @@ const readUndecided = () => readCookieConsent() === null;
 // Pe server (și la hidratare) bannerul e ascuns; apare imediat după, dacă nu există o alegere.
 const serverUndecided = () => false;
 
-export function CookieConsent() {
+/**
+ * Banda de consimțământ: UN rând pe desktop, maximum două pe mobil (auditul
+ * RAP-CVFM6G: fereastra veche ocupa jumătate din ecranul telefonului).
+ *
+ * `aboveBar` o ridică deasupra barei fixe de acțiune de pe telefon (vezi
+ * MobileActionBar); se pasează din paginile care montează bara.
+ */
+export function CookieConsent({ aboveBar = false }: { aboveBar?: boolean }) {
   const { t } = useI18n();
   const c = t.cookies;
   // „nedecis" vine din stocare, prin useSyncExternalStore (fără setState în efect)
@@ -92,22 +101,60 @@ export function CookieConsent() {
     <div
       role="dialog"
       aria-label={c.title}
-      className="card animate-rise fixed inset-x-4 z-40 mx-auto max-w-xl p-5 bottom-[max(1rem,env(safe-area-inset-bottom))] sm:inset-x-auto sm:right-6 sm:mx-0 sm:max-w-sm sm:bottom-6"
+      className={clsx(
+        "animate-rise fixed inset-x-0 z-50 border-t border-line bg-white/95 backdrop-blur",
+        // Pe mobil stă deasupra barei fixe de acțiune; pe desktop, lipită jos.
+        aboveBar ? "bottom-[calc(4.25rem+env(safe-area-inset-bottom))] md:bottom-0" : "bottom-0"
+      )}
     >
-      <p className="text-sm font-semibold tracking-tight text-ink">{c.title}</p>
-      <p className="mt-2 text-[13px] leading-relaxed text-muted">
-        {c.text}{" "}
-        <Link
-          href="/confidentialitate"
-          className="font-medium text-brand transition-colors duration-200 hover:text-brand-600"
-        >
-          {c.policyLabel}
-        </Link>
-        .
-      </p>
+      <Container className="flex flex-col gap-2 py-2.5 md:flex-row md:items-center md:justify-between md:gap-5 md:py-3">
+        <p className="text-[13px] leading-snug text-muted">
+          {c.short}{" "}
+          <Link
+            href="/confidentialitate"
+            aria-label={c.policyLabel}
+            className="font-medium text-brand transition-colors duration-200 hover:text-brand-600"
+          >
+            {c.more}
+          </Link>
+        </p>
 
+        <div className="flex shrink-0 items-center gap-2">
+          {showPrefs ? (
+            <button
+              onClick={() => decide({ media })}
+              className="btn-3d inline-flex h-9 flex-1 items-center justify-center whitespace-nowrap rounded-[10px] px-3 text-[13px] font-medium text-white transition-colors duration-200 md:flex-none"
+            >
+              {c.save}
+            </button>
+          ) : (
+            <button
+              onClick={() => decide({ media: true })}
+              className="btn-3d inline-flex h-9 flex-1 items-center justify-center whitespace-nowrap rounded-[10px] px-3 text-[13px] font-medium text-white transition-colors duration-200 md:flex-none"
+            >
+              {c.accept}
+            </button>
+          )}
+          <button
+            onClick={() => decide({ media: false })}
+            className="btn-3d-light inline-flex h-9 flex-1 items-center justify-center whitespace-nowrap rounded-[10px] px-3 text-[13px] font-medium text-ink transition-colors duration-200 md:flex-none"
+          >
+            {c.necessaryOnly}
+          </button>
+          {!showPrefs ? (
+            <button
+              onClick={() => setShowPrefs(true)}
+              className="inline-flex h-9 shrink-0 items-center justify-center whitespace-nowrap px-1 text-[13px] font-medium text-muted transition-colors duration-200 hover:text-ink"
+            >
+              {c.prefs}
+            </button>
+          ) : null}
+        </div>
+      </Container>
+
+      {/* Preferințele apar doar la cerere, tot în bandă (nu peste tot ecranul). */}
       {showPrefs ? (
-        <div className="mt-4 flex flex-col gap-2.5 border-t border-line pt-4">
+        <Container className="flex flex-col gap-2 border-t border-line py-3">
           <label className="flex items-start gap-2.5">
             <input
               type="checkbox"
@@ -115,7 +162,7 @@ export function CookieConsent() {
               disabled
               className="mt-0.5 size-4 shrink-0 accent-brand opacity-60"
             />
-            <span className="text-[13px] leading-relaxed text-muted">
+            <span className="text-[13px] leading-snug text-muted">
               <span className="font-medium text-ink">{c.categories.necessary.label}</span>
               {" "}{c.categories.necessary.desc}
             </span>
@@ -127,47 +174,13 @@ export function CookieConsent() {
               onChange={(ev) => setMedia(ev.target.checked)}
               className="mt-0.5 size-4 shrink-0 accent-brand"
             />
-            <span className="text-[13px] leading-relaxed text-muted">
+            <span className="text-[13px] leading-snug text-muted">
               <span className="font-medium text-ink">{c.categories.media.label}</span>
               {" "}{c.categories.media.desc}
             </span>
           </label>
-        </div>
+        </Container>
       ) : null}
-
-      <div className="mt-4 flex flex-col gap-2">
-        <div className="flex gap-2">
-          {showPrefs ? (
-            <button
-              onClick={() => decide({ media })}
-              className="btn-3d inline-flex h-10 flex-1 items-center justify-center whitespace-nowrap rounded-[10px] px-3 text-sm font-medium text-white transition-colors duration-200"
-            >
-              {c.save}
-            </button>
-          ) : (
-            <button
-              onClick={() => decide({ media: true })}
-              className="btn-3d inline-flex h-10 flex-1 items-center justify-center whitespace-nowrap rounded-[10px] px-3 text-sm font-medium text-white transition-colors duration-200"
-            >
-              {c.acceptAll}
-            </button>
-          )}
-          <button
-            onClick={() => decide({ media: false })}
-            className="btn-3d-light inline-flex h-10 flex-1 items-center justify-center whitespace-nowrap rounded-[10px] px-3 text-sm font-medium text-ink transition-colors duration-200"
-          >
-            {c.necessaryOnly}
-          </button>
-        </div>
-        {!showPrefs ? (
-          <button
-            onClick={() => setShowPrefs(true)}
-            className="inline-flex h-9 w-full items-center justify-center whitespace-nowrap text-sm font-medium text-muted transition-colors duration-200 hover:text-ink"
-          >
-            {c.prefs}
-          </button>
-        ) : null}
-      </div>
     </div>
   );
 }

@@ -26,12 +26,15 @@ export const metadata: Metadata = {
   description: homeDescription,
   keywords: [
     "școala auto Chișinău",
+    "școală auto Chișinău",
     "școală auto",
     "permis de conducere categoria B",
+    "permis categoria B Chișinău",
     "școala auto Buiucani",
     "școala auto Botanica",
     "școala auto Strășeni",
     "școala auto Vorniceni",
+    "автошкола Кишинёв",
     "GLG Property",
     "înscriere online școala auto",
   ],
@@ -82,7 +85,7 @@ export const viewport: Viewport = {
 
 /** Id-ul site-ului în Umami (din mediul containerului); lipsă = fără urmărire. */
 // Paginile statice se randează la build (fără mediul containerului), de aceea id-ul
-// e și valoare implicită; nu e secret — apare oricum în HTML-ul public.
+// e și valoare implicită; nu e secret, apare oricum în HTML-ul public.
 const UMAMI_WEBSITE_ID = process.env.UMAMI_WEBSITE_ID?.trim() || "6eb596f1-0800-4a5a-b1da-b4cae3655312";
 
 export default function RootLayout({

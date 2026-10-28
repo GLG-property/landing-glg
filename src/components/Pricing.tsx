@@ -37,6 +37,34 @@ export function Pricing() {
                 {pricing.enrollCta.label}
               </Button>
             </Reveal>
+
+            {/* Celelalte categorii: ce predăm, fără cifre pe care nu le avem
+                (cerința patronului, 22.10.2026: site-ul anunță A1-D). */}
+            <Reveal delay={120}>
+              <div className="card mt-6 p-5">
+                <h3 className="text-base font-semibold tracking-tight text-ink">
+                  {pricing.other.title}
+                </h3>
+                <ul className="mt-3 flex flex-wrap gap-1.5">
+                  {pricing.other.categories.map((c) => (
+                    <li
+                      key={c}
+                      className="chip-3d rounded-[10px] px-2 py-1 text-[13px] font-semibold leading-none text-ink"
+                    >
+                      {c}
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-3 text-sm leading-relaxed text-muted">{pricing.other.text}</p>
+                <a
+                  href={pricing.other.cta.href}
+                  className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-ink transition-colors duration-200 hover:text-brand"
+                >
+                  <Phone className="size-4" strokeWidth={1.5} />
+                  {pricing.other.cta.label}
+                </a>
+              </div>
+            </Reveal>
           </div>
 
           <Reveal>

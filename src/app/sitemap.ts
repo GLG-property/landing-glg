@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/blog/posts";
+import { categorii } from "@/lib/categorii";
+import { sedii } from "@/lib/sedii";
 import { absoluteUrl } from "@/lib/seo";
 
 /**
@@ -9,6 +11,8 @@ import { absoluteUrl } from "@/lib/seo";
  */
 const PAGES_UPDATED = new Date("2026-10-20");
 const LEGAL_UPDATED = new Date("2026-08-31");
+/** Paginile locale (sedii) și cele de categorie, publicate la această dată. */
+const LOCAL_PAGES_UPDATED = new Date("2026-10-28");
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPosts();
@@ -30,6 +34,29 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.9,
     },
+    // Categoria B este pagina de serviciu principală, celelalte categorii sunt
+    // informative, de aceea au prioritate mai mică.
+    {
+      url: absoluteUrl("/permis-categoria-b"),
+      lastModified: LOCAL_PAGES_UPDATED,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    // Paginile de sediu: intenție locală („școală auto Buiucani”), prioritate mare.
+    ...sedii.map((s) => ({
+      url: absoluteUrl(s.path),
+      lastModified: LOCAL_PAGES_UPDATED,
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })),
+    ...categorii
+      .filter((c) => c.slug !== "permis-categoria-b")
+      .map((c) => ({
+        url: absoluteUrl(c.path),
+        lastModified: LOCAL_PAGES_UPDATED,
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      })),
     {
       url: absoluteUrl("/blog"),
       lastModified: latestPost,

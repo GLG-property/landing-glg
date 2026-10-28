@@ -14,9 +14,11 @@ import { Testimonials } from "@/components/Testimonials";
 import { Faq } from "@/components/Faq";
 import { Team } from "@/components/Team";
 import { Contact } from "@/components/Contact";
+import { QuickEnroll } from "@/components/QuickEnroll";
 import { CityGuide } from "@/components/CityGuide";
 import { Footer } from "@/components/Footer";
 import { FloatingContact } from "@/components/FloatingContact";
+import { MobileActionBar } from "@/components/MobileActionBar";
 import { CookieConsent } from "@/components/CookieConsent";
 import { FaqJsonLd } from "@/components/JsonLd";
 import { homeDescription, homeTitle, pageMetadata } from "@/lib/seo";
@@ -48,11 +50,15 @@ export default function Home() {
         <Faq />
         <Team />
         <Contact />
+        {/* Formularul scurt de cerere, lipsea de pe prima pagină (audit RAP-CVFM6G) */}
+        <QuickEnroll />
         <CityGuide />
       </main>
       <Footer />
+      {/* Butonul plutitor rămâne doar pe desktop; pe telefon e bara fixă de jos. */}
       <FloatingContact />
-      <CookieConsent />
+      <MobileActionBar />
+      <CookieConsent aboveBar />
     </LanguageProvider>
   );
 }

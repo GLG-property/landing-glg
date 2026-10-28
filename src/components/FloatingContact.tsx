@@ -6,6 +6,7 @@ import clsx from "clsx";
 import { site } from "@/lib/content";
 import { useI18n } from "./LanguageProvider";
 import { TikTok, Facebook, Instagram } from "./icons";
+import { useMessengers } from "./messengers";
 
 const socials = [
   { icon: Facebook, href: site.social.facebook, label: "Facebook" },
@@ -13,9 +14,17 @@ const socials = [
   { icon: TikTok, href: site.social.tiktok, label: "TikTok" },
 ];
 
-/** Buton plutitor de contact: telefon + retele sociale, vizibil dupa primul ecran. */
+/**
+ * Buton plutitor de contact: telefon, WhatsApp (și Telegram, dacă există cont)
+ * și retelele sociale, vizibil dupa primul ecran.
+ *
+ * DOAR pe desktop (`hidden md:flex`): pe telefon acelasi colt e ocupat de bara
+ * fixa de actiune (MobileActionBar), iar doua lucruri suprapuse acolo erau
+ * exact ce semnala auditul.
+ */
 export function FloatingContact() {
   const { t } = useI18n();
+  const messengerLinks = useMessengers("buton-plutitor");
   const [visible, setVisible] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -49,7 +58,7 @@ export function FloatingContact() {
     <div
       ref={rootRef}
       className={clsx(
-        "fixed right-4 z-30 flex flex-col items-end gap-2 sm:right-6",
+        "fixed right-4 z-30 hidden flex-col items-end gap-2 md:flex sm:right-6",
         "bottom-[max(1.25rem,env(safe-area-inset-bottom))]",
         "transition-opacity duration-200",
         visible ? "opacity-100" : "pointer-events-none opacity-0"
@@ -64,6 +73,19 @@ export function FloatingContact() {
           >
             <Phone className="size-4" strokeWidth={1.5} />
           </a>
+          {messengerLinks.map((l) => (
+            <a
+              key={l.key}
+              href={l.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={l.onClick}
+              aria-label={l.label}
+              className="grid size-10 place-items-center rounded-[8px] text-muted transition-colors duration-200 hover:bg-surface hover:text-ink"
+            >
+              <l.Icon className="size-4" />
+            </a>
+          ))}
           {socials.map((s) => (
             <a
               key={s.label}

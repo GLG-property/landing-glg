@@ -3,6 +3,7 @@ import { LanguageProvider } from "@/components/LanguageProvider";
 import { Navbar } from "@/components/Navbar";
 import { EnrollForm } from "@/components/EnrollForm";
 import { Footer } from "@/components/Footer";
+import { MobileActionBar } from "@/components/MobileActionBar";
 import { CookieConsent } from "@/components/CookieConsent";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { pageMetadata } from "@/lib/seo";
@@ -28,17 +29,35 @@ export const metadata: Metadata = pageMetadata({
   path: "/inscriere",
 });
 
-export default async function InscrierePage() {
-  const options = await loadOptions();
+/** Un parametru de adresă, doar dacă e text simplu. */
+function one(v: string | string[] | undefined): string {
+  return typeof v === "string" ? v : "";
+}
+
+export default async function InscrierePage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const [options, sp] = await Promise.all([loadOptions(), searchParams]);
+  // Datele din formularul scurt al primei pagini (QuickEnroll).
+  const prefill = {
+    name: one(sp.nume),
+    phone: one(sp.telefon),
+    location: one(sp.sediu),
+  };
   return (
     <LanguageProvider>
       <BreadcrumbJsonLd items={[{ name: "Înscriere online", path: "/inscriere" }]} />
       <Navbar />
       <main>
-        <EnrollForm options={options} />
+        <EnrollForm options={options} prefill={prefill} />
       </main>
       <Footer />
-      <CookieConsent />
+      {/* Aici omul e deja în formular: bara de jos păstrează doar „Sună” și
+          mesageria, fără butonul „Înscrie-te” (ar duce în aceeași pagină). */}
+      <MobileActionBar showEnroll={false} />
+      <CookieConsent aboveBar />
     </LanguageProvider>
   );
 }

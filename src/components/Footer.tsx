@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Phone } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 import { site } from "@/lib/content";
 import { useI18n } from "./LanguageProvider";
 import { Container, Logo, Button } from "./primitives";
@@ -25,7 +25,7 @@ export function Footer() {
           <div className="flex max-w-md flex-col items-start">
             <Logo />
             <h2 className="mt-6 text-2xl font-semibold tracking-tight text-ink">
-              {footer.heading}<span className="dot">?</span>
+              {footer.heading}<span className="dot">.</span>
             </h2>
             <p className="mt-3 text-sm text-muted">{footer.text}</p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
@@ -37,6 +37,14 @@ export function Footer() {
                 {site.phone}
               </Button>
             </div>
+            {/* Adresa de e-mail, vizibilă și cu mailto funcțional */}
+            <a
+              href={site.emailHref}
+              className="mt-4 inline-flex items-center gap-2 text-sm text-muted transition-colors duration-200 hover:text-ink"
+            >
+              <Mail className="size-4 text-faint" strokeWidth={1.5} />
+              {site.email}
+            </a>
           </div>
 
           {/* Link columns */}
@@ -47,16 +55,27 @@ export function Footer() {
                   {col.title}
                 </h3>
                 <ul className="mt-4 flex flex-col gap-2.5">
-                  {col.links.map((link) => (
-                    <li key={link.label}>
-                      <Link
-                        href={link.href}
-                        className="text-sm text-muted transition-colors duration-200 hover:text-ink"
-                      >
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
+                  {col.links.map((link) => {
+                    // `mailto:` și `tel:` se randează cu <a> simplu: Link-ul lui
+                    // Next încearcă navigare internă și linkul de e-mail ducea la
+                    // o eroare (auditul RAP-CVFM6G).
+                    const external = /^(mailto:|tel:|https?:)/.test(link.href);
+                    const cls =
+                      "text-sm text-muted transition-colors duration-200 hover:text-ink";
+                    return (
+                      <li key={link.label}>
+                        {external ? (
+                          <a href={link.href} className={cls}>
+                            {link.label}
+                          </a>
+                        ) : (
+                          <Link href={link.href} className={cls}>
+                            {link.label}
+                          </Link>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             ))}

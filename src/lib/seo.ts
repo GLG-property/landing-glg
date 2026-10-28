@@ -1,19 +1,29 @@
 import type { Metadata } from "next";
 
 /**
- * Constante și helper pentru metadatele SEO. Limba RU este comutată doar pe
- * client (LanguageProvider), fără URL-uri separate, deci fiecare pagină are
- * un singur canonical și NU declară hreflang.
+ * Constante și helper pentru metadatele SEO.
+ *
+ * hreflang: limba RU este comutată DOAR pe client (LanguageProvider citește
+ * preferința din localStorage și schimbă dicționarul), la ACEEAȘI adresă URL.
+ * Varianta prerandată, cea pe care o indexează Google, este mereu RO. Fără
+ * adrese separate /ru/..., `alternates.languages` ar minți (ar trimite spre
+ * aceeași pagină), de aceea NU declarăm hreflang. Semnalăm existența variantei
+ * ruse doar prin `og:locale:alternate` (ru_RU) de mai jos și prin
+ * `inLanguage: ["ro", "ru"]` în datele structurate.
  */
 
 export const siteUrl = "https://scoalaautoglg.com";
 export const siteName = "Școala Auto GLG Property";
 export const brandSuffix = "GLG Property";
 
-/** Titlul și descrierea paginii principale (folosite și ca implicite în layout). */
-export const homeTitle = "Școală auto în Chișinău, permis categoria B | GLG Property";
+/**
+ * Titlul și descrierea paginii principale (folosite și ca implicite în layout).
+ * Titlul începe cu fraza căutată („școală auto Chișinău”), recomandarea
+ * auditului RAP-CVFM6G. Cratimă simplă, nu en-dash, conform DESIGN.md.
+ */
+export const homeTitle = "Școală auto Chișinău - permis categoria B | GLG Property";
 export const homeDescription =
-  "Școala Auto GLG Property: școală auto în Chișinău (Buiucani, Botanica), grupe la Strășeni și Vorniceni. Permis categoria B, instructori atestați, RO/RU, rate.";
+  "Școala Auto GLG Property în Chișinău: permis B, 24 lecții practice pe Skoda, instructori atestați, RO/RU, până la 25 de rate. Înscrie-te online azi!";
 
 export const ogImage = {
   url: "/masina-glg.jpg",

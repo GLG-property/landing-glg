@@ -363,14 +363,47 @@ function FormSection({
 
 type Status = { phase: "idle" | "submitting" } | { phase: "success"; duplicate: boolean };
 
-export function EnrollForm({ options }: { options: EnrollOptions | null }) {
+/**
+ * Datele venite din formularul scurt al primei pagini (QuickEnroll), citite pe
+ * server din adresa /inscriere?nume=…&telefon=…&sediu=… și pasate ca prop, ca
+ * să fie deja în câmpuri la prima randare (fără efect, fără nepotrivire la
+ * hidratare).
+ */
+export type EnrollPrefill = { name?: string; phone?: string; location?: string };
+
+function withPrefill(base: EnrollValues, p?: EnrollPrefill): EnrollValues {
+  const nume = (p?.name ?? "").trim().slice(0, 120);
+  const telefon = (p?.phone ?? "").trim().slice(0, 24);
+  const sediu = (p?.location ?? "").trim();
+  if (!nume && !telefon && !sediu) return base;
+  // „Nume și prenume”: primul cuvânt e numele de familie, restul prenumele.
+  const parts = nume.split(/\s+/).filter(Boolean);
+  return {
+    ...base,
+    last_name: parts[0] ?? "",
+    first_name: parts.slice(1).join(" "),
+    phone: telefon,
+    location: (LOCATION_NAMES as readonly string[]).includes(sediu) ? sediu : "",
+  };
+}
+
+export function EnrollForm({
+  options,
+  prefill,
+}: {
+  options: EnrollOptions | null;
+  prefill?: EnrollPrefill;
+}) {
   const { t, lang } = useI18n();
   const e = t.enroll;
 
-  const [values, setValues] = useState<EnrollValues>(() => emptyEnrollValues(lang));
+  const [values, setValues] = useState<EnrollValues>(() =>
+    withPrefill(emptyEnrollValues(lang), prefill)
+  );
   const [errors, setErrors] = useState<EnrollErrors>({});
   const [banner, setBanner] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>({ phase: "idle" });
+  const prefilled = !!(prefill?.name || prefill?.phone || prefill?.location);
   const formRef = useRef<HTMLFormElement>(null);
   const langTouched = useRef(false);
   // Analiză: „formular început” la primul câmp atins și „secțiune” la prima atingere a fiecărei secțiuni.
@@ -576,6 +609,12 @@ export function EnrollForm({ options }: { options: EnrollOptions | null }) {
             accent={e.titleAccent}
             subtitle={e.subtitle}
           />
+
+          {prefilled ? (
+            <p className="card mt-5 px-4 py-3 text-[13px] leading-relaxed text-ink">
+              {e.prefillNotice}
+            </p>
+          ) : null}
 
           <form
             ref={formRef}

@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Phone, Clock, MapPin } from "lucide-react";
+import { Phone, Clock, Mail, MapPin } from "lucide-react";
 import { site } from "@/lib/content";
 import { useI18n } from "./LanguageProvider";
 import { Container, SectionHeading } from "./primitives";
 import { TikTok, Facebook, Instagram } from "./icons";
+import { useMessengers } from "./messengers";
 import { Reveal } from "./Reveal";
 import {
   CONSENT_CHANGE_EVENT,
@@ -26,6 +27,7 @@ const socials = [
 export function Contact() {
   const { t, lang } = useI18n();
   const contact = t.contact;
+  const messengerLinks = useMessengers("contact");
   const [mapAllowed, setMapAllowed] = useState(false);
 
   useEffect(() => {
@@ -64,6 +66,23 @@ export function Contact() {
                 </span>
               </a>
 
+              {/* Adresa de e-mail, scrisă vizibil, cu mailto funcțional
+                  (auditul RAP-CVFM6G: era ascunsă și ducea la o eroare). */}
+              <a
+                href={site.emailHref}
+                className="card group flex items-center gap-4 p-4 transition-colors duration-200 hover:border-brand"
+              >
+                <span className="chip-3d grid size-9 shrink-0 place-items-center rounded-[10px] text-muted">
+                  <Mail className="size-4" strokeWidth={1.5} />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-sm text-muted">{contact.writeUs}</span>
+                  <span className="block break-all text-base font-semibold tracking-tight text-ink transition-colors duration-200 group-hover:text-brand">
+                    {site.email}
+                  </span>
+                </span>
+              </a>
+
               <div className="card flex items-center gap-4 p-4">
                 <span className="chip-3d grid size-9 shrink-0 place-items-center rounded-[10px] text-muted">
                   <Clock className="size-4" strokeWidth={1.5} />
@@ -74,6 +93,23 @@ export function Contact() {
                     {contact.hours}
                   </span>
                 </span>
+              </div>
+
+              {/* Mesagerie: WhatsApp (și Telegram, dacă școala are cont public) */}
+              <div className="flex flex-col gap-2.5 sm:flex-row">
+                {messengerLinks.map((l) => (
+                  <a
+                    key={l.key}
+                    href={l.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={l.onClick}
+                    className="btn-3d-light inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-[10px] px-4 text-sm font-medium text-ink transition-colors duration-200"
+                  >
+                    <l.Icon className="size-4 text-muted" />
+                    {l.label}
+                  </a>
+                ))}
               </div>
             </Reveal>
 

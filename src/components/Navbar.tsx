@@ -8,6 +8,7 @@ import clsx from "clsx";
 import { site, langs, langNames } from "@/lib/content";
 import { useI18n } from "./LanguageProvider";
 import { Logo, Container } from "./primitives";
+import { useMessengers } from "./messengers";
 
 export function Navbar() {
   const { lang, setLang, t } = useI18n();
@@ -16,6 +17,7 @@ export function Navbar() {
   const [langOpen, setLangOpen] = useState(false);
   const [active, setActive] = useState<string | null>(null);
   const pathname = usePathname();
+  const messengerLinks = useMessengers("antet");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -139,6 +141,22 @@ export function Navbar() {
             {site.phone}
           </a>
 
+          {/* Mesagerie, lângă telefon (doar desktop; pe mobil e în bara de jos) */}
+          {messengerLinks.map((l) => (
+            <a
+              key={l.key}
+              href={l.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={l.onClick}
+              aria-label={l.label}
+              title={l.label}
+              className="btn-3d-light hidden size-10 place-items-center rounded-[10px] text-muted transition-colors duration-200 hover:text-ink md:grid"
+            >
+              <l.Icon className="size-4" />
+            </a>
+          ))}
+
           {/* Primary CTA */}
           <Link
             href={t.nav.cta.href}
@@ -208,14 +226,32 @@ export function Navbar() {
                   </button>
                 ))}
               </div>
-              <a
-                href={site.phoneHref}
-                onClick={() => setOpen(false)}
-                className="btn-3d-light inline-flex w-full items-center justify-center gap-2 rounded-[10px] px-5 py-3.5 text-sm font-medium text-ink transition-colors duration-200"
-              >
-                <Phone className="size-4 text-muted" strokeWidth={1.5} />
-                {site.phone}
-              </a>
+              <div className="flex gap-2">
+                <a
+                  href={site.phoneHref}
+                  onClick={() => setOpen(false)}
+                  className="btn-3d-light inline-flex flex-1 items-center justify-center gap-2 rounded-[10px] px-4 py-3.5 text-sm font-medium text-ink transition-colors duration-200"
+                >
+                  <Phone className="size-4 text-muted" strokeWidth={1.5} />
+                  {site.phone}
+                </a>
+                {messengerLinks.map((l) => (
+                  <a
+                    key={l.key}
+                    href={l.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => {
+                      l.onClick();
+                      setOpen(false);
+                    }}
+                    aria-label={l.label}
+                    className="btn-3d-light grid size-12 shrink-0 place-items-center rounded-[10px] text-muted transition-colors duration-200 hover:text-ink"
+                  >
+                    <l.Icon className="size-4" />
+                  </a>
+                ))}
+              </div>
               <Link
                 href={t.nav.cta.href}
                 onClick={() => setOpen(false)}

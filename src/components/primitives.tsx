@@ -117,6 +117,15 @@ type ButtonProps = {
   withArrow?: boolean;
 };
 
+/**
+ * `tel:`, `mailto:` și adresele externe se randează cu <a> simplu: Link-ul lui
+ * Next e pentru rute interne, iar un href cu alt protocol nu are ce căuta prin
+ * router (auditul RAP-CVFM6G semnala linkul de e-mail care ducea la o eroare).
+ */
+function isPlainHref(href: string): boolean {
+  return /^(mailto:|tel:|https?:)/.test(href);
+}
+
 export function Button({
   href,
   children,
@@ -134,11 +143,25 @@ export function Button({
     secondary: "btn-3d-light text-ink",
     ghost: "text-brand hover:text-brand-700",
   } as const;
-
-  return (
-    <Link href={href} className={clsx(base, styles[variant], className)}>
+  const cls = clsx(base, styles[variant], className);
+  const content = (
+    <>
       {children}
       {withArrow ? <ArrowRight className="size-4" strokeWidth={1.5} /> : null}
+    </>
+  );
+
+  if (isPlainHref(href)) {
+    return (
+      <a href={href} className={cls}>
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={href} className={cls}>
+      {content}
     </Link>
   );
 }
@@ -153,16 +176,28 @@ export function BlockButton({
   children: React.ReactNode;
   className?: string;
 }) {
-  return (
-    <Link
-      href={href}
-      className={clsx(
-        "btn-3d flex w-full items-center justify-center gap-2 rounded-[10px] px-5 py-3.5 font-medium text-white transition-colors duration-200",
-        className
-      )}
-    >
+  const cls = clsx(
+    "btn-3d flex w-full items-center justify-center gap-2 rounded-[10px] px-5 py-3.5 font-medium text-white transition-colors duration-200",
+    className
+  );
+  const content = (
+    <>
       {children}
       <ArrowRight className="size-4" strokeWidth={1.5} />
+    </>
+  );
+
+  if (isPlainHref(href)) {
+    return (
+      <a href={href} className={cls}>
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={href} className={cls}>
+      {content}
     </Link>
   );
 }
