@@ -10,6 +10,17 @@ import { useI18n } from "./LanguageProvider";
 import { Logo, Container } from "./primitives";
 import { useMessengers } from "./messengers";
 
+/**
+ * După intrarea „Informație înscriere”, meniul are 7 poziții, iar pe laptopurile
+ * de 1024-1280px nu încap toate lângă siglă, telefon și butonul de înscriere.
+ * De aceea, pe desktop:
+ *  - „Acasă” nu se afișează (sigla duce oricum la pagina principală);
+ *  - „Echipa” apare doar de la 1280px în sus.
+ * În meniul mobil rămân toate cele 7 intrări, în ordinea din content.ts.
+ */
+const NAV_MOBILE_ONLY = new Set(["/#acasa"]);
+const NAV_FROM_XL = new Set(["/#echipa"]);
+
 export function Navbar() {
   const { lang, setLang, t } = useI18n();
   const [open, setOpen] = useState(false);
@@ -67,10 +78,13 @@ export function Navbar() {
       )}
     >
       <Container className="flex h-16 items-center justify-between gap-4">
-        <Logo />
+        {/* Numele scris cu majuscule („GLG PROPERTY”), cerința patronului din
+            31.10.2026. Textul vine din componenta Logo, accentul pe al doilea
+            cuvânt rămâne neatins. */}
+        <Logo className="uppercase" />
 
-        <nav className="hidden items-center gap-1 lg:flex">
-          {t.nav.items.map((item) => {
+        <nav className="hidden items-center gap-0.5 lg:flex xl:gap-1">
+          {t.nav.items.filter((item) => !NAV_MOBILE_ONLY.has(item.href)).map((item) => {
             // Ancorele urmăresc scroll-spy-ul pe pagina principală; paginile
             // proprii (ex. /blog) sunt active după calea curentă.
             const isAnchor = item.href.includes("#");
@@ -83,7 +97,8 @@ export function Navbar() {
                 key={item.href}
                 href={item.href}
                 className={clsx(
-                  "relative px-3 py-2 text-sm font-medium transition-colors duration-200 after:absolute after:inset-x-3 after:bottom-1 after:h-px after:opacity-0 after:transition-opacity after:duration-200",
+                  "relative px-2.5 py-2 text-sm font-medium transition-colors duration-200 after:absolute after:inset-x-2.5 after:bottom-1 after:h-px after:opacity-0 after:transition-opacity after:duration-200 xl:px-3 xl:after:inset-x-3",
+                  NAV_FROM_XL.has(item.href) && "hidden xl:block",
                   isActive
                     ? "text-ink after:bg-brand after:opacity-100"
                     : "text-muted hover:text-ink after:bg-ink hover:after:opacity-100"
@@ -132,16 +147,19 @@ export function Navbar() {
             ) : null}
           </div>
 
-          {/* Phone, secondary */}
+          {/* Phone, secondary. Numărul scris apare de la 1280px: între 1024 și
+              1280px locul e luat de meniul cu 6 intrări, iar telefonul rămâne
+              accesibil prin butonul cu iconiță de mai jos. */}
           <a
             href={site.phoneHref}
-            className="hidden items-center gap-2 px-2 py-2 text-sm font-medium text-ink transition-colors duration-200 hover:text-brand md:inline-flex"
+            className="hidden items-center gap-2 px-2 py-2 text-sm font-medium text-ink transition-colors duration-200 hover:text-brand xl:inline-flex"
           >
             <Phone className="size-4 text-muted" strokeWidth={1.5} />
             {site.phone}
           </a>
 
-          {/* Mesagerie, lângă telefon (doar desktop; pe mobil e în bara de jos) */}
+          {/* Mesagerie, lângă telefon (de la 1280px; sub acest prag rămâne
+              butonul plutitor de contact, care e vizibil de la 768px) */}
           {messengerLinks.map((l) => (
             <a
               key={l.key}
@@ -151,7 +169,7 @@ export function Navbar() {
               onClick={l.onClick}
               aria-label={l.label}
               title={l.label}
-              className="btn-3d-light hidden size-10 place-items-center rounded-[10px] text-muted transition-colors duration-200 hover:text-ink md:grid"
+              className="btn-3d-light hidden size-10 place-items-center rounded-[10px] text-muted transition-colors duration-200 hover:text-ink xl:grid"
             >
               <l.Icon className="size-4" />
             </a>
@@ -168,7 +186,7 @@ export function Navbar() {
           <a
             href={site.phoneHref}
             aria-label={site.phone}
-            className="btn-3d-light grid size-10 place-items-center rounded-[10px] text-ink transition-colors duration-200 md:hidden"
+            className="btn-3d-light grid size-10 place-items-center rounded-[10px] text-ink transition-colors duration-200 xl:hidden"
           >
             <Phone className="size-4" strokeWidth={1.5} />
           </a>

@@ -13,6 +13,8 @@ const PAGES_UPDATED = new Date("2026-10-20");
 const LEGAL_UPDATED = new Date("2026-08-31");
 /** Paginile locale (sedii) și cele de categorie, publicate la această dată. */
 const LOCAL_PAGES_UPDATED = new Date("2026-10-28");
+/** Pagina „Informație înscriere”, publicată odată cu meniul nou. */
+const INFO_PAGE_UPDATED = new Date("2026-10-31");
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPosts();
@@ -32,6 +34,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: absoluteUrl("/inscriere"),
       lastModified: PAGES_UPDATED,
       changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    // Pagina cu toate informațiile de dinainte de înscriere (grupe, preț, acte).
+    {
+      url: absoluteUrl("/informatii-inscriere"),
+      lastModified: INFO_PAGE_UPDATED,
+      changeFrequency: "weekly",
       priority: 0.9,
     },
     // Categoria B este pagina de serviciu principală, celelalte categorii sunt

@@ -96,7 +96,7 @@ export const categorii: Categorie[] = [
       includesTitle: "Ce include cursul de categoria B",
       includes: [
         "Teorie cu profesori atestați, în grupe de maximum 30 de persoane",
-        "24 de lecții practice pe Skoda Fabia și Skoda Scala",
+        "24 de lecții practice pe Skoda Fabia, Skoda Scala și Toyota Yaris",
         "Practică pe traseele reale de examinare din Chișinău",
         "Grupe în limba română la toate sediile și în limba rusă la Buiucani",
         "Cutie mecanică sau automată, la alegere",
@@ -105,7 +105,7 @@ export const categorii: Categorie[] = [
       ],
       durationTitle: "Cât durează",
       duration:
-        "Cursul durează 3 luni și cuprinde atât teoria, cât și practica. Teoria se ține luni și miercuri sau marți și joi, la 09:30, 16:00, 17:30 sau 19:00, iar la Buiucani grupele în limba rusă sunt la 17:30 și 19:00.",
+        "Cursul durează 3 luni și cuprinde atât teoria, cât și practica. Teoria se ține luni și miercuri, marți și joi sau în weekend, sâmbăta de la 09:00; orele din timpul săptămânii sunt 09:30, 16:00, 17:30 și 19:00, iar la Buiucani grupele în limba rusă sunt la 17:30 și 19:00.",
       agesTitle: "Condițiile legale de vârstă",
       ages: [
         "Examenul la ASP pentru categoria B se susține de la 18 ani împliniți.",
@@ -132,7 +132,7 @@ export const categorii: Categorie[] = [
         },
         {
           q: "Câte lecții practice am la categoria B?",
-          a: "24 de lecții practice, pe Skoda Fabia și Skoda Scala, inclusiv pe traseele reale de examinare din Chișinău.",
+          a: "24 de lecții practice, pe Skoda Fabia, Skoda Scala și Toyota Yaris, inclusiv pe traseele reale de examinare din Chișinău.",
         },
         {
           q: "Pot face practica pe cutie automată?",
@@ -162,7 +162,7 @@ export const categorii: Categorie[] = [
       includesTitle: "Что входит в курс категории B",
       includes: [
         "Теория с аттестованными преподавателями, группы до 30 человек",
-        "24 практических занятия на Skoda Fabia и Skoda Scala",
+        "24 практических занятия на Skoda Fabia, Skoda Scala и Toyota Yaris",
         "Практика по реальным экзаменационным маршрутам Кишинёва",
         "Группы на румынском во всех филиалах и на русском в Буюканах",
         "Механика или автомат, на выбор",
@@ -171,7 +171,7 @@ export const categorii: Categorie[] = [
       ],
       durationTitle: "Сколько длится",
       duration:
-        "Курс длится 3 месяца и включает теорию и практику. Теория проходит по понедельникам и средам или по вторникам и четвергам, в 09:30, 16:00, 17:30 или 19:00, а в Буюканах группы на русском в 17:30 и 19:00.",
+        "Курс длится 3 месяца и включает теорию и практику. Теория проходит по понедельникам и средам, по вторникам и четвергам или в выходные, по субботам с 09:00; в будни занятия в 09:30, 16:00, 17:30 или 19:00, а в Буюканах группы на русском в 17:30 и 19:00.",
       agesTitle: "Требования по возрасту",
       ages: [
         "Экзамен в ASP на категорию B сдают с 18 полных лет.",
@@ -198,7 +198,7 @@ export const categorii: Categorie[] = [
         },
         {
           q: "Сколько практических занятий на категории B?",
-          a: "24 занятия, на Skoda Fabia и Skoda Scala, в том числе по реальным экзаменационным маршрутам Кишинёва.",
+          a: "24 занятия, на Skoda Fabia, Skoda Scala и Toyota Yaris, в том числе по реальным экзаменационным маршрутам Кишинёва.",
         },
         {
           q: "Можно ли учиться на автомате?",
@@ -240,6 +240,7 @@ export const categorii: Categorie[] = [
         "A: motociclete fără limită de putere, cu sau fără ataș, și tricicluri de peste 15 kW",
         "Examenul teoretic are același format ca la categoria B: 24 de întrebări în 30 de minute",
         "Proba practică se dă pe poligon: slalom, ocolirea obstacolului, frânare controlată",
+        "Pregătirea practică se face pe motociclete Maya Motors și Andes, din parcul nostru de peste 50 de vehicule",
       ],
       durationTitle: "Durata cursului",
       duration:
@@ -298,6 +299,7 @@ export const categorii: Categorie[] = [
         "A: мотоциклы без ограничения мощности, с коляской или без, и трициклы свыше 15 кВт",
         "Теоретический экзамен как для категории B: 24 вопроса за 30 минут",
         "Практика на площадке: слалом, объезд препятствия, контролируемое торможение",
+        "Практическая подготовка на мотоциклах Maya Motors и Andes, из нашего парка более 50 единиц транспорта",
       ],
       durationTitle: "Длительность курса",
       duration:
@@ -363,6 +365,7 @@ export const categorii: Categorie[] = [
         "Teoria are 30 de întrebări în 38 de minute, cu minimum 27 de răspunsuri corecte",
         "Proba practică se dă pe traseu real, cu durată de minimum 45 de minute",
         "Adeverința medicală pentru categoriile profesionale cere un control mai amănunțit",
+        "Pregătirea practică se face pe camioane Volvo FE 320, Volvo FL 290 și MAN, cu cutie mecanică și automată",
       ],
       durationTitle: "Durata cursului",
       duration:
@@ -420,6 +423,7 @@ export const categorii: Categorie[] = [
         "Теория: 30 вопросов за 38 минут, минимум 27 правильных ответов",
         "Практика на реальном маршруте, не менее 45 минут",
         "Медсправка для профессиональных категорий требует более подробного осмотра",
+        "Практическая подготовка на грузовиках Volvo FE 320, Volvo FL 290 и MAN, механика и автомат",
       ],
       durationTitle: "Длительность курса",
       duration:
@@ -484,6 +488,7 @@ export const categorii: Categorie[] = [
         "Teoria are 30 de întrebări în 38 de minute, cu minimum 27 de răspunsuri corecte",
         "Proba practică se dă pe traseu real, cu durată de minimum 45 de minute",
         "Pentru transportul de persoane, cerințele medicale sunt cele mai stricte",
+        "Pregătirea practică se face pe autobuze Irisbus din parcul școlii",
       ],
       durationTitle: "Durata cursului",
       duration:
@@ -541,6 +546,7 @@ export const categorii: Categorie[] = [
         "Теория: 30 вопросов за 38 минут, минимум 27 правильных ответов",
         "Практика на реальном маршруте, не менее 45 минут",
         "Для перевозки пассажиров медицинские требования самые строгие",
+        "Практическая подготовка на автобусах Irisbus из парка школы",
       ],
       durationTitle: "Длительность курса",
       duration:

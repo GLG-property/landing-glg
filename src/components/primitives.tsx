@@ -33,8 +33,8 @@ export function Logo({ className }: { className?: string }) {
         priority
         className="h-11 w-auto"
       />
-      <span className="ml-2.5 text-[1.15rem] font-semibold tracking-tight text-ink">
-        GLG <span className="font-normal text-muted">Property</span>
+      <span className="ml-2.5 text-[1.3rem] font-bold tracking-tight text-ink">
+        GLG <span className="font-bold text-ink">PROPERTY</span>
       </span>
     </Link>
   );

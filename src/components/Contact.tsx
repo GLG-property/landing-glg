@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Phone, Clock, Mail, MapPin } from "lucide-react";
+import clsx from "clsx";
 import { site } from "@/lib/content";
 import { useI18n } from "./LanguageProvider";
 import { Container, SectionHeading } from "./primitives";
@@ -15,8 +16,10 @@ import {
 } from "./CookieConsent";
 
 // hl forces the embed UI language to match the page language instead of the browser locale
-const mapEmbedUrl = (lang: string) =>
-  `https://www.google.com/maps?q=Scoala%20Auto%20GLG%20Property%20Chisinau&output=embed&hl=${lang}`;
+const mapEmbedUrl = (lang: string, query: string) =>
+  `https://www.google.com/maps?q=${encodeURIComponent(query)}&output=embed&hl=${lang}`;
+const mapLinkUrl = (query: string) =>
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 
 const socials = [
   { icon: Facebook, href: site.social.facebook, label: "Facebook" },
@@ -29,6 +32,9 @@ export function Contact() {
   const contact = t.contact;
   const messengerLinks = useMessengers("contact");
   const [mapAllowed, setMapAllowed] = useState(false);
+  // Harta arată pe rând fiecare centru; implicit sediul principal (primul din listă).
+  const [centerIndex, setCenterIndex] = useState(0);
+  const activeCenter = contact.centers[centerIndex] ?? contact.centers[0];
 
   useEffect(() => {
     const sync = () => setMapAllowed(readCookieConsent()?.media === true);
@@ -139,8 +145,9 @@ export function Contact() {
             <div className="overflow-hidden rounded-xl border border-line bg-surface">
               {mapAllowed ? (
                 <iframe
-                  src={mapEmbedUrl(lang)}
-                  title={contact.mapTitle}
+                  key={activeCenter.mapQuery}
+                  src={mapEmbedUrl(lang, activeCenter.mapQuery)}
+                  title={`${contact.mapTitle}: ${activeCenter.name}`}
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                   allowFullScreen
@@ -159,17 +166,46 @@ export function Contact() {
                 </div>
               )}
             </div>
+            {/* Cele patru centre: apasă unul și harta sare la el. */}
             <div className="mt-5">
               <h3 className="text-base font-semibold tracking-tight text-ink">
                 {contact.centersTitle}
               </h3>
-              <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-2">
-                {contact.sectors.map((sector) => (
-                  <li key={sector} className="flex items-center gap-2 text-sm text-muted">
-                    <MapPin className="size-4 text-faint" strokeWidth={1.5} />
-                    <span>{sector}</span>
-                  </li>
-                ))}
+              <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+                {contact.centers.map((center, i) => {
+                  const active = i === centerIndex;
+                  return (
+                    <li key={center.name}>
+                      <button
+                        type="button"
+                        onClick={() => setCenterIndex(i)}
+                        aria-pressed={active}
+                        className={clsx(
+                          "flex w-full items-start gap-2.5 rounded-[10px] border p-3 text-left transition-colors duration-200",
+                          active ? "border-ink bg-ink/[0.04]" : "input-3d border-line hover:border-faint"
+                        )}
+                      >
+                        <MapPin
+                          className={clsx("mt-0.5 size-4 shrink-0", active ? "text-brand" : "text-faint")}
+                          strokeWidth={1.5}
+                        />
+                        <span className="min-w-0">
+                          <span className="block text-sm font-semibold text-ink">{center.name}</span>
+                          <span className="block text-[13px] leading-snug text-muted">{center.address}</span>
+                          <a
+                            href={mapLinkUrl(center.mapQuery)}
+                            target="_blank"
+                            rel="noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="mt-1 inline-block text-[13px] font-medium text-brand hover:underline"
+                          >
+                            {contact.mapOpen}
+                          </a>
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           </Reveal>

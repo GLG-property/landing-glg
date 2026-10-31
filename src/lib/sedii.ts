@@ -11,7 +11,8 @@
  *   - orarul de mai jos este orarul FIX al cabinetelor (copia publică a
  *     practica-glg/lib/groupSchedule.ts, fără numele cabinetelor). Grupele
  *     chiar deschise acum apar în formularul de la /inscriere;
- *   - ADRESELE: doar cele confirmate din surse publice. Unde nu avem adresa,
+ *   - ADRESELE: doar cele confirmate (documentul oficial al școlii, apoi surse
+ *     publice). Buiucani are adresa din document. Unde nu avem adresa,
  *     `address` este null și pagina afișează „adresa exactă la telefon”.
  *     NU se inventează adrese, nici în schema.org.
  * ============================================================
@@ -23,7 +24,7 @@ export type LocationName = (typeof LOCATION_NAMES)[number];
 
 /** Adresă poștală confirmată (se mapează 1:1 pe schema.org PostalAddress). */
 export interface SediuAddress {
-  /** Strada și numărul, ex. „bd. Alba Iulia 75/N”. */
+  /** Strada și numărul, ex. „str. Alba Iulia 75, bloc V, etaj 5”. */
   street: string;
   /** Localitatea, ex. „Chișinău”. */
   locality: string;
@@ -163,22 +164,25 @@ export const sedii: Sediu[] = [
     path: "/scoala-auto-buiucani",
     location: "Buiucani",
     shortName: { ro: "Școală auto Buiucani", ru: "Автошкола Буюканы" },
-    // Adresa sediului principal, confirmată din surse publice (bd. Alba Iulia 75/N).
-    address: { street: "bd. Alba Iulia 75/N", locality: "Chișinău", region: "Municipiul Chișinău" },
-    mapQuery: "bd. Alba Iulia 75/N, Chișinău",
+    // Adresa sediului principal, din documentul oficial al școlii
+    // („SC GLG PROPERTY SRL”): mun. Chișinău, str. Alba Iulia 75, blocul V,
+    // etajul 5. Înlocuiește varianta publică anterioară („bd. Alba Iulia 75/N”).
+    address: { street: "str. Alba Iulia 75, bloc V, etaj 5", locality: "Chișinău", region: "Municipiul Chișinău" },
+    // Harta primește doar strada și numărul: blocul și etajul nu ajută Google.
+    mapQuery: "str. Alba Iulia 75, Chișinău",
     areaServed: ["Chișinău"],
     schedule: chisinauSchedule(true),
     ro: {
       h1: "Școală auto în Buiucani, Chișinău",
       seoTitle: "Școală auto în Buiucani, Chișinău",
       description:
-        "Școală auto în Buiucani, Chișinău: bd. Alba Iulia 75/N, grupe în română și rusă, orare de la 09:30 până la 19:00, categoria B, 24 de lecții practice. Înscriere online.",
+        "Școală auto în Buiucani, Chișinău: str. Alba Iulia 75, grupe în română și rusă, orare de la 09:30 până la 19:00, categoria B, 24 de lecții practice. Înscriere online.",
       intro: [
-        "Sediul nostru principal este în sectorul Buiucani, pe bd. Alba Iulia 75/N, în Chișinău. Aici învață cele mai multe grupe, aici sunt și singurele grupe în limba rusă, iar cabinetele de teorie permit orare de dimineață, de după-amiază și de seară.",
+        "Sediul nostru principal este în sectorul Buiucani, pe str. Alba Iulia 75, blocul V, etajul 5, în Chișinău. Aici învață cele mai multe grupe, aici sunt și singurele grupe în limba rusă, iar cabinetele de teorie permit orare de dimineață, de după-amiază și de seară.",
         "Cursul durează 3 luni și include 24 de lecții practice pe Skoda Fabia și Skoda Scala, inclusiv pe traseele reale de examinare din Chișinău. Plata se poate face în până la 25 de rate.",
       ],
       addressLabel: "Adresa",
-      addressValue: "bd. Alba Iulia 75/N, Chișinău",
+      addressValue: "str. Alba Iulia 75, blocul V, etajul 5, Chișinău",
       mapNote: MAP_NOTE_EXACT_RO,
       scheduleTitle: "Orarul grupelor de teorie la Buiucani",
       scheduleNote: SCHEDULE_NOTE_RO,
@@ -191,7 +195,7 @@ export const sedii: Sediu[] = [
       faq: [
         {
           q: "Unde se află sediul din Buiucani?",
-          a: "Pe bd. Alba Iulia 75/N, în sectorul Buiucani din Chișinău. Suntem deschiși de luni până sâmbătă, iar la telefon 069 792 889 îți explicăm cum ajungi.",
+          a: "Pe str. Alba Iulia 75, blocul V, etajul 5, în sectorul Buiucani din Chișinău. Suntem deschiși de luni până sâmbătă, iar la telefon 069 792 889 îți explicăm cum ajungi.",
         },
         {
           q: "Sunt grupe în limba rusă la Buiucani?",
@@ -211,15 +215,15 @@ export const sedii: Sediu[] = [
     },
     ru: {
       h1: "Автошкола в Буюканах, Кишинёв",
-      seoTitle: "Автошкола Буюканы, Кишинёв, бул. Алба Юлия 75/N",
+      seoTitle: "Автошкола Буюканы, Кишинёв, ул. Алба Юлия 75",
       description:
-        "Автошкола в Буюканах, Кишинёв: бул. Алба Юлия 75/N, группы на русском и румынском, занятия с 09:30 до 19:00, категория B, 24 практических занятия. Заявка онлайн.",
+        "Автошкола в Буюканах, Кишинёв: ул. Алба Юлия 75, группы на русском и румынском, занятия с 09:30 до 19:00, категория B, 24 практических занятия. Заявка онлайн.",
       intro: [
-        "Главный филиал находится в секторе Буюканы, на бул. Алба Юлия 75/N в Кишинёве. Здесь учится больше всего групп, здесь же единственные группы на русском языке, а кабинеты теории позволяют утренние, дневные и вечерние занятия.",
+        "Главный филиал находится в секторе Буюканы, на ул. Алба Юлия 75, блок V, этаж 5, в Кишинёве. Здесь учится больше всего групп, здесь же единственные группы на русском языке, а кабинеты теории позволяют утренние, дневные и вечерние занятия.",
         "Курс длится 3 месяца и включает 24 практических занятия на Skoda Fabia и Skoda Scala, в том числе по реальным экзаменационным маршрутам Кишинёва. Оплата возможна до 25 частей.",
       ],
       addressLabel: "Адрес",
-      addressValue: "бул. Алба Юлия 75/N, Кишинёв",
+      addressValue: "ул. Алба Юлия 75, блок V, этаж 5, Кишинёв",
       mapNote: MAP_NOTE_EXACT_RU,
       scheduleTitle: "Расписание групп теории в Буюканах",
       scheduleNote: SCHEDULE_NOTE_RU,
@@ -232,7 +236,7 @@ export const sedii: Sediu[] = [
       faq: [
         {
           q: "Где находится филиал в Буюканах?",
-          a: "На бул. Алба Юлия 75/N, сектор Буюканы, Кишинёв. Работаем с понедельника по субботу, по телефону 069 792 889 подскажем, как добраться.",
+          a: "На ул. Алба Юлия 75, блок V, этаж 5, сектор Буюканы, Кишинёв. Работаем с понедельника по субботу, по телефону 069 792 889 подскажем, как добраться.",
         },
         {
           q: "Есть ли группы на русском языке в Буюканах?",
@@ -350,8 +354,8 @@ export const sedii: Sediu[] = [
     path: "/scoala-auto-straseni",
     location: "Strășeni",
     shortName: { ro: "Școală auto Strășeni", ru: "Автошкола Стрэшены" },
-    // Adresa filialei, confirmată din surse publice (str. Mihai Eminescu 32).
-    address: { street: "str. Mihai Eminescu 32", locality: "Strășeni", region: "Raionul Strășeni" },
+    // Adresa filialei, confirmată de patron (31.10.2026).
+    address: { street: "str. Mihai Eminescu 32/2", locality: "Strășeni", region: "Raionul Strășeni" },
     mapQuery: "str. Mihai Eminescu 32, Strășeni",
     areaServed: ["Strășeni"],
     schedule: [
@@ -361,15 +365,15 @@ export const sedii: Sediu[] = [
     ],
     ro: {
       h1: "Școală auto în Strășeni",
-      seoTitle: "Școală auto Strășeni, str. Mihai Eminescu 32",
+      seoTitle: "Școală auto Strășeni, str. Mihai Eminescu 32/2",
       description:
-        "Școală auto în Strășeni, str. Mihai Eminescu 32: grupe de teorie de la ora 15:00, categoria B, 24 de lecții practice pe Skoda, plata în rate. Înscriere online.",
+        "Școală auto în Strășeni, str. Mihai Eminescu 32/2: grupe de teorie de la ora 15:00, categoria B, 24 de lecții practice pe Skoda, plata în rate. Înscriere online.",
       intro: [
-        "Filiala din Strășeni este pe str. Mihai Eminescu 32. Aici teoria se ține după-amiaza, de la ora 15:00, ca să poți veni după școală sau după program, plus o grupă cu sâmbăta dimineață.",
+        "Filiala din Strășeni este pe str. Mihai Eminescu 32/2. Aici teoria se ține după-amiaza, de la ora 15:00, ca să poți veni după școală sau după program, plus o grupă cu sâmbăta dimineață.",
         "Cursul este același ca în Chișinău: 3 luni de teorie, 24 de lecții practice pe Skoda Fabia și Skoda Scala și plata în până la 25 de rate. Nu trebuie să te deplasezi la Chișinău pentru orele de teorie.",
       ],
       addressLabel: "Adresa",
-      addressValue: "str. Mihai Eminescu 32, Strășeni",
+      addressValue: "str. Mihai Eminescu 32/2, Strășeni",
       mapNote: MAP_NOTE_EXACT_RO,
       scheduleTitle: "Orarul grupelor de teorie la Strășeni",
       scheduleNote: SCHEDULE_NOTE_RO,
@@ -382,7 +386,7 @@ export const sedii: Sediu[] = [
       faq: [
         {
           q: "Unde se află filiala din Strășeni?",
-          a: "Pe str. Mihai Eminescu 32, în Strășeni. Suntem deschiși de luni până sâmbătă, iar la 069 792 889 îți explicăm cum ajungi.",
+          a: "Pe str. Mihai Eminescu 32/2, în Strășeni. Suntem deschiși de luni până sâmbătă, iar la 069 792 889 îți explicăm cum ajungi.",
         },
         {
           q: "La ce oră este teoria la Strășeni?",
@@ -402,15 +406,15 @@ export const sedii: Sediu[] = [
     },
     ru: {
       h1: "Автошкола в Стрэшенах",
-      seoTitle: "Автошкола Стрэшены, ул. Михай Эминеску 32",
+      seoTitle: "Автошкола Стрэшены, ул. Михай Эминеску 32/2",
       description:
-        "Автошкола в Стрэшенах, ул. Михай Эминеску 32: группы теории с 15:00, категория B, 24 практических занятия на Skoda, оплата частями. Заявка онлайн.",
+        "Автошкола в Стрэшенах, ул. Михай Эминеску 32/2: группы теории с 15:00, категория B, 24 практических занятия на Skoda, оплата частями. Заявка онлайн.",
       intro: [
-        "Филиал в Стрэшенах находится на ул. Михай Эминеску 32. Теория проходит днём, с 15:00, чтобы можно было прийти после школы или после работы, плюс есть группа с занятием в субботу утром.",
+        "Филиал в Стрэшенах находится на ул. Михай Эминеску 32/2. Теория проходит днём, с 15:00, чтобы можно было прийти после школы или после работы, плюс есть группа с занятием в субботу утром.",
         "Курс такой же, как в Кишинёве: 3 месяца теории, 24 практических занятия на Skoda Fabia и Skoda Scala, оплата до 25 частей. Ездить в Кишинёв на теорию не нужно.",
       ],
       addressLabel: "Адрес",
-      addressValue: "ул. Михай Эминеску 32, Стрэшены",
+      addressValue: "ул. Михай Эминеску 32/2, Стрэшены",
       mapNote: MAP_NOTE_EXACT_RU,
       scheduleTitle: "Расписание групп теории в Стрэшенах",
       scheduleNote: SCHEDULE_NOTE_RU,
@@ -423,7 +427,7 @@ export const sedii: Sediu[] = [
       faq: [
         {
           q: "Где находится филиал в Стрэшенах?",
-          a: "На ул. Михай Эминеску 32, Стрэшены. Работаем с понедельника по субботу, по телефону 069 792 889 подскажем, как добраться.",
+          a: "На ул. Михай Эминеску 32/2, Стрэшены. Работаем с понедельника по субботу, по телефону 069 792 889 подскажем, как добраться.",
         },
         {
           q: "Во сколько проходит теория в Стрэшенах?",
@@ -447,15 +451,14 @@ export const sedii: Sediu[] = [
     path: "/scoala-auto-vorniceni",
     location: "Vorniceni",
     shortName: { ro: "Școală auto Vorniceni", ru: "Автошкола Ворничены" },
-    // TODO: adresă exactă Vorniceni, de cerut patronului. Până atunci `address`
-    // rămâne null: pagina și schema.org NU afișează nicio stradă.
-    address: null,
-    mapQuery: "Vorniceni, raionul Strășeni",
+    // Adresa confirmată de patron (31.10.2026): cursurile se țin în incinta liceului.
+    address: { street: "str. Sfatul Țării 14", locality: "Vorniceni", region: "Raionul Strășeni" },
+    mapQuery: "Liceul Teoretic Ion Inculeț, str. Sfatul Țării 14, Vorniceni",
     areaServed: ["Vorniceni", "Strășeni"],
     schedule: [{ ...MA_VI, hours: "17:00", language: "ro" }],
     ro: {
       h1: "Școală auto în Vorniceni",
-      seoTitle: "Școală auto Vorniceni, raionul Strășeni",
+      seoTitle: "Școală auto Vorniceni, str. Sfatul Țării 14",
       description:
         "Școală auto în Vorniceni, raionul Strășeni: grupă de teorie marți și vineri de la 17:00, categoria B, 24 de lecții practice pe Skoda, plata în rate. Înscriere online.",
       intro: [
@@ -463,7 +466,7 @@ export const sedii: Sediu[] = [
         "Cursul este identic cu cel din Chișinău: 3 luni de teorie, 24 de lecții practice pe Skoda Fabia și Skoda Scala și plata în până la 25 de rate.",
       ],
       addressLabel: "Adresa",
-      addressValue: ADDR_CALL_RO,
+      addressValue: "Liceul Teoretic „Ion Inculeț”, str. Sfatul Țării 14, Vorniceni",
       mapNote: MAP_NOTE_AREA_RO,
       scheduleTitle: "Orarul grupei de teorie la Vorniceni",
       scheduleNote: SCHEDULE_NOTE_RO,
@@ -476,7 +479,7 @@ export const sedii: Sediu[] = [
       faq: [
         {
           q: "Care este adresa sediului din Vorniceni?",
-          a: "Sună-ne la 069 792 889 și îți spunem adresa exactă și cum ajungi. Suntem deschiși de luni până sâmbătă.",
+          a: "Orele se țin la Liceul Teoretic „Ion Inculeț”, str. Sfatul Țării 14, Vorniceni. Suntem deschiși de luni până sâmbătă, iar la 069 792 889 îți explicăm cum ajungi.",
         },
         {
           q: "Când se țin orele de teorie la Vorniceni?",
@@ -496,7 +499,7 @@ export const sedii: Sediu[] = [
     },
     ru: {
       h1: "Автошкола в Ворниченах",
-      seoTitle: "Автошкола Ворничены, район Стрэшены, расписание",
+      seoTitle: "Автошкола Ворничены, ул. Сфатул Цэрий 14",
       description:
         "Автошкола в Ворниченах, район Стрэшены: группа теории по вторникам и пятницам с 17:00, категория B, 24 практических занятия на Skoda, оплата частями.",
       intro: [
@@ -504,7 +507,7 @@ export const sedii: Sediu[] = [
         "Курс такой же, как в Кишинёве: 3 месяца теории, 24 практических занятия на Skoda Fabia и Skoda Scala, оплата до 25 частей.",
       ],
       addressLabel: "Адрес",
-      addressValue: ADDR_CALL_RU,
+      addressValue: "Теоретический лицей «Ион Инкулец», ул. Сфатул Цэрий 14, Ворничены",
       mapNote: MAP_NOTE_AREA_RU,
       scheduleTitle: "Расписание группы теории в Ворниченах",
       scheduleNote: SCHEDULE_NOTE_RU,
@@ -517,7 +520,7 @@ export const sedii: Sediu[] = [
       faq: [
         {
           q: "Какой адрес филиала в Ворниченах?",
-          a: "Позвоните по номеру 069 792 889, и мы сообщим точный адрес и как добраться. Работаем с понедельника по субботу.",
+          a: "Занятия проходят в Теоретическом лицее «Ион Инкулец», ул. Сфатул Цэрий 14, Ворничены. Работаем с понедельника по субботу, по телефону 069 792 889 подскажем, как добраться.",
         },
         {
           q: "Когда проходят занятия теории в Ворниченах?",

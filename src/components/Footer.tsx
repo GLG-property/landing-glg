@@ -23,7 +23,9 @@ export function Footer() {
         <div className="grid gap-12 py-14 lg:grid-cols-2 lg:gap-20">
           {/* Brand + CTA */}
           <div className="flex max-w-md flex-col items-start">
-            <Logo />
+            {/* Numele cu majuscule („GLG PROPERTY”), la fel ca în antet
+                (cerința patronului din 31.10.2026). */}
+            <Logo className="uppercase" />
             <h2 className="mt-6 text-2xl font-semibold tracking-tight text-ink">
               {footer.heading}<span className="dot">.</span>
             </h2>
@@ -86,7 +88,7 @@ export function Footer() {
         <div className="flex flex-col-reverse items-center justify-between gap-4 border-t border-line py-6 sm:flex-row">
           <div className="flex flex-col items-center gap-2 text-center sm:items-start sm:text-left">
             <p className="text-[13px] text-faint">
-              © 2026 {site.name}. {footer.rights} ·{" "}
+              © 2026 <span className="uppercase">{site.name}</span>. {footer.rights} ·{" "}
               <a
                 href="https://landings.md"
                 target="_blank"

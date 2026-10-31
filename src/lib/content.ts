@@ -333,7 +333,9 @@ export type Dict = {
     mapConsentCta: string;
     centersTitle: string;
     callNow: string;
-    sectors: string[];
+    /** Centrele arătate pe hartă: numele, adresa și căutarea pentru Google Maps. */
+    centers: { name: string; address: string; mapQuery: string }[];
+    mapOpen: string;
   };
   footer: {
     heading: string;
@@ -406,6 +408,7 @@ const ro: Dict = {
       { label: "Acasă", href: "/#acasa" },
       { label: "Despre noi", href: "/#despre" },
       { label: "Cursuri", href: "/#cursuri" },
+      { label: "Informație înscriere", href: "/informatii-inscriere" },
       { label: "Echipa", href: "/#echipa" },
       { label: "Blog", href: "/blog" },
       { label: "Contact", href: "/#contact" },
@@ -419,8 +422,11 @@ const ro: Dict = {
     eyebrow: "Școala Auto GLG Property din Republica Moldova",
     titleTop: "Școală auto în Chișinău",
     titleBottom: "pentru toate categoriile de permis",
+    // Subtitlul rămâne scurt (mai scurt decât varianta testată la auditul
+    // RAP-CVFM6G), ca butonul de înscriere să stea în primul ecran pe telefon.
+    // Cele patru sedii apar explicit, cerința patronului din 31.10.2026.
     subtitle:
-      "Instructori atestați, mașini moderne și grupe în română și rusă, în 4 centre: 2 în Chișinău, Strășeni și Vorniceni.",
+      "Instructori atestați, mașini moderne, grupe RO și RU. Chișinău Botanica, Chișinău Buiucani, Strășeni, Vorniceni.",
     imageAlt: "Skoda Fabia, mașină de instruire a Școlii Auto GLG Property din Chișinău",
     primaryCta: { label: "Înscrie-te online", href: "/inscriere" },
     secondaryCta: { label: site.phone, href: site.phoneHref },
@@ -468,14 +474,21 @@ const ro: Dict = {
     { value: 20000, suffix: "+", label: "Absolvenți" },
     { value: 10, suffix: "", label: "Ani de experiență" },
     { value: 80, suffix: "+", label: "Instructori" },
-    { value: 4, suffix: "", label: "Centre: 2 în Chișinău, Strășeni, Vorniceni" },
+    { value: 4, suffix: "", label: "Centre: Botanica, Buiucani, Strășeni, Vorniceni" },
   ],
 
+  // Parcul auto: cifra și modelele sunt cele din documentul oficial al școlii
+  // („peste 50 de mijloace de transport”, pe categorii). Fără alte adăugiri.
   cars: {
     badge: "Parcul auto GLG",
-    title: "Mașini moderne, întreținute impecabil",
-    text: "Înveți pe aceleași modele pe care vei susține examenul, pe traseele reale de examinare din Chișinău.",
-    chips: ["Skoda Fabia", "Skoda Scala", "Trasee de examinare"],
+    title: "Peste 50 de vehicule, întreținute impecabil",
+    text: "Avem peste 50 de vehicule de instruire, pentru toate categoriile, cu cutie mecanică și automată. Înveți pe aceleași modele pe care vei susține examenul, pe traseele reale de examinare din Chișinău.",
+    chips: [
+      "B1, B, BE: Skoda Fabia, Skoda Scala, Toyota Yaris",
+      "C1, C, C1E, CE: Volvo FE 320, Volvo FL 290, MAN",
+      "D1, D, D1E, DE: Irisbus",
+      "AM, A1, A2, A: Maya Motors, Andes",
+    ],
     cta: { label: "Vezi pachetul", href: "#preturi" },
     enrollCta: { label: "Înscrie-te online", href: "/inscriere" },
   },
@@ -562,8 +575,8 @@ const ro: Dict = {
       category: "B1 · B",
       features: [
         "Durată curs: 3 luni",
-        "Luni & miercuri sau marți & joi",
-        "Orare: 09:30, 16:00, 17:30, 19:00 (grupele în limba rusă: 17:30 și 19:00, la Buiucani)",
+        "Luni & miercuri, marți & joi sau weekend",
+        "Orare: 09:30, 16:00, 17:30, 19:00; weekend: sâmbăta de la 09:00 (grupele în limba rusă: 17:30 și 19:00, la Buiucani)",
         "24 de lecții practice cu Skoda Fabia și Skoda Scala",
         "Grup de maximum 30 de persoane",
         "Achitare în până la 25 de rate",
@@ -694,7 +707,7 @@ const ro: Dict = {
       slotPickSediu: "Alege întâi sediul",
       slotSaturday: "Sâmbătă",
       slotDaysHint:
-        "Zilele (Luni și Miercuri sau Marți și Joi) le stabilim împreună cu tine când grupa se formează.",
+        "Zilele (Luni și Miercuri, Marți și Joi sau weekend, sâmbăta) le stabilim împreună cu tine când grupa se formează.",
       noOpenGroups: "Momentan nu e deschisă nicio grupă la acest sediu. Trimite cererea și te sunăm când pornește următoarea.",
       fillSpots: "mai sunt locuri",
       fillAlmost: "aproape plină",
@@ -838,7 +851,7 @@ const ro: Dict = {
       },
       {
         q: "Unde vă găsesc?",
-        a: "Avem centre în Chișinău (Buiucani, Botanica), Strășeni și Vorniceni, deschise de luni până sâmbătă. Ne poți suna la 069 792 889.",
+        a: "Avem centre la Chișinău Botanica, Chișinău Buiucani, Strășeni și Vorniceni, deschise de luni până sâmbătă. Ne poți suna la 069 792 889.",
       },
     ],
   },
@@ -848,7 +861,7 @@ const ro: Dict = {
     title: "Află unde poți depune",
     titleAccent: "cererea",
     subtitle:
-      "Avem 4 centre: 2 în Chișinău (Buiucani, Botanica), Strășeni și Vorniceni, deschise de luni până sâmbătă. Sună-ne sau treci pe la noi.",
+      "Avem 4 centre: Chișinău Botanica, Chișinău Buiucani, Strășeni și Vorniceni, deschise de luni până sâmbătă. Sună-ne sau treci pe la noi.",
     callUs: "Sună-ne",
     hoursLabel: "Program",
     hours: "Luni - Sâmbătă",
@@ -860,7 +873,13 @@ const ro: Dict = {
     mapConsentCta: "Afișează harta",
     centersTitle: "Centrele noastre",
     callNow: "Sună acum",
-    sectors: ["Botanica", "Buiucani", "Strășeni", "Vorniceni"],
+    centers: [
+      { name: "Chișinău, Buiucani", address: "str. Alba Iulia 75, blocul V, etajul 5", mapQuery: "str. Alba Iulia 75, Chișinău" },
+      { name: "Chișinău, Botanica", address: "sectorul Botanica, sună-ne pentru adresa exactă", mapQuery: "Școala Auto GLG Property, Botanica, Chișinău" },
+      { name: "Strășeni", address: "str. Mihai Eminescu 32/2", mapQuery: "str. Mihai Eminescu 32, Strășeni" },
+      { name: "Vorniceni", address: "Liceul Teoretic „Ion Inculeț”, str. Sfatul Țării 14", mapQuery: "Liceul Teoretic Ion Inculeț, Sfatul Țării 14, Vorniceni, Strășeni" },
+    ],
+    mapOpen: "Vezi pe hartă",
   },
 
   footer: {
@@ -879,6 +898,10 @@ const ro: Dict = {
         links: [
           { label: "Despre noi", href: "/#despre" },
           { label: "Cum te înscrii", href: "/#cursuri" },
+          { label: "Informație înscriere", href: "/informatii-inscriere" },
+          // „Echipa” nu încape în antet pe ecranele de 1024-1280px, de aceea
+          // linkul are un loc fix aici.
+          { label: "Echipa", href: "/#echipa" },
           { label: "Întrebări frecvente", href: "/#intrebari" },
           { label: "Blog", href: "/blog" },
         ],
@@ -907,7 +930,7 @@ const ro: Dict = {
     titleAccent: "categoria B în Moldova",
     paragraphs: [
       "GLG Property este o școală auto din Chișinău, cu sedii în sectoarele Buiucani și Botanica și grupe de teorie la Strășeni și Vorniceni. De 10 ani pregătim viitori șoferi pentru permisul de conducere (categoriile A1, A2, A, B1, B, C, CE, D), în română și în rusă, cu instructori atestați și mașini Skoda Fabia și Skoda Scala, pe traseele reale de examinare.",
-      "Pașii sunt simpli. Te înscrii la o școală auto autorizată, urmezi cursul de teorie (3 luni, luni și miercuri sau marți și joi) și cele 24 de lecții practice din [pachetul Standard](/#preturi), apoi susții examenul teoretic și cel practic la Agenția Servicii Publice. Pentru dosar ai nevoie de buletin și de certificat medical, iar vârsta minimă pentru categoria B este de 18 ani.",
+      "Pașii sunt simpli. Te înscrii la o școală auto autorizată, urmezi cursul de teorie (3 luni, luni și miercuri, marți și joi sau sâmbăta, în grupa de weekend) și cele 24 de lecții practice din [pachetul Standard](/#preturi), apoi susții examenul teoretic și cel practic la Agenția Servicii Publice. Pentru dosar ai nevoie de buletin și de certificat medical, iar vârsta minimă pentru categoria B este de 18 ani.",
       "Alegi sediul și ora grupei direct din [formularul de înscriere online](/inscriere), iar noi te sunăm ca să confirmăm. Cursul se achită în până la 25 de rate, iar la înscrierea în sectoarele Botanica și Buiucani primești un voucher cadou de 200 lei. Sfaturi pentru examen și noutăți găsești pe [blogul școlii](/blog), iar adresele și programul, în secțiunea [Contact](/#contact).",
     ],
   },
@@ -1049,6 +1072,7 @@ const ru: Dict = {
       { label: "Главная", href: "/#acasa" },
       { label: "О нас", href: "/#despre" },
       { label: "Курсы", href: "/#cursuri" },
+      { label: "Информация о записи", href: "/informatii-inscriere" },
       { label: "Команда", href: "/#echipa" },
       { label: "Блог", href: "/blog" },
       { label: "Контакты", href: "/#contact" },
@@ -1063,7 +1087,7 @@ const ru: Dict = {
     titleTop: "Автошкола в Кишинёве",
     titleBottom: "для всех категорий прав",
     subtitle:
-      "Аттестованные инструкторы, современные автомобили и группы на румынском и русском языках, в 4 филиалах: 2 в Кишинёве, Стрэшены и Ворничены.",
+      "Аттестованные инструкторы, современные автомобили, группы RO и RU. Кишинёв Ботаника, Кишинёв Буюканы, Стрэшены, Ворничены.",
     imageAlt: "Skoda Fabia, учебный автомобиль автошколы GLG Property в Кишинёве",
     primaryCta: { label: "Записаться онлайн", href: "/inscriere" },
     secondaryCta: { label: site.phone, href: site.phoneHref },
@@ -1111,14 +1135,19 @@ const ru: Dict = {
     { value: 20000, suffix: "+", label: "Выпускников" },
     { value: 10, suffix: "", label: "Лет опыта" },
     { value: 80, suffix: "+", label: "Инструкторов" },
-    { value: 4, suffix: "", label: "Филиала: 2 в Кишинёве, Стрэшены, Ворничены" },
+    { value: 4, suffix: "", label: "Филиалы: Ботаника, Буюканы, Стрэшены, Ворничены" },
   ],
 
   cars: {
     badge: "Автопарк GLG",
-    title: "Современные автомобили в идеальном состоянии",
-    text: "Учись на тех же моделях, на которых будешь сдавать экзамен, на реальных экзаменационных маршрутах Кишинёва.",
-    chips: ["Skoda Fabia", "Skoda Scala", "Экзаменационные маршруты"],
+    title: "Более 50 учебных машин в идеальном состоянии",
+    text: "У нас более 50 учебных транспортных средств, по всем категориям, с механикой и автоматом. Учись на тех же моделях, на которых будешь сдавать экзамен, на реальных экзаменационных маршрутах Кишинёва.",
+    chips: [
+      "B1, B, BE: Skoda Fabia, Skoda Scala, Toyota Yaris",
+      "C1, C, C1E, CE: Volvo FE 320, Volvo FL 290, MAN",
+      "D1, D, D1E, DE: Irisbus",
+      "AM, A1, A2, A: Maya Motors, Andes",
+    ],
     cta: { label: "Смотреть пакет", href: "#preturi" },
     enrollCta: { label: "Записаться онлайн", href: "/inscriere" },
   },
@@ -1205,8 +1234,8 @@ const ru: Dict = {
       category: "B1 · B",
       features: [
         "Длительность курса: 3 месяца",
-        "Понедельник и среда или вторник и четверг",
-        "Время: 09:30, 16:00, 17:30, 19:00 (группы на русском: 17:30 и 19:00, филиал Буюканы)",
+        "Понедельник и среда, вторник и четверг или выходные",
+        "Время: 09:30, 16:00, 17:30, 19:00; выходные: суббота с 09:00 (группы на русском: 17:30 и 19:00, филиал Буюканы)",
         "24 практических занятия на Skoda Fabia и Skoda Scala",
         "Группа до 30 человек",
         "Рассрочка до 25 платежей",
@@ -1480,7 +1509,7 @@ const ru: Dict = {
       },
       {
         q: "Где вас найти?",
-        a: "У нас филиалы в Кишинёве (Буюканы, Ботаника), Стрэшенах и Ворниченах, открытые с понедельника по субботу. Звони по номеру 069 792 889.",
+        a: "У нас филиалы: Кишинёв Ботаника, Кишинёв Буюканы, Стрэшены и Ворничены, открытые с понедельника по субботу. Звони по номеру 069 792 889.",
       },
     ],
   },
@@ -1490,7 +1519,7 @@ const ru: Dict = {
     title: "Узнай, где подать",
     titleAccent: "заявление",
     subtitle:
-      "У нас 4 филиала: 2 в Кишинёве (Буюканы, Ботаника), Стрэшены и Ворничены, открытые с понедельника по субботу. Позвони или заходи в гости.",
+      "У нас 4 филиала: Кишинёв Ботаника, Кишинёв Буюканы, Стрэшены и Ворничены, открытые с понедельника по субботу. Позвони или заходи в гости.",
     callUs: "Позвони нам",
     hoursLabel: "График работы",
     hours: "Понедельник - Суббота",
@@ -1502,7 +1531,13 @@ const ru: Dict = {
     mapConsentCta: "Показать карту",
     centersTitle: "Наши филиалы",
     callNow: "Звони сейчас",
-    sectors: ["Ботаника", "Буюканы", "Стрэшены", "Ворничены"],
+    centers: [
+      { name: "Кишинёв, Буюканы", address: "ул. Алба Юлия 75, блок V, этаж 5", mapQuery: "str. Alba Iulia 75, Chișinău" },
+      { name: "Кишинёв, Ботаника", address: "сектор Ботаника, позвоните для точного адреса", mapQuery: "Școala Auto GLG Property, Botanica, Chișinău" },
+      { name: "Стрэшены", address: "ул. Михай Эминеску 32/2", mapQuery: "str. Mihai Eminescu 32, Strășeni" },
+      { name: "Ворничены", address: "Теоретический лицей «Ион Инкулец», ул. Сфатул Цэрий 14", mapQuery: "Liceul Teoretic Ion Inculeț, Sfatul Țării 14, Vorniceni, Strășeni" },
+    ],
+    mapOpen: "Смотреть на карте",
   },
 
   footer: {
@@ -1521,6 +1556,8 @@ const ru: Dict = {
         links: [
           { label: "О нас", href: "/#despre" },
           { label: "Как записаться", href: "/#cursuri" },
+          { label: "Информация о записи", href: "/informatii-inscriere" },
+          { label: "Команда", href: "/#echipa" },
           { label: "Частые вопросы", href: "/#intrebari" },
           { label: "Блог", href: "/blog" },
         ],
@@ -1549,7 +1586,7 @@ const ru: Dict = {
     titleAccent: "категории B в Молдове",
     paragraphs: [
       "GLG Property, автошкола в Кишинёве с филиалами в секторах Буюканы и Ботаника и группами теории в Стрэшенах и Ворниченах. Уже 10 лет мы готовим будущих водителей к получению прав (категории A1, A2, A, B1, B, C, CE, D), на румынском и русском языках, с аттестованными инструкторами и автомобилями Skoda Fabia и Skoda Scala, на реальных экзаменационных маршрутах.",
-      "Шаги простые. Записываешься в лицензированную автошколу, проходишь курс теории (3 месяца, понедельник и среда или вторник и четверг) и 24 практических занятия из [пакета Standard](/#preturi), затем сдаёшь теоретический и практический экзамены в Агентстве государственных услуг. Для досье нужны удостоверение личности и медицинская справка, а минимальный возраст для категории B составляет 18 лет.",
+      "Шаги простые. Записываешься в лицензированную автошколу, проходишь курс теории (3 месяца, понедельник и среда, вторник и четверг или суббота, в группе выходного дня) и 24 практических занятия из [пакета Standard](/#preturi), затем сдаёшь теоретический и практический экзамены в Агентстве государственных услуг. Для досье нужны удостоверение личности и медицинская справка, а минимальный возраст для категории B составляет 18 лет.",
       "Филиал и время группы выбираешь прямо в [форме онлайн-записи](/inscriere), а мы перезвоним для подтверждения. Курс можно оплатить в рассрочку до 25 платежей, а при записи в секторах Ботаника и Буюканы ты получаешь подарочный ваучер на 200 леев. Советы к экзамену и новости читай в [блоге автошколы](/blog), а адреса и график работы смотри в разделе [Контакты](/#contact).",
     ],
   },
