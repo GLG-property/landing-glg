@@ -91,9 +91,12 @@ const securityHeaders = [
   // (unsafe-none ar lăsa `window.opener` accesibil). `same-origin-allow-popups`
   // păstrează funcționale ferestrele de partajare socială.
   { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },
-  // `same-site` în loc de `same-origin`: harta Google trebuie să poată fi
-  // încadrată, iar `same-origin` ar bloca resursele cross-origin legitime.
-  { key: "Cross-Origin-Resource-Policy", value: "same-site" },
+  // `cross-origin`: site-ul e public, nu are resurse private, iar sigla și
+  // pozele trebuie să se poată afișa din alt origine (clienții de email
+  // încarcă `logo.png` din emailurile către cursanți). Cu `same-site` sigla
+  // rămânea goală în email. Protecția reală a datelor stă în aplicație, pe
+  // app.scoalaautoglg.com, care are propriile anteturi.
+  { key: "Cross-Origin-Resource-Policy", value: "cross-origin" },
   { key: "X-DNS-Prefetch-Control", value: "on" },
   { key: "Content-Security-Policy", value: csp },
 ];
@@ -122,18 +125,23 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 60 * 60 * 24 * 30,
   },
   async headers() {
+    // ATENȚIE la ordine: când două reguli potrivesc aceeași adresă și dau
+    // același antet, câștigă PRIMA. De aceea fișierele statice stau înaintea
+    // regulii generale, altfel `Cross-Origin-Resource-Policy: same-site` de
+    // mai jos le-ar bloca afișarea din alt origine (sigla din emailuri).
     return [
-      // Anteturile de securitate pe TOT site-ul, inclusiv /api și /u.
-      { source: "/:path*", headers: securityHeaders },
       // Fișierele din /public sunt imuabile în practică (se schimbă doar la
-      // redeploy, iar numele rămâne același) — dar le ținem la 7 zile cu
+      // redeploy, iar numele rămâne același), dar le ținem la 7 zile cu
       // `stale-while-revalidate`, ca o poză înlocuită să intre în maxim o zi.
       {
         source: "/:file*.(jpg|jpeg|png|svg|webp|avif|mp4|woff2|ico)",
         headers: [
           { key: "Cache-Control", value: "public, max-age=604800, stale-while-revalidate=86400" },
+          { key: "Cross-Origin-Resource-Policy", value: "cross-origin" },
         ],
       },
+      // Anteturile de securitate pe TOT site-ul, inclusiv /api și /u.
+      { source: "/:path*", headers: securityHeaders },
     ];
   },
   async redirects() {
