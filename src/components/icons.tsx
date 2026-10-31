@@ -1,7 +1,12 @@
 import type { LucideIcon } from "lucide-react";
 import {
+  BadgeCheck,
   Car,
+  Clock,
+  FileSignature,
+  FileText,
   Languages,
+  Mail,
   Wallet,
   Trophy,
   UserRoundCheck,
@@ -16,6 +21,12 @@ export const iconMap: Record<string, LucideIcon> = {
   trophy: Trophy,
   userCheck: UserRoundCheck,
   lifebuoy: LifeBuoy,
+  // pașii procesului de înscriere (secțiunea Steps)
+  fileText: FileText,
+  mail: Mail,
+  clock: Clock,
+  badgeCheck: BadgeCheck,
+  fileSignature: FileSignature,
 };
 
 /** Brand glyphs, lucide dropped brand icons, so we ship the official Simple Icons paths. */

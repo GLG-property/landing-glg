@@ -168,6 +168,14 @@ export interface InfoDict {
     installmentsNote: string;
     reserveLabel: string;
     reserveValue: string;
+    /**
+     * Regula celor 24 de ore (cerința patronului, 31.10.2026): cererea online
+     * nu ține locul până nu se achită. Pașii întregi ai înscrierii stau pe
+     * prima pagină, secțiunea „Procesul de înscriere”, de acolo linkul.
+     */
+    reserveRuleTitle: string;
+    reserveRuleText: string;
+    reserveRuleCta: string;
     stepsTitle: string;
     steps: Step[];
     ruleTitle: string;
@@ -295,6 +303,10 @@ const ro: InfoDict = {
     installmentsNote: "Se aplică pachetului Standard pentru categoria B.",
     reserveLabel: "Rezervarea locului",
     reserveValue: "prima rată 500 lei",
+    reserveRuleTitle: "Rezervarea locului: 24 de ore de la trimiterea cererii",
+    reserveRuleText:
+      "Cererea online nu garantează locul în grupă. După trimitere primești pe email linkurile de plată și ai 24 de ore ca să achiți 500 lei taxa de rezervare sau 3500 lei integral, online sau la sediu. Plata o verifică un angajat al școlii și o confirmă în aceeași zi sau a doua zi. Dacă în 24 de ore plata nu este înregistrată, cererea nu mai ține locul și trebuie depusă din nou. Restul de 3000 lei, în cazul rezervării cu 500 lei, se achită până la prima lecție de teorie.",
+    reserveRuleCta: "Vezi procesul de înscriere, pas cu pas",
     stepsTitle: "Pașii achitării",
     steps: [
       {
@@ -515,6 +527,10 @@ const ru: InfoDict = {
     installmentsNote: "Относится к пакету Стандарт для категории B.",
     reserveLabel: "Бронирование места",
     reserveValue: "первая часть 500 лей",
+    reserveRuleTitle: "Бронирование места: 24 часа с момента отправки заявки",
+    reserveRuleText:
+      "Заявка онлайн не гарантирует место в группе. После отправки на email приходят ссылки для оплаты, и у вас есть 24 часа, чтобы оплатить 500 лей за бронирование или 3500 лей полностью, онлайн или в филиале. Оплату проверяет сотрудник школы и подтверждает её в тот же день или на следующий. Если за 24 часа оплата не зарегистрирована, заявка больше не держит место и её нужно подать заново. Остаток в 3000 лей, при бронировании за 500 лей, оплачивается до первого занятия теории.",
+    reserveRuleCta: "Посмотреть процесс записи, шаг за шагом",
     stepsTitle: "Порядок оплаты",
     steps: [
       {

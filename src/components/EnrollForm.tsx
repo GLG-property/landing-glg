@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Camera, CheckCircle2, FileText, ImagePlus, Loader2, Phone, X } from "lucide-react";
+import { AlertTriangle, Camera, FileText, ImagePlus, Loader2, X } from "lucide-react";
 import clsx from "clsx";
 import { site } from "@/lib/content";
 import {
@@ -16,10 +16,12 @@ import {
   type EnrollErrorCode,
   type EnrollErrors,
   type EnrollValues,
+  type PaymentInfo,
 } from "@/lib/enroll";
 import { preparePhoto } from "@/lib/imageCompress";
 import { LOCATION_NAMES, fillOf, isSelectable, optionsFor, type EnrollOptions, type GroupFill } from "@/lib/schedule";
 import { EV, track } from "@/lib/analytics";
+import { EnrollSuccess } from "./EnrollSuccess";
 import { useI18n } from "./LanguageProvider";
 import { Container, SectionHeading } from "./primitives";
 
@@ -361,7 +363,14 @@ function FormSection({
 
 /* ---------- formularul ---------- */
 
-type Status = { phase: "idle" | "submitting" } | { phase: "success"; duplicate: boolean };
+type Status =
+  | { phase: "idle" | "submitting" }
+  /**
+   * `payment` vine din răspunsul aplicației (termen + linkuri), completat local
+   * dacă lipsește; `email` e adresa chiar completată, ca ecranul de succes să o
+   * poată arăta (valorile formularului rămân, dar le citim o singură dată).
+   */
+  | { phase: "success"; duplicate: boolean; payment: PaymentInfo; email: string };
 
 /**
  * Datele venite din formularul scurt al primei pagini (QuickEnroll), citite pe
@@ -493,7 +502,12 @@ export function EnrollForm({
     switch (outcome.kind) {
       case "ok":
       case "duplicate":
-        setStatus({ phase: "success", duplicate: outcome.kind === "duplicate" });
+        setStatus({
+          phase: "success",
+          duplicate: outcome.kind === "duplicate",
+          payment: outcome.payment,
+          email: values.email.trim(),
+        });
         track(EV.inscriereTrimisa, { sediu: values.location, ora: values.slot, categorie: values.category, limba: values.language, duplicat: outcome.kind === "duplicate" });
         return;
       case "invalid": {
@@ -526,42 +540,15 @@ export function EnrollForm({
     setStatus({ phase: "idle" });
   }
 
-  /* ---------- starea de succes ---------- */
+  /* ---------- starea de succes: verifică emailul și achită în 24 de ore ---------- */
 
   if (status.phase === "success") {
-    const s = e.success;
     return (
-      <section className="bg-white py-14 sm:py-20">
-        <Container>
-          <div className="card mx-auto max-w-xl px-6 py-10 text-center sm:px-12 sm:py-12">
-            <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-brand/10">
-              <CheckCircle2 className="size-7 text-brand" strokeWidth={1.75} />
-            </div>
-            <h1 className="mt-5 text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-              {status.duplicate ? s.duplicateTitle : s.title}
-            </h1>
-            <p className="mx-auto mt-3 max-w-md text-base leading-relaxed text-muted">
-              {status.duplicate ? s.duplicateText : s.text}
-            </p>
-            {/* Pe telefon butoanele stau unul sub altul, pe toată lățimea; pe desktop, unul lângă altul, fără text rupt pe două rânduri. */}
-            <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:justify-center">
-              <a
-                href={site.phoneHref}
-                className="btn-3d inline-flex h-11 items-center justify-center gap-2 whitespace-nowrap rounded-[10px] px-6 text-sm font-medium text-white transition-colors duration-200"
-              >
-                <Phone className="size-4" strokeWidth={1.75} />
-                {s.call} · {site.phone}
-              </a>
-              <Link
-                href="/"
-                className="btn-3d-light inline-flex h-11 items-center justify-center whitespace-nowrap rounded-[10px] px-6 text-sm font-medium text-ink transition-colors duration-200"
-              >
-                {s.back}
-              </Link>
-            </div>
-          </div>
-        </Container>
-      </section>
+      <EnrollSuccess
+        email={status.email}
+        payment={status.payment}
+        duplicate={status.duplicate}
+      />
     );
   }
 
@@ -1095,6 +1082,16 @@ export function EnrollForm({
                 {errors.consent ? (
                   <p className="mt-1.5 text-xs font-medium text-red-600">{e.errors.consent}</p>
                 ) : null}
+              </div>
+
+              {/* Regula de rezervare, chiar înaintea butonului: cererea nu ține
+                  locul fără achitare în 24 de ore (cerința patronului, 31.10.2026). */}
+              <div className="mt-4 flex items-start gap-3 rounded-[10px] border border-line bg-brand-50 px-3.5 py-3">
+                <AlertTriangle className="mt-0.5 size-4 shrink-0 text-brand" strokeWidth={1.5} />
+                <div>
+                  <p className="text-[13px] font-semibold text-ink">{e.reserveNotice.title}</p>
+                  <p className="mt-1 text-[13px] leading-relaxed text-muted">{e.reserveNotice.text}</p>
+                </div>
               </div>
 
               {banner ? (

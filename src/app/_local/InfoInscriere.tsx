@@ -1,6 +1,7 @@
 "use client";
 
-import { AlertTriangle, CalendarClock, Check, CreditCard, FileSignature, MapPin, Phone, Wallet } from "lucide-react";
+import Link from "next/link";
+import { AlertTriangle, ArrowRight, CalendarClock, Check, Clock, CreditCard, FileSignature, MapPin, Phone, Wallet } from "lucide-react";
 import { site } from "@/lib/content";
 import { useI18n } from "@/components/LanguageProvider";
 import { Button, Container, Eyebrow, SectionHeading } from "@/components/primitives";
@@ -103,6 +104,30 @@ export function InfoInscriere({ options }: { options: EnrollOptions | null }) {
                 <span className="text-[13px] leading-relaxed text-muted">{s.note}</span>
               </div>
             ))}
+          </Reveal>
+
+          {/* Regula celor 24 de ore. Pașii înscrierii, cu toate detaliile, stau
+              într-un singur loc, pe prima pagină, ca să nu existe două liste
+              de pași care se contrazic; de aici doar linkul spre ei. */}
+          <Reveal className="card mt-5 flex items-start gap-4 p-5">
+            <span className="grid size-9 shrink-0 place-items-center rounded-[10px] border border-line bg-brand-50 text-brand">
+              <Clock className="size-4" strokeWidth={1.5} />
+            </span>
+            <span>
+              <span className="block text-base font-semibold tracking-tight text-ink">
+                {p.reserveRuleTitle}
+              </span>
+              <span className="mt-1.5 block max-w-3xl text-sm leading-relaxed text-muted">
+                {p.reserveRuleText}
+              </span>
+              <Link
+                href="/#cursuri"
+                className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-brand transition-colors duration-200 hover:text-brand-600"
+              >
+                {p.reserveRuleCta}
+                <ArrowRight className="size-4" strokeWidth={1.5} />
+              </Link>
+            </span>
           </Reveal>
 
           <h3 className="mt-12 text-lg font-semibold tracking-tight text-ink">{p.stepsTitle}</h3>

@@ -49,4 +49,11 @@ export const EV = {
   contractVazut: "contract-vazut",
   /** A adăugat o poză a buletinului în formular (fata / verso). */
   pozaBuletin: "poza-buletin",
+  // plata care rezervă locul în grupă (ecranul de după trimiterea cererii)
+  /** A deschis linkul de 500 lei, taxa de rezervare. */
+  plata500: "plata-500",
+  /** A deschis linkul de 3500 lei, achitare integrală. */
+  plata3500: "plata-3500",
+  /** A ales varianta „vin la sediu”, din ecranul de după trimitere. */
+  plataSediu: "plata-sediu",
 } as const;

@@ -5,6 +5,7 @@
  */
 
 import type { Lang } from "./content";
+import { safePaymentDueAt, safePaymentLinks, type PaymentLinks } from "./plata";
 import { isSelectable, optionsFor, type EnrollOptions } from "./schedule";
 
 /**
@@ -307,9 +308,16 @@ export function buildEnrollPayload(v: EnrollValues): Record<string, unknown> {
   };
 }
 
+/**
+ * Ce trebuie achitat ca să se rezerve locul: termenul (ISO) și linkurile de
+ * plată. Vine de la aplicație, dar e mereu completat local dacă lipsește (vezi
+ * lib/plata.ts): ecranul de după trimitere nu are voie să rămână fără butoane.
+ */
+export type PaymentInfo = { dueAt: string; links: PaymentLinks };
+
 export type EnrollOutcome =
-  | { kind: "ok" }
-  | { kind: "duplicate" }
+  | { kind: "ok"; payment: PaymentInfo }
+  | { kind: "duplicate"; payment: PaymentInfo }
   | { kind: "invalid"; fields: string[] }
   | { kind: "captcha" }
   | { kind: "rate_limited" }
@@ -318,8 +326,24 @@ export type EnrollOutcome =
 /** Interpretează corpul JSON al răspunsului (sau null la corp ilizibil). */
 export function interpretEnrollResponse(data: unknown): EnrollOutcome {
   if (typeof data === "object" && data !== null) {
-    const d = data as { ok?: unknown; duplicate?: unknown; error?: unknown; fields?: unknown };
-    if (d.ok === true) return d.duplicate === true ? { kind: "duplicate" } : { kind: "ok" };
+    const d = data as {
+      ok?: unknown;
+      duplicate?: unknown;
+      error?: unknown;
+      fields?: unknown;
+      paymentDueAt?: unknown;
+      links?: unknown;
+    };
+    if (d.ok === true) {
+      // Numele câmpurilor sunt cele convenite cu aplicația (`paymentDueAt`,
+      // `links.reserve`, `links.full`); dacă lipsesc (aplicație mai veche),
+      // folosim linkurile locale și termenul de 24 de ore de acum.
+      const payment: PaymentInfo = {
+        dueAt: safePaymentDueAt(d.paymentDueAt),
+        links: safePaymentLinks(d.links),
+      };
+      return d.duplicate === true ? { kind: "duplicate", payment } : { kind: "ok", payment };
+    }
     if (d.error === "invalid") {
       const fields = Array.isArray(d.fields)
         ? d.fields.filter((f): f is string => typeof f === "string")

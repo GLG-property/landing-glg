@@ -181,6 +181,8 @@ export type EnrollDict = {
   consent: string;
   consentLinkLabel: string;
   consentSuffix: string;
+  /** Rezumatul regulii de rezervare, chiar înaintea butonului de trimitere. */
+  reserveNotice: { title: string; text: string };
   submit: string;
   submitting: string;
   callOption: string;
@@ -206,9 +208,46 @@ export type EnrollDict = {
     generic: string;
     network: string;
   };
+  /**
+   * Ecranul de după trimiterea cererii: „Verifică-ți emailul”, termenul de 24
+   * de ore și cele două butoane de plată. Emailul poate întârzia sau poate să
+   * nu plece deloc, de aceea linkurile de aici sunt calea sigură.
+   */
   success: {
     title: string;
     text: string;
+    /** „Am trimis linkurile de plată la” (urmează adresa completată). */
+    sentTo: string;
+    /** Ce face omul dacă emailul nu ajunge. */
+    noEmail: string;
+    /** Blocul cu termenul. */
+    deadlineTitle: string;
+    deadlineText: string;
+    /** „Achită până” (urmează data și ora în fusul Chișinăului). */
+    deadlinePrefix: string;
+    /** Cuvântul dinaintea orei: „ora” / „в”. */
+    deadlineTimeWord: string;
+    /** Contorul discret: „mai ai 23 h 58 min”. */
+    countdownPrefix: string;
+    hoursShort: string;
+    minutesShort: string;
+    countdownExpired: string;
+    /** Blocul cu cele două butoane de plată. */
+    payTitle: string;
+    payReserve: string;
+    payReserveNote: string;
+    payFull: string;
+    payFullNote: string;
+    /** Varianta „vin la sediu”. */
+    officeTitle: string;
+    officeText: string;
+    officeCta: string;
+    /** Plata e verificată de un angajat. */
+    verifyTitle: string;
+    verifyText: string;
+    /** Ce se întâmplă dacă nu achită în 24 de ore. */
+    missedTitle: string;
+    missedText: string;
     duplicateTitle: string;
     duplicateText: string;
     back: string;
@@ -302,12 +341,16 @@ export type Dict = {
     errors: { name: string; phone: string; sediu: string; consent: string };
   };
   enroll: EnrollDict;
+  /**
+   * „Procesul de înscriere”, pașii de la cerere până la prima lecție.
+   * `warn` e chenarul de atenționare din pasul achitării (24 de ore).
+   */
   steps: {
     eyebrow: string;
     title: string;
     titleAccent: string;
     subtitle: string;
-    items: { title: string; text: string; link?: Cta }[];
+    items: { icon: string; title: string; text: string; warn?: string; link?: Cta }[];
   };
   testimonials: { eyebrow: string; title: string; titleAccent: string; caption: string; videoFallback: string };
   faq: {
@@ -745,6 +788,10 @@ const ro: Dict = {
       "Sunt de acord cu prelucrarea datelor mele personale de către GLG Property SRL în scopul înscrierii la cursuri și al întocmirii contractului de școlarizare, conform Legii 133/2011 privind protecția datelor cu caracter personal. Am citit",
     consentLinkLabel: "politica de confidențialitate",
     consentSuffix: ".",
+    reserveNotice: {
+      title: "Locul în grupă se rezervă doar după achitare",
+      text: "După ce trimiți cererea primești pe email linkurile de plată și ai 24 de ore ca să achiți 500 lei taxa de rezervare (restul, 3000 lei, la sediu, până la prima lecție de teorie) sau 3500 lei integral. Poți achita online sau la sediu. Dacă în 24 de ore plata nu este înregistrată, cererea nu mai ține locul în grupă.",
+    },
     submit: "Trimite cererea",
     submitting: "Se trimite…",
     callOption: "Preferi să vorbim la telefon?",
@@ -772,39 +819,82 @@ const ro: Dict = {
       network: "Nu am putut trimite cererea. Verifică conexiunea la internet și încearcă din nou.",
     },
     success: {
-      title: "Cererea a fost trimisă!",
-      text: "Îți mulțumim! Un coleg de la GLG te va suna în curând ca să confirme înscrierea și să-ți răspundă la întrebări.",
+      title: "Verifică-ți emailul",
+      text: "Cererea a fost trimisă. Pe email ai linkurile de plată, iar aceleași linkuri le ai și mai jos, ca să poți achita chiar acum.",
+      sentTo: "Am trimis linkurile de plată la",
+      noEmail:
+        "Dacă emailul nu ajunge în câteva minute, verifică și folderul Spam. Nu aștepta emailul: achită direct de pe butoanele de mai jos.",
+      deadlineTitle: "Locul în grupă se rezervă doar după achitare",
+      deadlineText:
+        "Cererea singură nu îți ține locul. Ai 24 de ore ca să achiți taxa de rezervare de 500 lei sau suma integrală de 3500 lei.",
+      deadlinePrefix: "Achită până",
+      deadlineTimeWord: "ora",
+      countdownPrefix: "mai ai",
+      hoursShort: "h",
+      minutesShort: "min",
+      countdownExpired: "termenul de 24 de ore a trecut",
+      payTitle: "Achită online, acum",
+      payReserve: "Achită 500 lei (rezervare)",
+      payReserveNote:
+        "Îți rezervă locul în grupă. Restul, 3000 lei, se achită la sediu, până la prima lecție de teorie.",
+      payFull: "Achită 3500 lei (integral)",
+      payFullNote: "Prețul întreg al cursului, teorie și practică. Nu mai ai nimic de achitat la sediu.",
+      officeTitle: "Sau vino la unul dintre sedii în 24 de ore",
+      officeText:
+        "Poți achita și la sediu, în numerar sau prin card, în același termen de 24 de ore. Adresele și programul sediilor sunt în secțiunea de contact.",
+      officeCta: "Vezi sediile și programul",
+      verifyTitle: "Plata o verifică un angajat",
+      verifyText:
+        "Un angajat al școlii verifică plata și îți confirmă locul în grupă în aceeași zi sau a doua zi. Păstrează dovada plății (captura din aplicația bancară sau bonul de la sediu) până la confirmare.",
+      missedTitle: "Dacă nu achiți în 24 de ore",
+      missedText:
+        "Cererea nu mai ține locul în grupă, iar locul trece la următoarea persoană. Poți trimite cererea din nou, dar grupa aleasă s-ar putea umple până atunci.",
       duplicateTitle: "Cererea ta există deja",
       duplicateText:
-        "Am primit deja o cerere cu acest telefon sau IDNP în ultimele 24 de ore. Nu e nevoie să o retrimiți, te sunăm noi.",
+        "Am primit deja o cerere cu acest telefon sau IDNP în ultimele 24 de ore. Nu e nevoie să o retrimiți, dar locul se rezervă doar după achitare, din butoanele de mai jos.",
       back: "Înapoi la pagina principală",
       call: "Sună-ne",
     },
   },
 
   steps: {
-    eyebrow: "Patru pași",
-    title: "Cum te înscrii,",
-    titleAccent: "pas cu pas",
-    subtitle: "De la cerere până la permis.",
+    eyebrow: "Șase pași",
+    title: "Procesul de",
+    titleAccent: "înscriere",
+    subtitle: "De la cererea online până la prima lecție, cu termenul de achitare la vedere.",
     items: [
       {
-        title: "Completează cererea",
-        text: "Trimiți cererea online în câteva minute, sau ne suni și o completăm împreună.",
+        icon: "fileText",
+        title: "Completezi cererea online",
+        text: "Durează câteva minute: datele tale, sediul, grupa și limba de studiu.",
         link: { label: "Completează cererea", href: "/inscriere" },
       },
       {
-        title: "Confirmăm detaliile",
-        text: "Te sunăm și stabilim grupa, orarul și actele necesare.",
+        icon: "mail",
+        title: "Primești pe email linkurile de plată",
+        text: "Verifici emailul imediat. Aceleași linkuri apar și pe ecranul de confirmare, după trimitere.",
+      },
+      {
+        icon: "clock",
+        title: "În 24 de ore achiți",
+        text: "500 lei taxa de rezervare, restul de 3000 lei la sediu, sau 3500 lei integral. Online, prin link, sau la sediu.",
+        warn: "Fără achitare în 24 de ore cererea nu mai ține locul în grupă și trebuie trimisă din nou.",
+      },
+      {
+        icon: "badgeCheck",
+        title: "Un angajat verifică plata",
+        text: "Verificăm plata în aceeași zi sau a doua zi și îți confirmăm locul în grupă.",
+      },
+      {
+        icon: "fileSignature",
+        title: "Te sunăm și semnezi contractul",
+        text: "Contractul de studii se semnează online sau la sediu, cum îți este mai comod.",
         link: { label: "Unde ne găsești?", href: "#contact" },
       },
       {
-        title: "Urmezi teoria și practica",
-        text: "Cursuri cu instructori experimentați, pe mașini moderne, în română sau rusă.",
-      },
-      {
-        title: "Susții examenul",
-        text: "Te pregătim pentru proba teoretică și pentru cea practică, cu lecții pe traseele reale de examinare.",
+        icon: "car",
+        title: "Începi teoria, apoi practica",
+        text: "Teoria pornește la data grupei alese, iar lecțiile de practică vin după, cu instructorul tău.",
       },
     ],
   },
@@ -1005,6 +1095,10 @@ const ro: Dict = {
       {
         h: "Obiectul site-ului",
         p: "Site-ul prezintă serviciile școlii auto și îți permite să trimiți o cerere de înscriere online. Trimiterea formularului nu creează un contract și nu garantează un loc în grupă: contractul de școlarizare se semnează la sediu, după ce te contactăm telefonic pentru confirmare.",
+      },
+      {
+        h: "Rezervarea locului în grupă",
+        p: "Cererea trimisă online nu garantează locul în grupă. Locul se rezervă doar după achitarea taxei de rezervare de 500 lei sau a sumei integrale de 3500 lei, în 24 de ore de la trimiterea cererii. Plata se poate face online, prin linkurile primite pe email, sau la sediu. Plățile sunt verificate de un angajat al școlii și se confirmă în aceeași zi sau a doua zi. Dacă în 24 de ore plata nu este înregistrată, cererea nu mai ține locul și trebuie depusă din nou. Restul de 3000 lei, în cazul rezervării cu 500 lei, se achită până la prima lecție de teorie.",
       },
       {
         h: "Utilizarea site-ului",
@@ -1404,6 +1498,10 @@ const ru: Dict = {
       "Я согласен(на) на обработку моих персональных данных компанией GLG Property SRL в целях записи на курсы и оформления договора об обучении, в соответствии с Законом 133/2011 о защите персональных данных. Я ознакомился(лась) с",
     consentLinkLabel: "политикой конфиденциальности",
     consentSuffix: ".",
+    reserveNotice: {
+      title: "Место в группе бронируется только после оплаты",
+      text: "После отправки заявки на email придут ссылки для оплаты, и у тебя есть 24 часа, чтобы оплатить 500 лей за бронирование (остаток, 3000 лей, в филиале, до первого занятия теории) или 3500 лей полностью. Оплатить можно онлайн или в филиале. Если за 24 часа оплата не зарегистрирована, заявка больше не держит место в группе.",
+    },
     submit: "Отправить заявку",
     submitting: "Отправляем…",
     callOption: "Удобнее по телефону?",
@@ -1431,39 +1529,82 @@ const ru: Dict = {
       network: "Не удалось отправить заявку. Проверь подключение к интернету и попробуй снова.",
     },
     success: {
-      title: "Заявка отправлена!",
-      text: "Спасибо! Сотрудник GLG скоро позвонит, чтобы подтвердить запись и ответить на твои вопросы.",
+      title: "Проверь свою почту",
+      text: "Заявка отправлена. Ссылки для оплаты пришли на email, и те же ссылки есть ниже, чтобы можно было оплатить сразу.",
+      sentTo: "Ссылки для оплаты отправлены на",
+      noEmail:
+        "Если письмо не придёт за несколько минут, проверь папку Спам. Не жди письмо: оплати прямо с кнопок ниже.",
+      deadlineTitle: "Место в группе бронируется только после оплаты",
+      deadlineText:
+        "Сама заявка место не держит. У тебя есть 24 часа, чтобы оплатить 500 лей за бронирование или 3500 лей полностью.",
+      deadlinePrefix: "Оплати до",
+      deadlineTimeWord: "в",
+      countdownPrefix: "осталось",
+      hoursShort: "ч",
+      minutesShort: "мин",
+      countdownExpired: "срок в 24 часа истёк",
+      payTitle: "Оплатить онлайн, сейчас",
+      payReserve: "Оплатить 500 лей (бронирование)",
+      payReserveNote:
+        "Закрепляет за тобой место в группе. Остаток, 3000 лей, оплачивается в филиале, до первого занятия теории.",
+      payFull: "Оплатить 3500 лей (полностью)",
+      payFullNote: "Полная стоимость курса, теория и практика. В филиале платить больше нечего.",
+      officeTitle: "Или приходи в один из филиалов в течение 24 часов",
+      officeText:
+        "Оплатить можно и в филиале, наличными или картой, в тот же срок, 24 часа. Адреса и график филиалов есть в разделе контактов.",
+      officeCta: "Посмотреть филиалы и график",
+      verifyTitle: "Оплату проверяет сотрудник",
+      verifyText:
+        "Сотрудник школы проверяет оплату и подтверждает место в группе в тот же день или на следующий. Сохрани подтверждение оплаты (скриншот из банковского приложения или чек из филиала) до подтверждения.",
+      missedTitle: "Если не оплатить за 24 часа",
+      missedText:
+        "Заявка больше не держит место в группе, и место переходит следующему человеку. Заявку можно отправить снова, но выбранная группа к тому времени может заполниться.",
       duplicateTitle: "Твоя заявка уже есть",
       duplicateText:
-        "Мы уже получили заявку с этим телефоном или IDNP за последние 24 часа. Отправлять повторно не нужно, мы сами позвоним.",
+        "Мы уже получили заявку с этим телефоном или IDNP за последние 24 часа. Отправлять повторно не нужно, но место бронируется только после оплаты, с кнопок ниже.",
       back: "Вернуться на главную",
       call: "Позвонить",
     },
   },
 
   steps: {
-    eyebrow: "Четыре шага",
-    title: "Как записаться,",
-    titleAccent: "шаг за шагом",
-    subtitle: "От заявки до прав.",
+    eyebrow: "Шесть шагов",
+    title: "Процесс",
+    titleAccent: "записи",
+    subtitle: "От заявки онлайн до первого занятия, со сроком оплаты на виду.",
     items: [
       {
-        title: "Заполни заявку",
-        text: "Отправь заявку онлайн за несколько минут, или позвони нам, и мы заполним её вместе.",
+        icon: "fileText",
+        title: "Заполняешь заявку онлайн",
+        text: "Занимает несколько минут: твои данные, филиал, группа и язык обучения.",
         link: { label: "Заполнить заявку", href: "/inscriere" },
       },
       {
-        title: "Подтвердим детали",
-        text: "Мы позвоним и согласуем группу, расписание и документы.",
+        icon: "mail",
+        title: "Получаешь на email ссылки для оплаты",
+        text: "Проверяешь почту сразу. Те же ссылки видны и на экране подтверждения, после отправки.",
+      },
+      {
+        icon: "clock",
+        title: "За 24 часа оплачиваешь",
+        text: "500 лей за бронирование, остаток 3000 лей в филиале, или 3500 лей полностью. Онлайн, по ссылке, или в филиале.",
+        warn: "Без оплаты за 24 часа заявка больше не держит место в группе, и её нужно отправить заново.",
+      },
+      {
+        icon: "badgeCheck",
+        title: "Сотрудник проверяет оплату",
+        text: "Проверяем оплату в тот же день или на следующий и подтверждаем место в группе.",
+      },
+      {
+        icon: "fileSignature",
+        title: "Мы звоним, ты подписываешь договор",
+        text: "Договор об обучении подписывается онлайн или в филиале, как тебе удобнее.",
         link: { label: "Где нас найти?", href: "#contact" },
       },
       {
-        title: "Пройди теорию и практику",
-        text: "Занятия с опытными инструкторами, на современных автомобилях, на румынском или русском.",
-      },
-      {
-        title: "Сдай экзамен",
-        text: "Готовим к теоретической и практической части, с занятиями на реальных экзаменационных маршрутах.",
+        icon: "car",
+        title: "Начинаешь теорию, затем практику",
+        text: "Теория начинается в дату выбранной группы, а практические занятия идут после, с твоим инструктором.",
       },
     ],
   },
@@ -1662,6 +1803,10 @@ const ru: Dict = {
       {
         h: "Назначение сайта",
         p: "Сайт представляет услуги автошколы и позволяет отправить заявку на запись онлайн. Отправка формы не создаёт договор и не гарантирует место в группе: договор об обучении подписывается в офисе, после того как мы свяжемся с вами по телефону для подтверждения.",
+      },
+      {
+        h: "Бронирование места в группе",
+        p: "Отправленная онлайн заявка не гарантирует место в группе. Место бронируется только после оплаты сбора за бронирование в 500 лей или полной суммы в 3500 лей, в течение 24 часов с момента отправки заявки. Оплатить можно онлайн, по ссылкам, полученным на email, или в филиале. Платежи проверяет сотрудник школы и подтверждает их в тот же день или на следующий. Если за 24 часа оплата не зарегистрирована, заявка больше не держит место и её нужно подать заново. Остаток в 3000 лей, при бронировании за 500 лей, оплачивается до первого занятия теории.",
       },
       {
         h: "Использование сайта",

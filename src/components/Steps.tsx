@@ -2,17 +2,26 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Car } from "lucide-react";
+import { AlertTriangle, ArrowRight, Car } from "lucide-react";
 import clsx from "clsx";
 import { useI18n } from "./LanguageProvider";
+import { iconMap } from "./icons";
 import { Container, SectionHeading } from "./primitives";
 import { Reveal } from "./Reveal";
 
 const LOOP_MS = 16000;
 
+/**
+ * „Procesul de înscriere”, pașii de la cererea online până la prima lecție
+ * (cerința patronului, 31.10.2026). Pasul achitării are chenarul lui de
+ * atenționare: fără plată în 24 de ore cererea nu mai ține locul în grupă.
+ *
+ * Păstrează id-ul „cursuri”: antetul și subsolul duc aici cu „Cum te înscrii”.
+ */
 export function Steps() {
   const { t } = useI18n();
   const steps = t.steps;
+  const count = steps.items.length;
 
   const roadRef = useRef<HTMLDivElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
@@ -43,7 +52,8 @@ export function Steps() {
       const fade = Math.min(1, p / 0.05, (1 - p) / 0.05);
       car.style.transform = `translate(${pt.x * sx - 10}px, ${pt.y * sy - 14}px) rotate(${angle}deg)`;
       car.style.opacity = String(fade);
-      const idx = Math.min(3, Math.floor(p * 4));
+      // un segment de traseu pentru fiecare pas, oricâți pași ar fi
+      const idx = Math.min(count - 1, Math.floor(p * count));
       if (idx !== current) {
         current = idx;
         setActiveStep(idx);
@@ -51,7 +61,7 @@ export function Steps() {
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [count]);
 
   return (
     <section id="cursuri" className="scroll-mt-24 bg-surface py-14 sm:py-20">
@@ -63,32 +73,46 @@ export function Steps() {
           accent={steps.titleAccent}
           subtitle={steps.subtitle}
         />
-        <Reveal stagger className="mt-10 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-          {steps.items.map((step, i) => (
-            <article key={step.title} className="border-t border-line pt-5">
-              <span
-                className={clsx(
-                  "text-xs font-medium tabular-nums tracking-[0.14em] transition-colors duration-500",
-                  activeStep === i ? "text-brand" : "text-faint"
-                )}
-              >
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <h3 className="mt-3 text-[17px] font-medium tracking-tight text-ink">
-                {step.title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted">{step.text}</p>
-              {step.link ? (
-                <Link
-                  href={step.link.href}
-                  className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-brand transition-colors duration-200 hover:text-brand-600"
-                >
-                  {step.link.label}
-                  <ArrowRight className="size-4" strokeWidth={1.5} />
-                </Link>
-              ) : null}
-            </article>
-          ))}
+        <Reveal stagger className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {steps.items.map((step, i) => {
+            const Icon = iconMap[step.icon];
+            return (
+              <article key={step.title} className="card flex flex-col p-5">
+                <div className="flex items-center gap-3">
+                  <span className="chip-3d grid size-9 shrink-0 place-items-center rounded-[10px] text-ink">
+                    {Icon ? <Icon className="size-4" strokeWidth={1.5} /> : null}
+                  </span>
+                  <span
+                    className={clsx(
+                      "text-xs font-medium tabular-nums tracking-[0.14em] transition-colors duration-500",
+                      activeStep === i ? "text-brand" : "text-faint"
+                    )}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                </div>
+                <h3 className="mt-4 text-[17px] font-medium tracking-tight text-ink">
+                  {step.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{step.text}</p>
+                {step.warn ? (
+                  <p className="mt-3 flex items-start gap-2 rounded-[10px] border border-line bg-brand-50 px-3 py-2 text-[13px] font-medium leading-relaxed text-ink">
+                    <AlertTriangle className="mt-0.5 size-4 shrink-0 text-brand" strokeWidth={1.5} />
+                    {step.warn}
+                  </p>
+                ) : null}
+                {step.link ? (
+                  <Link
+                    href={step.link.href}
+                    className="mt-auto inline-flex items-center gap-1.5 pt-4 text-sm font-medium text-brand transition-colors duration-200 hover:text-brand-600"
+                  >
+                    {step.link.label}
+                    <ArrowRight className="size-4" strokeWidth={1.5} />
+                  </Link>
+                ) : null}
+              </article>
+            );
+          })}
         </Reveal>
 
         {/* traseu line-art sub pasi, cu masina care il parcurge */}
