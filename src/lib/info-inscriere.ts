@@ -10,7 +10,7 @@
  *   - cifrele de preț sunt cele confirmate de patron (31.10.2026):
  *     3500 lei pachetul Standard categoria B, până la 25 de rate,
  *     rezervare cu 500 lei + 3000 lei până la prima lecție de teorie,
- *     integral 3500 lei dacă grupa începe în cel mult 7 zile;
+ *     taxa de bază de 3500 lei dacă grupa începe în cel mult 7 zile;
  *   - secțiunile „documente” sunt transcrierea fidelă a celor două foi
  *     oficiale „SC GLG PROPERTY SRL” trimise de patron, fără
  *     reinterpretări; termenii juridici (HG 181/2022, Legea 273/1994,
@@ -305,7 +305,7 @@ const ro: InfoDict = {
     reserveValue: "prima rată 500 lei",
     reserveRuleTitle: "Rezervarea locului: 24 de ore de la trimiterea cererii",
     reserveRuleText:
-      "Cererea online nu garantează locul în grupă. După trimitere primești pe email linkurile de plată și ai 24 de ore ca să achiți 500 lei taxa de rezervare sau 3500 lei integral, online sau la sediu. Plata o verifică un angajat al școlii și o confirmă în aceeași zi sau a doua zi. Dacă în 24 de ore plata nu este înregistrată, cererea nu mai ține locul și trebuie depusă din nou. Restul de 3000 lei, în cazul rezervării cu 500 lei, se achită până la prima lecție de teorie.",
+      "Cererea online nu garantează locul în grupă. După trimitere primești pe email linkurile de plată și ai 24 de ore ca să achiți 500 lei taxa de rezervare sau 3500 lei taxa de bază, online sau la sediu. Plata o verifică un angajat al școlii și o confirmă în aceeași zi sau a doua zi. Dacă în 24 de ore plata nu este înregistrată, cererea nu mai ține locul și trebuie depusă din nou. Restul de 3000 lei, în cazul rezervării cu 500 lei, se achită până la prima lecție de teorie.",
     reserveRuleCta: "Vezi procesul de înscriere, pas cu pas",
     stepsTitle: "Pașii achitării",
     steps: [
@@ -318,8 +318,8 @@ const ro: InfoDict = {
         text: "Prima rată de 500 lei îți ține locul în grupă. Restul, 3000 lei, se achită până la prima lecție de teorie.",
       },
       {
-        title: "Dacă grupa începe în cel mult 7 zile sau a început deja, achiți integral 3500 lei",
-        text: "În acest caz nu mai există varianta cu rezervare: suma se achită integral la înscriere.",
+        title: "Dacă grupa începe în cel mult 7 zile sau a început deja, achiți taxa de bază de 3500 lei",
+        text: "În acest caz nu mai există varianta cu rezervare: taxa de bază se achită în întregime la înscriere.",
       },
       {
         title: "Semnezi contractul de studii",
@@ -327,7 +327,7 @@ const ro: InfoDict = {
       },
       {
         title: "Începi lecțiile de practică",
-        text: "Practica pornește doar după ce contractul este semnat și cei 3500 lei sunt achitați integral.",
+        text: "Practica pornește doar după ce contractul este semnat și taxa de bază de 3500 lei este achitată.",
       },
     ],
     ruleTitle: "Regula de care depinde practica",
@@ -335,7 +335,7 @@ const ro: InfoDict = {
       "Nu poți începe lecțiile de practică până nu ai semnat contractul de studii și nu ai achitat 3500 lei. Chiar dacă suma este achitată, fără contract semnat nu se face nicio programare la instructor.",
     contractTitle: "Contractul de studii",
     contractText:
-      "Se semnează la sediu sau online. Este documentul care, împreună cu achitarea integrală, deschide accesul la orele de practică.",
+      "Se semnează la sediu sau online. Este documentul care, împreună cu achitarea taxei de bază, deschide accesul la orele de practică.",
     otherTitle: "Celelalte categorii",
     otherText:
       "Pentru aceste categorii prețul depinde de categorie și de grupa care se deschide, de aceea se comunică la telefon sau la sediu. Nu publicăm cifre pe care nu le putem garanta.",
@@ -431,7 +431,7 @@ const ro: InfoDict = {
     },
     {
       q: "Pot rezerva locul în grupă cu o primă rată?",
-      a: "Da, dacă grupa începe peste mai mult de 7 zile: rezervi locul cu prima rată de 500 lei, iar restul de 3000 lei se achită până la prima lecție de teorie. Dacă grupa începe în cel mult 7 zile sau a început deja, se achită integral 3500 lei.",
+      a: "Da, dacă grupa începe peste mai mult de 7 zile: rezervi locul cu prima rată de 500 lei, iar restul de 3000 lei se achită până la prima lecție de teorie. Dacă grupa începe în cel mult 7 zile sau a început deja, se achită taxa de bază de 3500 lei.",
     },
     {
       q: "Când pot începe lecțiile de practică?",
@@ -529,7 +529,7 @@ const ru: InfoDict = {
     reserveValue: "первая часть 500 лей",
     reserveRuleTitle: "Бронирование места: 24 часа с момента отправки заявки",
     reserveRuleText:
-      "Заявка онлайн не гарантирует место в группе. После отправки на email приходят ссылки для оплаты, и у вас есть 24 часа, чтобы оплатить 500 лей за бронирование или 3500 лей полностью, онлайн или в филиале. Оплату проверяет сотрудник школы и подтверждает её в тот же день или на следующий. Если за 24 часа оплата не зарегистрирована, заявка больше не держит место и её нужно подать заново. Остаток в 3000 лей, при бронировании за 500 лей, оплачивается до первого занятия теории.",
+      "Заявка онлайн не гарантирует место в группе. После отправки на email приходят ссылки для оплаты, и у вас есть 24 часа, чтобы оплатить 500 лей за бронирование или 3500 лей базовый тариф, онлайн или в филиале. Оплату проверяет сотрудник школы и подтверждает её в тот же день или на следующий. Если за 24 часа оплата не зарегистрирована, заявка больше не держит место и её нужно подать заново. Остаток в 3000 лей, при бронировании за 500 лей, оплачивается до первого занятия теории.",
     reserveRuleCta: "Посмотреть процесс записи, шаг за шагом",
     stepsTitle: "Порядок оплаты",
     steps: [
@@ -542,8 +542,8 @@ const ru: InfoDict = {
         text: "Первая часть, 500 лей, закрепляет за вами место в группе. Остаток, 3000 лей, оплачивается до первого занятия теории.",
       },
       {
-        title: "Если группа начинается в течение 7 дней или уже началась, оплачиваете полностью 3500 лей",
-        text: "В этом случае варианта с бронированием нет: сумма оплачивается полностью при записи.",
+        title: "Если группа начинается в течение 7 дней или уже началась, оплачиваете базовый тариф 3500 лей",
+        text: "В этом случае варианта с бронированием нет: базовый тариф оплачивается полностью при записи.",
       },
       {
         title: "Подписываете договор об обучении",
@@ -551,7 +551,7 @@ const ru: InfoDict = {
       },
       {
         title: "Начинаете практические занятия",
-        text: "Практика начинается только после того, как договор подписан и 3500 лей оплачены полностью.",
+        text: "Практика начинается только после того, как договор подписан и базовый тариф 3500 лей оплачен.",
       },
     ],
     ruleTitle: "Правило, от которого зависит практика",
@@ -655,7 +655,7 @@ const ru: InfoDict = {
     },
     {
       q: "Можно ли забронировать место в группе первой частью оплаты?",
-      a: "Да, если группа начинается более чем через 7 дней: место бронируется первой частью в 500 лей, а остаток, 3000 лей, оплачивается до первого занятия теории. Если группа начинается в течение 7 дней или уже началась, оплачивается полностью 3500 лей.",
+      a: "Да, если группа начинается более чем через 7 дней: место бронируется первой частью в 500 лей, а остаток, 3000 лей, оплачивается до первого занятия теории. Если группа начинается в течение 7 дней или уже началась, оплачивается базовый тариф 3500 лей.",
     },
     {
       q: "Когда можно начать практические занятия?",

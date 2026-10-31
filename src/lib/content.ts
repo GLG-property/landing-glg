@@ -790,7 +790,7 @@ const ro: Dict = {
     consentSuffix: ".",
     reserveNotice: {
       title: "Locul în grupă se rezervă doar după achitare",
-      text: "După ce trimiți cererea primești pe email linkurile de plată și ai 24 de ore ca să achiți 500 lei taxa de rezervare (restul, 3000 lei, la sediu, până la prima lecție de teorie) sau 3500 lei integral. Poți achita online sau la sediu. Dacă în 24 de ore plata nu este înregistrată, cererea nu mai ține locul în grupă.",
+      text: "După ce trimiți cererea primești pe email linkurile de plată și ai 24 de ore ca să achiți 500 lei taxa de rezervare (restul, 3000 lei, la sediu, până la prima lecție de teorie) sau 3500 lei taxa de bază. Poți achita online sau la sediu. Dacă în 24 de ore plata nu este înregistrată, cererea nu mai ține locul în grupă.",
     },
     submit: "Trimite cererea",
     submitting: "Se trimite…",
@@ -826,7 +826,7 @@ const ro: Dict = {
         "Dacă emailul nu ajunge în câteva minute, verifică și folderul Spam. Nu aștepta emailul: achită direct de pe butoanele de mai jos.",
       deadlineTitle: "Locul în grupă se rezervă doar după achitare",
       deadlineText:
-        "Cererea singură nu îți ține locul. Ai 24 de ore ca să achiți taxa de rezervare de 500 lei sau suma integrală de 3500 lei.",
+        "Cererea singură nu îți ține locul. Ai 24 de ore ca să achiți taxa de rezervare de 500 lei sau taxa de bază de 3500 lei.",
       deadlinePrefix: "Achită până",
       deadlineTimeWord: "ora",
       countdownPrefix: "mai ai",
@@ -837,7 +837,7 @@ const ro: Dict = {
       payReserve: "Achită 500 lei (rezervare)",
       payReserveNote:
         "Îți rezervă locul în grupă. Restul, 3000 lei, se achită la sediu, până la prima lecție de teorie.",
-      payFull: "Achită 3500 lei (integral)",
+      payFull: "Achită 3500 lei (taxa de bază)",
       payFullNote: "Prețul întreg al cursului, teorie și practică. Nu mai ai nimic de achitat la sediu.",
       officeTitle: "Sau vino la unul dintre sedii în 24 de ore",
       officeText:
@@ -877,7 +877,7 @@ const ro: Dict = {
       {
         icon: "clock",
         title: "În 24 de ore achiți",
-        text: "500 lei taxa de rezervare, restul de 3000 lei la sediu, sau 3500 lei integral. Online, prin link, sau la sediu.",
+        text: "500 lei taxa de rezervare, restul de 3000 lei la sediu, sau 3500 lei taxa de bază. Online, prin link, sau la sediu.",
         warn: "Fără achitare în 24 de ore cererea nu mai ține locul în grupă și trebuie trimisă din nou.",
       },
       {
@@ -1098,7 +1098,7 @@ const ro: Dict = {
       },
       {
         h: "Rezervarea locului în grupă",
-        p: "Cererea trimisă online nu garantează locul în grupă. Locul se rezervă doar după achitarea taxei de rezervare de 500 lei sau a sumei integrale de 3500 lei, în 24 de ore de la trimiterea cererii. Plata se poate face online, prin linkurile primite pe email, sau la sediu. Plățile sunt verificate de un angajat al școlii și se confirmă în aceeași zi sau a doua zi. Dacă în 24 de ore plata nu este înregistrată, cererea nu mai ține locul și trebuie depusă din nou. Restul de 3000 lei, în cazul rezervării cu 500 lei, se achită până la prima lecție de teorie.",
+        p: "Cererea trimisă online nu garantează locul în grupă. Locul se rezervă doar după achitarea taxei de rezervare de 500 lei sau a taxei de bază de 3500 lei, în 24 de ore de la trimiterea cererii. Plata se poate face online, prin linkurile primite pe email, sau la sediu. Plățile sunt verificate de un angajat al școlii și se confirmă în aceeași zi sau a doua zi. Dacă în 24 de ore plata nu este înregistrată, cererea nu mai ține locul și trebuie depusă din nou. Restul de 3000 lei, în cazul rezervării cu 500 lei, se achită până la prima lecție de teorie.",
       },
       {
         h: "Utilizarea site-ului",
@@ -1500,7 +1500,7 @@ const ru: Dict = {
     consentSuffix: ".",
     reserveNotice: {
       title: "Место в группе бронируется только после оплаты",
-      text: "После отправки заявки на email придут ссылки для оплаты, и у тебя есть 24 часа, чтобы оплатить 500 лей за бронирование (остаток, 3000 лей, в филиале, до первого занятия теории) или 3500 лей полностью. Оплатить можно онлайн или в филиале. Если за 24 часа оплата не зарегистрирована, заявка больше не держит место в группе.",
+      text: "После отправки заявки на email придут ссылки для оплаты, и у тебя есть 24 часа, чтобы оплатить 500 лей за бронирование (остаток, 3000 лей, в филиале, до первого занятия теории) или 3500 лей базовый тариф. Оплатить можно онлайн или в филиале. Если за 24 часа оплата не зарегистрирована, заявка больше не держит место в группе.",
     },
     submit: "Отправить заявку",
     submitting: "Отправляем…",
@@ -1536,7 +1536,7 @@ const ru: Dict = {
         "Если письмо не придёт за несколько минут, проверь папку Спам. Не жди письмо: оплати прямо с кнопок ниже.",
       deadlineTitle: "Место в группе бронируется только после оплаты",
       deadlineText:
-        "Сама заявка место не держит. У тебя есть 24 часа, чтобы оплатить 500 лей за бронирование или 3500 лей полностью.",
+        "Сама заявка место не держит. У тебя есть 24 часа, чтобы оплатить 500 лей за бронирование или 3500 лей базовый тариф.",
       deadlinePrefix: "Оплати до",
       deadlineTimeWord: "в",
       countdownPrefix: "осталось",
@@ -1547,7 +1547,7 @@ const ru: Dict = {
       payReserve: "Оплатить 500 лей (бронирование)",
       payReserveNote:
         "Закрепляет за тобой место в группе. Остаток, 3000 лей, оплачивается в филиале, до первого занятия теории.",
-      payFull: "Оплатить 3500 лей (полностью)",
+      payFull: "Оплатить 3500 лей (базовый тариф)",
       payFullNote: "Полная стоимость курса, теория и практика. В филиале платить больше нечего.",
       officeTitle: "Или приходи в один из филиалов в течение 24 часов",
       officeText:
@@ -1587,7 +1587,7 @@ const ru: Dict = {
       {
         icon: "clock",
         title: "За 24 часа оплачиваешь",
-        text: "500 лей за бронирование, остаток 3000 лей в филиале, или 3500 лей полностью. Онлайн, по ссылке, или в филиале.",
+        text: "500 лей за бронирование, остаток 3000 лей в филиале, или 3500 лей базовый тариф. Онлайн, по ссылке, или в филиале.",
         warn: "Без оплаты за 24 часа заявка больше не держит место в группе, и её нужно отправить заново.",
       },
       {
