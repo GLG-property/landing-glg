@@ -148,6 +148,8 @@ export type EnrollDict = {
     fillSpots: string;
     fillAlmost: string;
     fillFull: string;
+    /** Explicația culorilor de lângă grupe. */
+    fillLegend: string;
     scheduleOther: string;
     schedule: string;
     schedulePlaceholder: string;
@@ -709,9 +711,10 @@ const ro: Dict = {
       slotDaysHint:
         "Zilele (Luni și Miercuri, Marți și Joi sau weekend, sâmbăta) le stabilim împreună cu tine când grupa se formează.",
       noOpenGroups: "Momentan nu e deschisă nicio grupă la acest sediu. Trimite cererea și te sunăm când pornește următoarea.",
-      fillSpots: "mai sunt locuri",
-      fillAlmost: "aproape plină",
-      fillFull: "plină",
+      fillSpots: "sunt locuri",
+      fillAlmost: "aproape finisată",
+      fillFull: "ultimele locuri disponibile",
+      fillLegend: "Verde: sunt locuri. Galben: aproape finisată. Roșu: ultimele locuri disponibile.",
       scheduleOther: "Altă preferință de orar",
       schedule: "Ora disponibilă pentru cursuri",
       schedulePlaceholder: "ex.: după 17:30",
@@ -1369,7 +1372,8 @@ const ru: Dict = {
       noOpenGroups: "Сейчас в этом филиале нет открытой группы. Отправь заявку, и мы позвоним, когда стартует следующая.",
       fillSpots: "есть места",
       fillAlmost: "почти заполнена",
-      fillFull: "заполнена",
+      fillFull: "последние места",
+      fillLegend: "Зелёный: есть места. Жёлтый: почти заполнена. Красный: последние места.",
       scheduleOther: "Другие пожелания по расписанию",
       schedule: "Удобное время для занятий",
       schedulePlaceholder: "напр.: после 17:30",

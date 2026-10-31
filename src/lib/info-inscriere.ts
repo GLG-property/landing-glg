@@ -95,11 +95,10 @@ export function splitGroupLabel(o: GroupOption, lang: Lang): { days: string; hou
   return { days: label.slice(0, i), hours: label.slice(i + 3) };
 }
 
-/** Locurile rămase, doar când API-ul le trimite (altfel rămâne doar punctul colorat). */
-export function seatsLeft(o: GroupOption): number | null {
-  if (typeof o.count !== "number" || typeof o.capacity !== "number") return null;
-  return Math.max(0, o.capacity - o.count);
-}
+/**
+ * Public NU se arată câte locuri au mai rămas (cerința patronului, 31.10.2026):
+ * rămâne doar punctul colorat și eticheta lui. Vezi `fillLegend`.
+ */
 
 /** „2026-11-12” devine „12.11.2026”; orice altceva se ignoră. */
 export function formatStart(iso: string | null | undefined): string {
@@ -150,7 +149,7 @@ export interface InfoDict {
     enrollCta: string;
     seeSediu: string;
     startLabel: string;
-    seatsLeftLabel: string;
+    fillLegend: string;
     emptyTitle: string;
     emptyText: string;
     offlineTitle: string;
@@ -264,17 +263,17 @@ const ro: InfoDict = {
     eyebrow: "Din sistemul școlii",
     title: "Grupele disponibile acum",
     subtitle:
-      "Grupele deschise, pe sedii, cu zilele, ora, limba de studiu și locurile rămase. O grupă plină nu se mai poate alege.",
+      "Grupele deschise, pe sedii, cu zilele, ora și limba de studiu. Grupele pline nu mai apar în listă.",
     daysColumn: "Zile",
     hoursColumn: "Ora",
     langColumn: "Limba",
-    seatsColumn: "Locuri",
+    seatsColumn: "Disponibilitate",
     langRo: "Română",
     langRu: "Rusă",
     enrollCta: "Înscrie-te",
     seeSediu: "Despre acest sediu",
     startLabel: "Începe pe",
-    seatsLeftLabel: "locuri libere",
+    fillLegend: "Verde: sunt locuri. Galben: aproape finisată. Roșu: ultimele locuri disponibile.",
     emptyTitle: "Nicio grupă deschisă acum la acest sediu",
     emptyText:
       "Poți lăsa cererea de înscriere oricum: te sunăm imediat ce pornește grupa următoare la acest sediu și îți spunem zilele, ora și limba.",
@@ -488,13 +487,13 @@ const ru: InfoDict = {
     daysColumn: "Дни",
     hoursColumn: "Время",
     langColumn: "Язык",
-    seatsColumn: "Места",
+    seatsColumn: "Наличие мест",
     langRo: "Румынский",
     langRu: "Русский",
     enrollCta: "Записаться",
     seeSediu: "Об этом филиале",
     startLabel: "Начало",
-    seatsLeftLabel: "свободных мест",
+    fillLegend: "Зелёный: есть места. Жёлтый: почти заполнена. Красный: последние места.",
     emptyTitle: "В этом филиале сейчас нет открытых групп",
     emptyText:
       "Заявку всё равно можно оставить: мы позвоним, как только в этом филиале откроется следующая группа, и сообщим дни, время и язык.",

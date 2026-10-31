@@ -584,8 +584,9 @@ export function EnrollForm({
   const anyAtLocation = values.location ? (options?.locations.find((l) => l.name === values.location)?.options.length ?? 0) : 0;
   const noRuGroup = !!values.location && values.language === "ru" && anyAtLocation > 0 && groupOpts.length === 0;
   const noOpenGroup = !!values.location && anyAtLocation === 0;
-  // Fiecare grupă vine cu umplerea ei (capacitate 30 RO / 15 RU): punct verde /
-  // galben / roșu + „mai sunt locuri” / „aproape plină” / „plină”; cele pline nu se pot alege.
+  // Fiecare grupă vine doar cu umplerea ei, fără cifre (cerința patronului,
+  // 31.10.2026): punct verde „sunt locuri”, galben „aproape finisată”, roșu
+  // „ultimele locuri disponibile”. Grupele pline nu mai sunt trimise de API.
   const fillText: Record<GroupFill, string> = { verde: f.fillSpots, galben: f.fillAlmost, rosu: f.fillFull };
   const slotOptions = groupOpts.map((o) => {
     const fill = fillOf(o);
@@ -969,14 +970,18 @@ export function EnrollForm({
                 ) : noOpenGroup ? (
                   <p className="text-sm text-muted">{f.noOpenGroups}</p>
                 ) : noRuGroup ? null : (
-                  <PillGroup
-                    name="group_id"
-                    value={values.group_id}
-                    invalid={!!errors.group_id}
-                    options={slotOptions}
-                    chips
-                    onChange={(v) => set("group_id", v)}
-                  />
+                  <>
+                    <PillGroup
+                      name="group_id"
+                      value={values.group_id}
+                      invalid={!!errors.group_id}
+                      options={slotOptions}
+                      chips
+                      onChange={(v) => set("group_id", v)}
+                    />
+                    {/* Ce înseamnă culorile; numărul de locuri rămase nu se arată public. */}
+                    <p className="mt-2 text-xs leading-relaxed text-faint">{f.fillLegend}</p>
+                  </>
                 )}
               </Field>
               <Field label={f.category} help={e.help.category} helpLabel={e.helpLabel} htmlFor="category" error={msg("category")}>

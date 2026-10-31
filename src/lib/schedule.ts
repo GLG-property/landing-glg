@@ -23,11 +23,11 @@ export interface GroupOption {
   label: string;
   labelRu: string;
   startDate: string | null;
-  /** Cursanți deja înscriși (poate lipsi la un API mai vechi). */
-  count?: number;
-  /** Capacitatea grupei. */
-  capacity?: number;
-  /** Umplerea; lipsă = tratată ca „verde”. */
+  /**
+   * Umplerea, fără cifre (lipsă = tratată ca „verde”): verde = sunt locuri,
+   * galben = aproape finisată, roșu = ultimele locuri disponibile. Numărul de
+   * locuri rămase NU se expune public.
+   */
   fill?: GroupFill;
 }
 export interface LocationOptions {
@@ -48,7 +48,11 @@ export function fillOf(o: GroupOption): GroupFill {
   return o.fill ?? "verde";
 }
 
-/** O grupă plină nu se poate alege. */
+/**
+ * Orice grupă primită de la API se poate alege: cele pline nu mai sunt
+ * trimise, iar roșu înseamnă acum „ultimele locuri disponibile”, nu „plină”.
+ */
 export function isSelectable(o: GroupOption): boolean {
-  return fillOf(o) !== "rosu";
+  void o;
+  return true;
 }

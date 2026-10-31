@@ -11,7 +11,7 @@ import {
   INFO_LOCATIONS,
   formatStart,
   infoInscriere,
-  seatsLeft,
+
   splitGroupLabel,
 } from "@/lib/info-inscriere";
 import { fillOf, isSelectable, optionsFor, type EnrollOptions, type GroupFill } from "@/lib/schedule";
@@ -118,7 +118,6 @@ export function GrupeLive({ options }: { options: EnrollOptions | null }) {
                         {groups.map((o) => {
                           const fill = fillOf(o);
                           const { days, hours } = splitGroupLabel(o, lang);
-                          const left = seatsLeft(o);
                           const start = formatStart(o.startDate);
                           return (
                             <tr key={o.id} className="border-b border-line last:border-0">
@@ -137,11 +136,7 @@ export function GrupeLive({ options }: { options: EnrollOptions | null }) {
                                   <span className={clsx("size-2.5 shrink-0 rounded-full", FILL_DOT[fill])} aria-hidden="true" />
                                   <span className={isSelectable(o) ? "text-muted" : "text-faint"}>{fillText[fill]}</span>
                                 </span>
-                                {left !== null ? (
-                                  <span className="mt-0.5 block text-[13px] tabular-nums text-faint">
-                                    {left} {g.seatsLeftLabel}
-                                  </span>
-                                ) : null}
+
                               </td>
                             </tr>
                           );
@@ -169,6 +164,16 @@ export function GrupeLive({ options }: { options: EnrollOptions | null }) {
             );
           })}
         </Reveal>
+
+        {/* Ce înseamnă culorile (public nu se arată câte locuri au rămas). */}
+        <ul className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[13px] text-muted">
+          {(["verde", "galben", "rosu"] as GroupFill[]).map((f) => (
+            <li key={f} className="flex items-center gap-2">
+              <span className={clsx("size-2.5 shrink-0 rounded-full", FILL_DOT[f])} aria-hidden="true" />
+              <span>{fillText[f]}</span>
+            </li>
+          ))}
+        </ul>
       </Container>
     </section>
   );
