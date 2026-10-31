@@ -10,8 +10,8 @@ export const site = {
   phoneHref: "tel:+37369792889",
   /** Numărul în format internațional, fără semne (pentru wa.me / t.me). */
   phoneDigits: "37369792889",
-  email: "contact@scoalaautoglg.com",
-  emailHref: "mailto:contact@scoalaautoglg.com",
+  email: "scoalaauto.glgproperty@gmail.com",
+  emailHref: "mailto:scoalaauto.glgproperty@gmail.com",
   social: {
     facebook: "https://www.facebook.com/scoalaautoBuiucani/",
     instagram: "https://www.instagram.com/glgproperty/?hl=ro",
@@ -982,11 +982,11 @@ const ro: Dict = {
       },
       {
         h: "Drepturile tale",
-        p: "Ai dreptul de acces la datele tale, dreptul la rectificare, la ștergere, la restricționarea prelucrării, dreptul de opoziție și dreptul de a-ți retrage oricând consimțământul. Pentru orice solicitare scrie-ne la contact@scoalaautoglg.com sau sună la 069 792 889. Dacă consideri că drepturile tale au fost încălcate, poți depune o plângere la Centrul Național pentru Protecția Datelor cu Caracter Personal al Republicii Moldova (datepersonale.md).",
+        p: "Ai dreptul de acces la datele tale, dreptul la rectificare, la ștergere, la restricționarea prelucrării, dreptul de opoziție și dreptul de a-ți retrage oricând consimțământul. Pentru orice solicitare scrie-ne la scoalaauto.glgproperty@gmail.com sau sună la 069 792 889. Dacă consideri că drepturile tale au fost încălcate, poți depune o plângere la Centrul Național pentru Protecția Datelor cu Caracter Personal al Republicii Moldova (datepersonale.md).",
       },
       {
         h: "Contact",
-        p: "GLG Property SRL, Chișinău, Republica Moldova. E-mail: contact@scoalaautoglg.com. Telefon: 069 792 889.",
+        p: "GLG Property SRL, Chișinău, Republica Moldova. E-mail: scoalaauto.glgproperty@gmail.com. Telefon: 069 792 889.",
       },
     ],
   },
@@ -1029,7 +1029,7 @@ const ro: Dict = {
       },
       {
         h: "Contact",
-        p: "GLG Property SRL, Chișinău, Republica Moldova. E-mail: contact@scoalaautoglg.com. Telefon: 069 792 889.",
+        p: "GLG Property SRL, Chișinău, Republica Moldova. E-mail: scoalaauto.glgproperty@gmail.com. Telefon: 069 792 889.",
       },
     ],
   },
@@ -1638,11 +1638,11 @@ const ru: Dict = {
       },
       {
         h: "Ваши права",
-        p: "Вы имеете право на доступ к своим данным, на их исправление, удаление, ограничение обработки, право на возражение и право в любой момент отозвать согласие. По любому запросу пишите на contact@scoalaautoglg.com или звоните по номеру 069 792 889. Если вы считаете, что ваши права нарушены, вы можете подать жалобу в Национальный центр по защите персональных данных Республики Молдова (datepersonale.md).",
+        p: "Вы имеете право на доступ к своим данным, на их исправление, удаление, ограничение обработки, право на возражение и право в любой момент отозвать согласие. По любому запросу пишите на scoalaauto.glgproperty@gmail.com или звоните по номеру 069 792 889. Если вы считаете, что ваши права нарушены, вы можете подать жалобу в Национальный центр по защите персональных данных Республики Молдова (datepersonale.md).",
       },
       {
         h: "Контакты",
-        p: "GLG Property SRL, Кишинёв, Республика Молдова. E-mail: contact@scoalaautoglg.com. Телефон: 069 792 889.",
+        p: "GLG Property SRL, Кишинёв, Республика Молдова. E-mail: scoalaauto.glgproperty@gmail.com. Телефон: 069 792 889.",
       },
     ],
   },
@@ -1685,7 +1685,7 @@ const ru: Dict = {
       },
       {
         h: "Контакты",
-        p: "GLG Property SRL, Кишинёв, Республика Молдова. E-mail: contact@scoalaautoglg.com. Телефон: 069 792 889.",
+        p: "GLG Property SRL, Кишинёв, Республика Молдова. E-mail: scoalaauto.glgproperty@gmail.com. Телефон: 069 792 889.",
       },
     ],
   },
