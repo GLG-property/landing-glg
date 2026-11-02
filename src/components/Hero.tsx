@@ -114,21 +114,22 @@ export function Hero() {
             introducerea cu banda roșie și fără secvențele cu omul care vorbește,
             doar sediul, sala, posterele, motoarele, mașinile și motocicletele,
             cu treceri line și cu finalul legat de început (buclă fără tăietură).
-            Filmat vertical, deci stă într-o ramă 9:16 centrată. */}
-        <div className="animate-rise flex justify-center lg:justify-end" style={{ animationDelay: "160ms" }}>
-          <div className="w-full max-w-[300px] overflow-hidden rounded-xl border border-line bg-ink shadow-sm sm:max-w-[320px] lg:max-w-[340px]">
+            Originalul e vertical; aici e TĂIAT PE CENTRU la 4:3 (patronul:
+            „arată urât vertical”), ca să umple locul exact ca vechea poză. */}
+        <div className="animate-rise" style={{ animationDelay: "160ms" }}>
+          <div className="overflow-hidden rounded-xl border border-line bg-ink">
             <video
-              className="aspect-[9/16] w-full object-cover"
+              className="aspect-[4/3] h-full w-full object-cover"
               autoPlay
               muted
               loop
               playsInline
               disablePictureInPicture
               preload="auto"
-              poster="/video/hero-sediu.jpg"
+              poster="/video/hero-sediu-wide.jpg"
               aria-label={hero.imageAlt}
             >
-              <source src="/video/hero-sediu.mp4" type="video/mp4" />
+              <source src="/video/hero-sediu-wide.mp4" type="video/mp4" />
             </video>
           </div>
         </div>
