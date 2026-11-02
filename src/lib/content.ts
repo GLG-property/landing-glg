@@ -46,7 +46,13 @@ export const langNames: Record<Lang, string> = { ro: "Română", ru: "Русск
 type Cta = { label: string; href: string };
 type NavItem = { label: string; href: string };
 /** O persoană din organigramă; `initials` lipsă = se deduc din nume. */
-export type TeamPerson = { name: string; role: string; initials?: string };
+export type TeamPerson = {
+  name: string;
+  role: string;
+  initials?: string;
+  /** Fotografia din /public/echipa (pătrată, 400x400); lipsă = avatar cu inițiale. */
+  photo?: string;
+};
 
 export type Plan = {
   name: string;
@@ -547,17 +553,21 @@ const ro: Dict = {
     root: { name: "Școala Auto GLG Property", role: "Administrația", initials: "GLG" },
     levels: [
       {
+        label: "Director",
+        people: [{ name: "Nicic Veaceslav", role: "Director", photo: "/echipa/nicic-veaceslav.jpg" }],
+      },
+      {
         label: "Manageri",
         people: [
           { name: "Vlad", role: "Manager 1" },
-          { name: "Cristian", role: "Manager 2" },
+          { name: "Malai Cristian", role: "Manager 2", photo: "/echipa/malai-cristian.jpg" },
           { name: "Ion", role: "Manager 3" },
         ],
       },
       {
         label: "Secretariat administrativ",
         people: [
-          { name: "Viorica", role: "Secretar" },
+          { name: "Dosca Viorica", role: "Secretar", photo: "/echipa/dosca-viorica.jpg" },
           { name: "Rebeca", role: "Secretar" },
         ],
       },
@@ -1258,17 +1268,21 @@ const ru: Dict = {
     root: { name: "Автошкола GLG Property", role: "Администрация", initials: "GLG" },
     levels: [
       {
+        label: "Директор",
+        people: [{ name: "Ничик Вячеслав", role: "Директор", photo: "/echipa/nicic-veaceslav.jpg" }],
+      },
+      {
         label: "Менеджеры",
         people: [
           { name: "Влад", role: "Менеджер 1" },
-          { name: "Кристиан", role: "Менеджер 2" },
+          { name: "Малай Кристиан", role: "Менеджер 2", photo: "/echipa/malai-cristian.jpg" },
           { name: "Ион", role: "Менеджер 3" },
         ],
       },
       {
         label: "Административный секретариат",
         people: [
-          { name: "Виорика", role: "Секретарь" },
+          { name: "Доска Виорика", role: "Секретарь", photo: "/echipa/dosca-viorica.jpg" },
           { name: "Ребека", role: "Секретарь" },
         ],
       },

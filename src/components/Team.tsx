@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import clsx from "clsx";
 import type { TeamPerson } from "@/lib/content";
 import { useI18n } from "./LanguageProvider";
@@ -17,17 +18,34 @@ function initialsOf(p: TeamPerson): string {
     .join("");
 }
 
-/** Avatar cu inițiale: singurul loc unde rounded-full e permis (avatare). */
-function Avatar({ text, large }: { text: string; large?: boolean }) {
+/**
+ * Avatarul unei persoane: fotografia, dacă există, altfel inițialele.
+ * Singurul loc unde `rounded-full` e permis (avatare).
+ */
+function Avatar({ person, large }: { person: TeamPerson; large?: boolean }) {
+  const size = large ? "size-12" : "size-10";
+  if (person.photo) {
+    return (
+      <Image
+        src={person.photo}
+        alt={person.name}
+        width={96}
+        height={96}
+        sizes="48px"
+        className={clsx("shrink-0 rounded-full border border-line object-cover", size)}
+      />
+    );
+  }
   return (
     <span
       className={clsx(
         "chip-3d grid shrink-0 place-items-center rounded-full font-semibold tracking-tight text-ink",
-        large ? "size-12 text-sm" : "size-10 text-xs"
+        size,
+        large ? "text-sm" : "text-xs"
       )}
       aria-hidden="true"
     >
-      {text}
+      {initialsOf(person)}
     </span>
   );
 }
@@ -38,8 +56,9 @@ function Connector() {
 }
 
 /**
- * „Echipa noastră”: organigrama școlii pe niveluri (administrație → manageri →
- * secretariat → echipele mari), fără poze: carduri simple cu inițiale.
+ * „Echipa noastră”: organigrama școlii pe niveluri (administrație → director →
+ * manageri → secretariat → echipele mari). Cine are fotografie o arată; restul,
+ * inițialele.
  */
 export function Team() {
   const { t } = useI18n();
@@ -61,7 +80,7 @@ export function Team() {
           {/* Vârful: administrația */}
           <Reveal className="flex justify-center">
             <div className="card flex w-full max-w-sm items-center gap-4 p-4">
-              <Avatar text={initialsOf(team.root)} large />
+              <Avatar person={team.root} large />
               <div className="min-w-0">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">{team.root.role}</p>
                 <p className="mt-0.5 text-base font-semibold tracking-tight text-ink">{team.root.name}</p>
@@ -82,7 +101,7 @@ export function Team() {
                     key={p.name + p.role}
                     className="card flex w-full items-center gap-3 p-4 sm:w-[calc(50%-0.5rem)] md:w-56"
                   >
-                    <Avatar text={initialsOf(p)} />
+                    <Avatar person={p} />
                     <div className="min-w-0">
                       <p className="truncate text-base font-semibold tracking-tight text-ink">{p.name}</p>
                       <p className="text-sm text-muted">{p.role}</p>
