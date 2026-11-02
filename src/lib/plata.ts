@@ -7,9 +7,11 @@
  *  un buton de plată citește de aici, ca să nu existe două cifre
  *  diferite pe două pagini.
  *
- *  Regula patronului (31.10.2026): după trimiterea cererii omul are 24
- *  de ore ca să achite 500 lei taxa de rezervare (restul 3000 lei la
- *  sediu, până la prima lecție de teorie) sau 3500 lei integral. Fără
+ *  Regula patronului (31.10.2026), cu denumirile oficiale ale taxelor
+ *  (2.11.2026): după trimiterea cererii omul are 24 de ore ca să achite
+ *  taxa de înscriere 1/2, 500 lei (taxa de înscriere 2/2, 3000 lei, la
+ *  sediu, până la prima lecție de teorie), sau taxa de bază, 3500 lei,
+ *  dintr-o dată. Taxa de înscriere 1/2 + 2/2 = taxa de bază. Fără
  *  achitare în 24 de ore cererea nu mai ține locul în grupă.
  *
  *  Modul pur, fără React: poate fi folosit și pe server.
@@ -19,11 +21,11 @@
 import type { Lang } from "./content";
 
 export const PLATA = {
-  /** Taxa de rezervare a locului în grupă. */
+  /** Taxa de înscriere 1/2, cea care rezervă locul în grupă. */
   reserve: 500,
-  /** Restul, dacă locul a fost rezervat cu 500 lei. */
+  /** Taxa de înscriere 2/2, de achitat la sediu. */
   rest: 3000,
-  /** Prețul integral al pachetului Standard, categoria B. */
+  /** Taxa de bază a pachetului Standard, categoria B. */
   full: 3500,
   /** Termenul de achitare, în ore, de la trimiterea cererii. */
   deadlineHours: 24,

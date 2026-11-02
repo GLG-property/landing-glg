@@ -7,6 +7,7 @@ import { CarsVideo } from "@/components/CarsVideo";
 import { Benefits } from "@/components/Benefits";
 import { Stats } from "@/components/Stats";
 import { WhyUs } from "@/components/WhyUs";
+import { VideoReels } from "@/components/VideoReels";
 import { Voucher } from "@/components/Voucher";
 import { Pricing } from "@/components/Pricing";
 import { Steps } from "@/components/Steps";
@@ -43,6 +44,8 @@ export default function Home() {
         <Benefits />
         <Stats />
         <WhyUs />
+        {/* Clipurile școlii (instituția în prim-plan), aduse de patron pe 2.11.2026. */}
+        <VideoReels />
         <Voucher />
         <Pricing />
         <Steps />

@@ -291,6 +291,15 @@ export type Dict = {
   benefits: { icon: string; title: string; text: string; tag: string }[];
   stats: { value: number; suffix: string; label: string }[];
   cars: { badge: string; title: string; text: string; chips: string[]; cta: Cta; enrollCta: Cta };
+  /** Secțiunea „Video": clipurile școlii din public/video/ (VideoReels.tsx). */
+  videos: {
+    eyebrow: string;
+    title: string;
+    accent: string;
+    subtitle: string;
+    fallback: string;
+    items: { id: string; label: string }[];
+  };
   /** „Echipa noastră”: organigrama pe nivele, fără poze (carduri cu inițiale). */
   team: {
     eyebrow: string;
@@ -542,6 +551,26 @@ const ro: Dict = {
     ],
     cta: { label: "Vezi pachetul", href: "#preturi" },
     enrollCta: { label: "Înscrie-te online", href: "/inscriere" },
+  },
+
+  videos: {
+    eyebrow: "Video",
+    title: "Școala auto GLG Property,",
+    accent: "văzută din interior",
+    subtitle: "Sediul, sala de curs, poligonul, mașinile și oamenii care te învață să conduci. Apasă Play pe orice clip.",
+    fallback: "Browserul tău nu poate reda acest videoclip.",
+    items: [
+      { id: "despre-scoala", label: "Despre Școala Auto GLG Property" },
+      { id: "sediu", label: "Sediul, sala de curs și dotările" },
+      { id: "poligon", label: "Poligonul de instruire" },
+      { id: "parc-auto", label: "Parcul auto: mașini noi Skoda" },
+      { id: "pe-scurt", label: "GLG Property, pe scurt" },
+      { id: "informatii", label: "Informații utile pentru cursanți" },
+      { id: "interviu-cursanta", label: "Interviu la sediu, cu o cursantă" },
+      { id: "interviu", label: "Interviu cu echipa GLG" },
+      { id: "lectie", label: "Lecție de conducere, din mașină" },
+      { id: "parerea-cursantei", label: "Părerea unei cursante" },
+    ],
   },
 
   team: {
@@ -800,7 +829,7 @@ const ro: Dict = {
     consentSuffix: ".",
     reserveNotice: {
       title: "Locul în grupă se rezervă doar după achitare",
-      text: "După ce trimiți cererea primești pe email linkurile de plată și ai 24 de ore ca să achiți 500 lei taxa de rezervare (restul, 3000 lei, la sediu, până la prima lecție de teorie) sau 3500 lei taxa de bază. Poți achita online sau la sediu. Dacă în 24 de ore plata nu este înregistrată, cererea nu mai ține locul în grupă.",
+      text: "După ce trimiți cererea primești pe email linkurile de plată și ai 24 de ore ca să achiți taxa de înscriere 1/2, 500 lei (taxa de înscriere 2/2, 3000 lei, la sediu, până la prima lecție de teorie), sau taxa de bază, 3500 lei, dintr-o dată. Poți achita online sau la sediu. Dacă în 24 de ore plata nu este înregistrată, cererea nu mai ține locul în grupă.",
     },
     submit: "Trimite cererea",
     submitting: "Se trimite…",
@@ -836,7 +865,7 @@ const ro: Dict = {
         "Dacă emailul nu ajunge în câteva minute, verifică și folderul Spam. Nu aștepta emailul: achită direct de pe butoanele de mai jos.",
       deadlineTitle: "Locul în grupă se rezervă doar după achitare",
       deadlineText:
-        "Cererea singură nu îți ține locul. Ai 24 de ore ca să achiți taxa de rezervare de 500 lei sau taxa de bază de 3500 lei.",
+        "Cererea singură nu îți ține locul. Ai 24 de ore ca să achiți taxa de înscriere 1/2, de 500 lei, sau taxa de bază, de 3500 lei.",
       deadlinePrefix: "Achită până",
       deadlineTimeWord: "ora",
       countdownPrefix: "mai ai",
@@ -844,11 +873,11 @@ const ro: Dict = {
       minutesShort: "min",
       countdownExpired: "termenul de 24 de ore a trecut",
       payTitle: "Achită online, acum",
-      payReserve: "Achită 500 lei (rezervare)",
+      payReserve: "Achită 500 lei (taxa de înscriere 1/2)",
       payReserveNote:
-        "Îți rezervă locul în grupă. Restul, 3000 lei, se achită la sediu, până la prima lecție de teorie.",
+        "Îți rezervă locul în grupă. Taxa de înscriere 2/2, 3000 lei, se achită la sediu, până la prima lecție de teorie.",
       payFull: "Achită 3500 lei (taxa de bază)",
-      payFullNote: "Prețul întreg al cursului, teorie și practică. Nu mai ai nimic de achitat la sediu.",
+      payFullNote: "Taxa de bază acoperă tot cursul, teorie și practică. Nu mai ai nimic de achitat la sediu.",
       officeTitle: "Sau vino la unul dintre sedii în 24 de ore",
       officeText:
         "Poți achita și la sediu, în numerar sau prin card, în același termen de 24 de ore. Adresele și programul sediilor sunt în secțiunea de contact.",
@@ -887,7 +916,7 @@ const ro: Dict = {
       {
         icon: "clock",
         title: "În 24 de ore achiți",
-        text: "500 lei taxa de rezervare, restul de 3000 lei la sediu, sau 3500 lei taxa de bază. Online, prin link, sau la sediu.",
+        text: "Taxa de înscriere 1/2, 500 lei, iar taxa de înscriere 2/2, 3000 lei, la sediu, sau taxa de bază, 3500 lei, dintr-o dată. Online, prin link, sau la sediu.",
         warn: "Fără achitare în 24 de ore cererea nu mai ține locul în grupă și trebuie trimisă din nou.",
       },
       {
@@ -1108,7 +1137,7 @@ const ro: Dict = {
       },
       {
         h: "Rezervarea locului în grupă",
-        p: "Cererea trimisă online nu garantează locul în grupă. Locul se rezervă doar după achitarea taxei de rezervare de 500 lei sau a taxei de bază de 3500 lei, în 24 de ore de la trimiterea cererii. Plata se poate face online, prin linkurile primite pe email, sau la sediu. Plățile sunt verificate de un angajat al școlii și se confirmă în aceeași zi sau a doua zi. Dacă în 24 de ore plata nu este înregistrată, cererea nu mai ține locul și trebuie depusă din nou. Restul de 3000 lei, în cazul rezervării cu 500 lei, se achită până la prima lecție de teorie.",
+        p: "Cererea trimisă online nu garantează locul în grupă. Locul se rezervă doar după achitarea taxei de înscriere 1/2, de 500 lei, sau a taxei de bază, de 3500 lei, în 24 de ore de la trimiterea cererii. Plata se poate face online, prin linkurile primite pe email, sau la sediu. Plățile sunt verificate de un angajat al școlii și se confirmă în aceeași zi sau a doua zi. Dacă în 24 de ore plata nu este înregistrată, cererea nu mai ține locul și trebuie depusă din nou. Taxa de înscriere 2/2, 3000 lei, în cazul achitării taxei de înscriere 1/2, se achită până la prima lecție de teorie.",
       },
       {
         h: "Utilizarea site-ului",
@@ -1257,6 +1286,26 @@ const ru: Dict = {
     ],
     cta: { label: "Смотреть пакет", href: "#preturi" },
     enrollCta: { label: "Записаться онлайн", href: "/inscriere" },
+  },
+
+  videos: {
+    eyebrow: "Видео",
+    title: "Автошкола GLG Property",
+    accent: "изнутри",
+    subtitle: "Офис, учебный класс, автодром, машины и люди, которые научат вас водить. Нажмите Play на любом ролике.",
+    fallback: "Ваш браузер не может воспроизвести это видео.",
+    items: [
+      { id: "despre-scoala", label: "Об автошколе GLG Property" },
+      { id: "sediu", label: "Офис, учебный класс и оснащение" },
+      { id: "poligon", label: "Учебный автодром" },
+      { id: "parc-auto", label: "Автопарк: новые машины Skoda" },
+      { id: "pe-scurt", label: "GLG Property, коротко" },
+      { id: "informatii", label: "Полезная информация для учеников" },
+      { id: "interviu-cursanta", label: "Интервью в офисе, с ученицей" },
+      { id: "interviu", label: "Интервью с командой GLG" },
+      { id: "lectie", label: "Урок вождения, из машины" },
+      { id: "parerea-cursantei", label: "Мнение ученицы" },
+    ],
   },
 
   team: {
@@ -1514,7 +1563,7 @@ const ru: Dict = {
     consentSuffix: ".",
     reserveNotice: {
       title: "Место в группе бронируется только после оплаты",
-      text: "После отправки заявки на email придут ссылки для оплаты, и у тебя есть 24 часа, чтобы оплатить 500 лей за бронирование (остаток, 3000 лей, в филиале, до первого занятия теории) или 3500 лей базовый тариф. Оплатить можно онлайн или в филиале. Если за 24 часа оплата не зарегистрирована, заявка больше не держит место в группе.",
+      text: "После отправки заявки на email придут ссылки для оплаты, и у тебя есть 24 часа, чтобы оплатить регистрационный взнос 1/2, 500 лей (регистрационный взнос 2/2, 3000 лей, в филиале, до первого занятия теории), или базовый тариф, 3500 лей, сразу. Оплатить можно онлайн или в филиале. Если за 24 часа оплата не зарегистрирована, заявка больше не держит место в группе.",
     },
     submit: "Отправить заявку",
     submitting: "Отправляем…",
@@ -1550,7 +1599,7 @@ const ru: Dict = {
         "Если письмо не придёт за несколько минут, проверь папку Спам. Не жди письмо: оплати прямо с кнопок ниже.",
       deadlineTitle: "Место в группе бронируется только после оплаты",
       deadlineText:
-        "Сама заявка место не держит. У тебя есть 24 часа, чтобы оплатить 500 лей за бронирование или 3500 лей базовый тариф.",
+        "Сама заявка место не держит. У тебя есть 24 часа, чтобы оплатить регистрационный взнос 1/2, 500 лей, или базовый тариф, 3500 лей.",
       deadlinePrefix: "Оплати до",
       deadlineTimeWord: "в",
       countdownPrefix: "осталось",
@@ -1558,11 +1607,11 @@ const ru: Dict = {
       minutesShort: "мин",
       countdownExpired: "срок в 24 часа истёк",
       payTitle: "Оплатить онлайн, сейчас",
-      payReserve: "Оплатить 500 лей (бронирование)",
+      payReserve: "Оплатить 500 лей (регистрационный взнос 1/2)",
       payReserveNote:
-        "Закрепляет за тобой место в группе. Остаток, 3000 лей, оплачивается в филиале, до первого занятия теории.",
+        "Закрепляет за тобой место в группе. Регистрационный взнос 2/2, 3000 лей, оплачивается в филиале, до первого занятия теории.",
       payFull: "Оплатить 3500 лей (базовый тариф)",
-      payFullNote: "Полная стоимость курса, теория и практика. В филиале платить больше нечего.",
+      payFullNote: "Базовый тариф покрывает весь курс, теорию и практику. В филиале платить больше нечего.",
       officeTitle: "Или приходи в один из филиалов в течение 24 часов",
       officeText:
         "Оплатить можно и в филиале, наличными или картой, в тот же срок, 24 часа. Адреса и график филиалов есть в разделе контактов.",
@@ -1601,7 +1650,7 @@ const ru: Dict = {
       {
         icon: "clock",
         title: "За 24 часа оплачиваешь",
-        text: "500 лей за бронирование, остаток 3000 лей в филиале, или 3500 лей базовый тариф. Онлайн, по ссылке, или в филиале.",
+        text: "Регистрационный взнос 1/2, 500 лей, а регистрационный взнос 2/2, 3000 лей, в филиале, или базовый тариф, 3500 лей, сразу. Онлайн, по ссылке, или в филиале.",
         warn: "Без оплаты за 24 часа заявка больше не держит место в группе, и её нужно отправить заново.",
       },
       {
@@ -1820,7 +1869,7 @@ const ru: Dict = {
       },
       {
         h: "Бронирование места в группе",
-        p: "Отправленная онлайн заявка не гарантирует место в группе. Место бронируется только после оплаты сбора за бронирование в 500 лей или полной суммы в 3500 лей, в течение 24 часов с момента отправки заявки. Оплатить можно онлайн, по ссылкам, полученным на email, или в филиале. Платежи проверяет сотрудник школы и подтверждает их в тот же день или на следующий. Если за 24 часа оплата не зарегистрирована, заявка больше не держит место и её нужно подать заново. Остаток в 3000 лей, при бронировании за 500 лей, оплачивается до первого занятия теории.",
+        p: "Отправленная онлайн заявка не гарантирует место в группе. Место бронируется только после оплаты регистрационного взноса 1/2, 500 лей, или базового тарифа, 3500 лей, в течение 24 часов с момента отправки заявки. Оплатить можно онлайн, по ссылкам, полученным на email, или в филиале. Платежи проверяет сотрудник школы и подтверждает их в тот же день или на следующий. Если за 24 часа оплата не зарегистрирована, заявка больше не держит место и её нужно подать заново. Регистрационный взнос 2/2, 3000 лей, при оплате регистрационного взноса 1/2, оплачивается до первого занятия теории.",
       },
       {
         h: "Использование сайта",

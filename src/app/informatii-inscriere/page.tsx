@@ -38,7 +38,7 @@ async function loadOptions(): Promise<EnrollOptions | null> {
 export const metadata: Metadata = pageMetadata({
   title: "Informații înscriere: grupe, prețuri și acte",
   description:
-    "Tot ce trebuie să știi înainte de înscriere la Școala Auto GLG: grupele deschise pe sedii, pachetul Standard de 3500 lei pentru categoria B, plata în rate și actele.",
+    "Tot ce trebuie să știi înainte de înscriere la Școala Auto GLG: grupele deschise pe sedii, taxa de bază de 3500 lei pentru pachetul Standard categoria B, taxa de înscriere 1/2 și 2/2, plata în rate și actele.",
   path: PATH,
 });
 
