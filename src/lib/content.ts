@@ -487,7 +487,7 @@ const ro: Dict = {
     // Cele patru sedii apar explicit, cerința patronului din 31.10.2026.
     subtitle:
       "Instructori atestați, mașini moderne, grupe RO și RU. Chișinău Botanica, Chișinău Buiucani, Strășeni, Vorniceni.",
-    imageAlt: "Skoda Fabia, mașină de instruire a Școlii Auto GLG Property din Chișinău",
+    imageAlt: "Sediul Școlii Auto GLG Property din Chișinău, sala de curs și dotările, în video",
     primaryCta: { label: "Înscrie-te online", href: "/inscriere" },
     secondaryCta: { label: site.phone, href: site.phoneHref },
     priceLine: "Pachetul Standard se achită în până la 25 de rate.",
@@ -1224,7 +1224,7 @@ const ru: Dict = {
     titleBottom: "для всех категорий прав",
     subtitle:
       "Аттестованные инструкторы, современные автомобили, группы RO и RU. Кишинёв Ботаника, Кишинёв Буюканы, Стрэшены, Ворничены.",
-    imageAlt: "Skoda Fabia, учебный автомобиль автошколы GLG Property в Кишинёве",
+    imageAlt: "Офис автошколы GLG Property в Кишинёве, учебный класс и оснащение, на видео",
     primaryCta: { label: "Записаться онлайн", href: "/inscriere" },
     secondaryCta: { label: site.phone, href: site.phoneHref },
     priceLine: "Пакет Standard можно оплатить в рассрочку до 25 платежей.",

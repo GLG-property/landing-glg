@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { Check, Phone } from "lucide-react";
 import { useI18n } from "./LanguageProvider";
@@ -109,18 +108,28 @@ export function Hero() {
           </ul>
         </div>
 
-        {/* Media */}
-        <div className="animate-rise" style={{ animationDelay: "160ms" }}>
-          <div className="overflow-hidden rounded-xl border border-line">
-            <Image
-              src="/masina-glg.jpg"
-              alt={hero.imageAlt}
-              width={1280}
-              height={960}
-              priority
-              className="h-full w-full object-cover"
-              sizes="(min-width: 1024px) 640px, 100vw"
-            />
+        {/* Media: clipul cu sediul, primul lucru de pe hero (cerința patronului,
+            2.11.2026): fără sunet, în buclă continuă ca un GIF, fără controale.
+            Fișierul e tăiat din clipul original (public/video/sediu.mp4): fără
+            introducerea cu banda roșie și fără secvențele cu omul care vorbește,
+            doar sediul, sala, posterele, motoarele, mașinile și motocicletele,
+            cu treceri line și cu finalul legat de început (buclă fără tăietură).
+            Filmat vertical, deci stă într-o ramă 9:16 centrată. */}
+        <div className="animate-rise flex justify-center lg:justify-end" style={{ animationDelay: "160ms" }}>
+          <div className="w-full max-w-[300px] overflow-hidden rounded-xl border border-line bg-ink shadow-sm sm:max-w-[320px] lg:max-w-[340px]">
+            <video
+              className="aspect-[9/16] w-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+              disablePictureInPicture
+              preload="auto"
+              poster="/video/hero-sediu.jpg"
+              aria-label={hero.imageAlt}
+            >
+              <source src="/video/hero-sediu.mp4" type="video/mp4" />
+            </video>
           </div>
         </div>
       </Container>
