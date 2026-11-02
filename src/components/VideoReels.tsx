@@ -8,26 +8,22 @@ import { Reveal } from "./Reveal";
 
 /**
  * Clipurile școlii (filmate vertical, pentru telefon), aduse de patron din
- * Drive pe 2.11.2026: sediul în prim-plan (cerința patronului, 2.11.2026), apoi prezentarea,
- * poligonul, parcul auto, interviurile și părerile cursanților.
+ * Drive pe 2.11.2026. Doar PATRU pe site (patronul: „prea multe clipuri”):
+ * prezentarea școlii în prim-plan, apoi poligonul, parcul auto și lecția din
+ * mașină. Sediul rulează pe hero (Hero.tsx); interviurile și părerile au
+ * rămas în public/video/, nefolosite, ca să poată fi puse oricând la loc.
  *
  * Fișierele stau în public/video/ (comprimate la 720p, cu poster JPG), toate
  * cu `preload="none"`: pagina nu descarcă niciun film până nu apasă omul
  * Play. Când pornește un clip, celelalte se opresc, ca să nu se audă două
  * voci deodată.
  */
-const FEATURED = { id: "sediu", src: "/video/sediu.mp4", poster: "/video/sediu.jpg" };
+const FEATURED = { id: "despre-scoala", src: "/video/despre-scoala.mp4", poster: "/video/despre-scoala.jpg" };
 
 const CLIPS = [
-  { id: "despre-scoala", src: "/video/despre-scoala.mp4", poster: "/video/despre-scoala.jpg" },
   { id: "poligon", src: "/video/poligon.mp4", poster: "/video/poligon.jpg" },
   { id: "parc-auto", src: "/video/parc-auto.mp4", poster: "/video/parc-auto.jpg" },
-  { id: "pe-scurt", src: "/video/pe-scurt.mp4", poster: "/video/pe-scurt.jpg" },
-  { id: "informatii", src: "/video/informatii.mp4", poster: "/video/informatii.jpg" },
-  { id: "interviu-cursanta", src: "/video/interviu-cursanta.mp4", poster: "/video/interviu-cursanta.jpg" },
-  { id: "interviu", src: "/video/interviu.mp4", poster: "/video/interviu.jpg" },
   { id: "lectie", src: "/video/lectie.mp4", poster: "/video/lectie.jpg" },
-  { id: "parerea-cursantei", src: "/video/parerea-cursantei.mp4", poster: "/video/parerea-cursantei.jpg" },
 ];
 
 export function VideoReels() {
@@ -51,7 +47,7 @@ export function VideoReels() {
         <SectionHeading eyebrow={v.eyebrow} title={v.title} accent={v.accent} subtitle={v.subtitle} />
 
         <div className="mt-10 grid gap-6 lg:grid-cols-[minmax(0,320px)_1fr] lg:gap-8">
-          {/* Sediul, în prim-plan */}
+          {/* Prezentarea școlii, în prim-plan */}
           <Reveal>
             <figure className="card overflow-hidden">
               <video
