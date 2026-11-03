@@ -148,8 +148,6 @@ const SCHEDULE_NOTE_RO =
 const SCHEDULE_NOTE_RU =
   "Это интервалы, в которые филиал может вести группы. Открытые сейчас группы и свободные места видны в форме заявки.";
 
-const ADDR_CALL_RO = "Adresa exactă: sună-ne la 069 792 889";
-const ADDR_CALL_RU = "Точный адрес: позвоните нам по номеру 069 792 889";
 
 const MAP_NOTE_EXACT_RO = "Harta se încarcă de la Google doar după acordul tău pentru media externe.";
 const MAP_NOTE_EXACT_RU = "Карта загружается с Google только после вашего согласия на внешние медиа.";
@@ -260,10 +258,10 @@ export const sedii: Sediu[] = [
     path: "/scoala-auto-botanica",
     location: "Botanica",
     shortName: { ro: "Școală auto Botanica", ru: "Автошкола Ботаника" },
-    // TODO: adresă exactă Botanica, de cerut patronului. Până atunci `address`
-    // rămâne null: pagina și schema.org NU afișează nicio stradă.
-    address: null,
-    mapQuery: "Botanica, Chișinău",
+    // Adresa dată de patron pe 3.11.2026: str. Sarmizegetusa 43, etajul 2,
+    // cabinetul 206. Harta primește doar strada și numărul.
+    address: { street: "str. Sarmizegetusa 43, etaj 2, cabinet 206", locality: "Chișinău", region: "Municipiul Chișinău" },
+    mapQuery: "str. Sarmizegetusa 43, Chișinău",
     areaServed: ["Chișinău"],
     schedule: chisinauSchedule(false),
     ro: {
@@ -276,8 +274,8 @@ export const sedii: Sediu[] = [
         "Cursul durează 3 luni, include 24 de lecții practice pe Skoda Fabia și Skoda Scala și se poate achita în până la 25 de rate. Grupele de la Botanica se predau în limba română; pentru grupe în limba rusă te așteptăm la Buiucani.",
       ],
       addressLabel: "Adresa",
-      addressValue: ADDR_CALL_RO,
-      mapNote: MAP_NOTE_AREA_RO,
+      addressValue: "str. Sarmizegetusa 43, etajul 2, cabinetul 206, Chișinău",
+      mapNote: MAP_NOTE_EXACT_RO,
       scheduleTitle: "Orarul grupelor de teorie la Botanica",
       scheduleNote: SCHEDULE_NOTE_RO,
       categoriesTitle: "Ce categorii se predau la Botanica",
@@ -289,7 +287,7 @@ export const sedii: Sediu[] = [
       faq: [
         {
           q: "Care este adresa sediului din Botanica?",
-          a: "Sună-ne la 069 792 889 și îți spunem adresa exactă și cum ajungi. Suntem deschiși de luni până sâmbătă.",
+          a: "Str. Sarmizegetusa 43, etajul 2, cabinetul 206, Chișinău. Suntem deschiși de luni până sâmbătă; dacă nu găsești intrarea, sună la 069 792 889.",
         },
         {
           q: "Ce orare are teoria la Botanica?",
@@ -317,8 +315,8 @@ export const sedii: Sediu[] = [
         "Курс длится 3 месяца, включает 24 практических занятия на Skoda Fabia и Skoda Scala, оплата возможна до 25 частей. Группы в Ботанике ведутся на румынском языке; группы на русском ждут вас в Буюканах.",
       ],
       addressLabel: "Адрес",
-      addressValue: ADDR_CALL_RU,
-      mapNote: MAP_NOTE_AREA_RU,
+      addressValue: "ул. Сармизеджетуза 43, этаж 2, кабинет 206, Кишинёв",
+      mapNote: MAP_NOTE_EXACT_RU,
       scheduleTitle: "Расписание групп теории в Ботанике",
       scheduleNote: SCHEDULE_NOTE_RU,
       categoriesTitle: "Какие категории преподаём в Ботанике",
@@ -330,7 +328,7 @@ export const sedii: Sediu[] = [
       faq: [
         {
           q: "Какой адрес филиала в Ботанике?",
-          a: "Позвоните по номеру 069 792 889, и мы сообщим точный адрес и как добраться. Работаем с понедельника по субботу.",
+          a: "Ул. Сармизеджетуза 43, этаж 2, кабинет 206, Кишинёв. Работаем с понедельника по субботу; если не нашли вход, позвоните по номеру 069 792 889.",
         },
         {
           q: "Какое расписание теории в Ботанике?",

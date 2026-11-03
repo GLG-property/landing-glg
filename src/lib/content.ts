@@ -1007,7 +1007,7 @@ const ro: Dict = {
     callNow: "Sună acum",
     centers: [
       { name: "Chișinău, Buiucani", address: "str. Alba Iulia 75, blocul V, etajul 5", mapQuery: "str. Alba Iulia 75, Chișinău" },
-      { name: "Chișinău, Botanica", address: "sectorul Botanica, sună-ne pentru adresa exactă", mapQuery: "Școala Auto GLG Property, Botanica, Chișinău" },
+      { name: "Chișinău, Botanica", address: "str. Sarmizegetusa 43, etajul 2, cabinetul 206", mapQuery: "str. Sarmizegetusa 43, Chișinău" },
       { name: "Strășeni", address: "str. Mihai Eminescu 32/2", mapQuery: "str. Mihai Eminescu 32, Strășeni" },
       { name: "Vorniceni", address: "Liceul Teoretic „Ion Inculeț”, str. Sfatul Țării 14", mapQuery: "Liceul Teoretic Ion Inculeț, Sfatul Țării 14, Vorniceni, Strășeni" },
     ],
@@ -1741,7 +1741,7 @@ const ru: Dict = {
     callNow: "Звони сейчас",
     centers: [
       { name: "Кишинёв, Буюканы", address: "ул. Алба Юлия 75, блок V, этаж 5", mapQuery: "str. Alba Iulia 75, Chișinău" },
-      { name: "Кишинёв, Ботаника", address: "сектор Ботаника, позвоните для точного адреса", mapQuery: "Școala Auto GLG Property, Botanica, Chișinău" },
+      { name: "Кишинёв, Ботаника", address: "ул. Сармизеджетуза 43, этаж 2, кабинет 206", mapQuery: "str. Sarmizegetusa 43, Chișinău" },
       { name: "Стрэшены", address: "ул. Михай Эминеску 32/2", mapQuery: "str. Mihai Eminescu 32, Strășeni" },
       { name: "Ворничены", address: "Теоретический лицей «Ион Инкулец», ул. Сфатул Цэрий 14", mapQuery: "Liceul Teoretic Ion Inculeț, Sfatul Țării 14, Vorniceni, Strășeni" },
     ],
