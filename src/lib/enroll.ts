@@ -55,6 +55,8 @@ export type EnrollValues = {
   workplace: string;
   referral: "" | "recomandare" | "retele_sociale";
   category: string;
+  /** A doua categorie (opțional): aplicația creează două cereri, câte una pe categorie. "" = doar una. */
+  category2: string;
   language: Lang;
   transmission: "" | "manual" | "automatic";
   location: string; // sediul grupei de teorie
@@ -96,6 +98,7 @@ export function emptyEnrollValues(lang: Lang): EnrollValues {
     workplace: "",
     referral: "",
     category: "B",
+    category2: "",
     language: lang,
     transmission: "",
     location: "",
@@ -288,6 +291,8 @@ export function buildEnrollPayload(v: EnrollValues): Record<string, unknown> {
     id_photo_back_b64: opt(v.id_photo_back),
 
     category: opt(v.category),
+    // A doua categorie, doar dacă e aleasă și diferită de prima (6.11.2026).
+    category2: v.category2.trim() && v.category2.trim() !== v.category.trim() ? v.category2.trim() : undefined,
     citizenship: opt(v.citizenship),
     sex: v.sex || undefined,
     address_raion: opt(v.address_raion),

@@ -370,7 +370,7 @@ type Status =
    * dacă lipsește; `email` e adresa chiar completată, ca ecranul de succes să o
    * poată arăta (valorile formularului rămân, dar le citim o singură dată).
    */
-  | { phase: "success"; duplicate: boolean; payment: PaymentInfo; email: string };
+  | { phase: "success"; duplicate: boolean; payment: PaymentInfo; email: string; twoCategories: boolean };
 
 /**
  * Datele venite din formularul scurt al primei pagini (QuickEnroll), citite pe
@@ -507,8 +507,10 @@ export function EnrollForm({
           duplicate: outcome.kind === "duplicate",
           payment: outcome.payment,
           email: values.email.trim(),
+          // Două categorii = două cereri: ecranul de succes vorbește la plural.
+          twoCategories: !!values.category2.trim() && values.category2.trim() !== values.category.trim(),
         });
-        track(EV.inscriereTrimisa, { sediu: values.location, ora: values.slot, categorie: values.category, limba: values.language, duplicat: outcome.kind === "duplicate" });
+        track(EV.inscriereTrimisa, { sediu: values.location, ora: values.slot, categorie: values.category, categorie2: values.category2, limba: values.language, duplicat: outcome.kind === "duplicate" });
         return;
       case "invalid": {
         const fieldErrors: EnrollErrors = {};
@@ -548,6 +550,7 @@ export function EnrollForm({
         email={status.email}
         payment={status.payment}
         duplicate={status.duplicate}
+        twoCategories={status.twoCategories}
       />
     );
   }
@@ -977,13 +980,36 @@ export function EnrollForm({
                   className={selectClass(!!errors.category)}
                   style={selectStyle}
                   value={values.category}
-                  onChange={(ev) => set("category", ev.target.value)}
+                  onChange={(ev) => {
+                    set("category", ev.target.value);
+                    // A doua categorie nu poate fi aceeași cu prima.
+                    if (values.category2 === ev.target.value) set("category2", "");
+                  }}
                 >
                   {enrollCategories.map((c) => (
                     <option key={c} value={c}>
                       {c}
                     </option>
                   ))}
+                </select>
+              </Field>
+              {/* Două categorii deodată = două cereri (6.11.2026): aceleași opțiuni, fără cea deja aleasă. */}
+              <Field label={f.category2} help={e.help.category2} helpLabel={e.helpLabel} htmlFor="category2">
+                <select
+                  id="category2"
+                  className={selectClass(false)}
+                  style={selectStyle}
+                  value={values.category2}
+                  onChange={(ev) => set("category2", ev.target.value)}
+                >
+                  <option value="">{f.category2None}</option>
+                  {enrollCategories
+                    .filter((c) => c !== values.category)
+                    .map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
                 </select>
               </Field>
               <Field label={f.transmission} help={e.help.transmission} helpLabel={e.helpLabel} error={msg("transmission")}>

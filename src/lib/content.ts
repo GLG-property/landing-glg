@@ -96,6 +96,7 @@ export type EnrollDict = {
     studyLanguage: string;
     slot: string;
     category: string;
+    category2: string;
     transmission: string;
     workplace: string;
     referral: string;
@@ -137,6 +138,9 @@ export type EnrollDict = {
     referralRecommendation: string;
     referralSocial: string;
     category: string;
+    /** A doua categorie (opțional) și opțiunea „doar una”. */
+    category2: string;
+    category2None: string;
     studyLanguage: string;
     langRo: string;
     langRu: string;
@@ -222,6 +226,8 @@ export type EnrollDict = {
   success: {
     title: string;
     text: string;
+    /** Varianta cu două categorii: s-au trimis două cereri. */
+    textTwo: string;
     /** „Am trimis linkurile de plată la” (urmează adresa completată). */
     sentTo: string;
     /** Ce face omul dacă emailul nu ajunge. */
@@ -738,6 +744,7 @@ const ro: Dict = {
       studyLanguage: "Limba în care vrei să înveți. Grupe în română sunt la toate sediile; în rusă doar la Buiucani.",
       slot: "Grupa deschisă acum la sediul ales: zilele și ora cursului de teorie. Dacă nu îți convine, alege alt sediu sau te sunăm când pornește următoarea.",
       category: "Categoria pe care vrei să o obții. Pentru autoturism alegi B.",
+      category2: "Doar dacă vrei două categorii deodată (de exemplu B și A). Primim câte o cerere pentru fiecare categorie.",
       transmission: "Cutia de viteze pe care faci practica. Cu permis luat pe automată nu ai voie să conduci mașină cu cutie mecanică.",
       workplace: "Cu ce te ocupi: unde lucrezi sau unde înveți (de exemplu student, elev, angajat la…). Opțional, apare în cererea-contract.",
       referral: "De unde ai aflat de noi. Ne ajută să știm ce funcționează.",
@@ -779,6 +786,8 @@ const ro: Dict = {
       referralRecommendation: "Recomandare",
       referralSocial: "Rețele de socializare",
       category: "Categoria solicitată",
+      category2: "A doua categorie (opțional)",
+      category2None: "Doar o categorie",
       studyLanguage: "Limba de studii",
       langRo: "Română",
       langRu: "Rusă",
@@ -824,7 +833,7 @@ const ro: Dict = {
       agree: "Am citit și sunt de acord cu prevederile contractului de studii.",
     },
     consent:
-      "Sunt de acord cu prelucrarea datelor mele personale de către GLG Property SRL în scopul înscrierii la cursuri și al întocmirii contractului de școlarizare, conform Legii 133/2011 privind protecția datelor cu caracter personal. Am citit",
+      "Sunt de acord cu prelucrarea datelor mele personale de către GLG Property SRL în scopul înscrierii la cursuri și al întocmirii contractului de școlarizare, conform Legii 195/2024 privind protecția datelor cu caracter personal. Am citit",
     consentLinkLabel: "politica de confidențialitate",
     consentSuffix: ".",
     reserveNotice: {
@@ -860,6 +869,8 @@ const ro: Dict = {
     success: {
       title: "Verifică-ți emailul",
       text: "Cererea a fost trimisă. Pe email ai linkurile de plată, iar aceleași linkuri le ai și mai jos, ca să poți achita chiar acum.",
+      textTwo:
+        "Cererile au fost trimise, câte una pentru fiecare categorie aleasă. Pe email ai linkurile de plată, iar aceleași linkuri le ai și mai jos, ca să poți achita chiar acum.",
       sentTo: "Am trimis linkurile de plată la",
       noEmail:
         "Dacă emailul nu ajunge în câteva minute, verifică și folderul Spam. Nu aștepta emailul: achită direct de pe butoanele de mai jos.",
@@ -1090,7 +1101,7 @@ const ro: Dict = {
     sections: [
       {
         h: "Cine suntem",
-        p: "Operatorul datelor tale este GLG Property SRL, școală auto autorizată din Chișinău, Republica Moldova (site: scoalaautoglg.com). Prelucrăm date cu caracter personal în conformitate cu Legea nr. 133/2011 privind protecția datelor cu caracter personal și cu principiile Regulamentului (UE) 2016/679 (GDPR).",
+        p: "Operatorul datelor tale este GLG Property SRL, școală auto autorizată din Chișinău, Republica Moldova (site: scoalaautoglg.com). Prelucrăm date cu caracter personal în conformitate cu Legea nr. 195/2024 privind protecția datelor cu caracter personal și cu principiile Regulamentului (UE) 2016/679 (GDPR).",
       },
       {
         h: "Ce date colectăm",
@@ -1473,6 +1484,7 @@ const ru: Dict = {
       studyLanguage: "Язык обучения. Группы на румынском есть во всех филиалах; на русском только в Буюканах.",
       slot: "Открытая сейчас группа в выбранном филиале: дни и время занятий по теории. Если не подходит, выбери другой филиал или мы позвоним, когда стартует следующая.",
       category: "Категория, которую хочешь получить. Для легкового автомобиля выбирай B.",
+      category2: "Только если хочешь две категории сразу (например B и A). Мы получим отдельную заявку на каждую категорию.",
       transmission: "Коробка передач, на которой проходишь практику. С правами на автомат нельзя водить машину с механикой.",
       workplace: "Чем ты занимаешься: где работаешь или учишься (например студент, школьник, работаю в…). Необязательно, указывается в заявлении-договоре.",
       referral: "Откуда ты узнал о нас. Помогает понять, что работает.",
@@ -1514,6 +1526,8 @@ const ru: Dict = {
       referralRecommendation: "Рекомендация",
       referralSocial: "Социальные сети",
       category: "Желаемая категория",
+      category2: "Вторая категория (необязательно)",
+      category2None: "Только одна категория",
       studyLanguage: "Язык обучения",
       langRo: "Румынский",
       langRu: "Русский",
@@ -1558,7 +1572,7 @@ const ru: Dict = {
       agree: "Я прочитал(а) и согласен(на) с условиями договора об обучении.",
     },
     consent:
-      "Я согласен(на) на обработку моих персональных данных компанией GLG Property SRL в целях записи на курсы и оформления договора об обучении, в соответствии с Законом 133/2011 о защите персональных данных. Я ознакомился(лась) с",
+      "Я согласен(на) на обработку моих персональных данных компанией GLG Property SRL в целях записи на курсы и оформления договора об обучении, в соответствии с Законом 195/2024 о защите персональных данных. Я ознакомился(лась) с",
     consentLinkLabel: "политикой конфиденциальности",
     consentSuffix: ".",
     reserveNotice: {
@@ -1594,6 +1608,8 @@ const ru: Dict = {
     success: {
       title: "Проверь свою почту",
       text: "Заявка отправлена. Ссылки для оплаты пришли на email, и те же ссылки есть ниже, чтобы можно было оплатить сразу.",
+      textTwo:
+        "Заявки отправлены, по одной на каждую выбранную категорию. Ссылки для оплаты пришли на email, и те же ссылки есть ниже, чтобы можно было оплатить сразу.",
       sentTo: "Ссылки для оплаты отправлены на",
       noEmail:
         "Если письмо не придёт за несколько минут, проверь папку Спам. Не жди письмо: оплати прямо с кнопок ниже.",
@@ -1822,7 +1838,7 @@ const ru: Dict = {
     sections: [
       {
         h: "Кто мы",
-        p: "Оператором ваших данных является GLG Property SRL, лицензированная автошкола в Кишинёве, Республика Молдова (сайт: scoalaautoglg.com). Мы обрабатываем персональные данные в соответствии с Законом № 133/2011 о защите персональных данных и принципами Регламента (ЕС) 2016/679 (GDPR).",
+        p: "Оператором ваших данных является GLG Property SRL, лицензированная автошкола в Кишинёве, Республика Молдова (сайт: scoalaautoglg.com). Мы обрабатываем персональные данные в соответствии с Законом № 195/2024 о защите персональных данных и принципами Регламента (ЕС) 2016/679 (GDPR).",
       },
       {
         h: "Какие данные мы собираем",

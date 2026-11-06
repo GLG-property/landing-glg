@@ -38,11 +38,14 @@ export function EnrollSuccess({
   email,
   payment,
   duplicate,
+  twoCategories = false,
 }: {
   /** Adresa la care au fost trimise linkurile (din valorile formularului). */
   email: string;
   payment: PaymentInfo;
   duplicate: boolean;
+  /** Două categorii alese = două cereri trimise (textul vorbește la plural). */
+  twoCategories?: boolean;
 }) {
   const { t, lang } = useI18n();
   const s = t.enroll.success;
@@ -77,7 +80,7 @@ export function EnrollSuccess({
               {duplicate ? s.duplicateTitle : s.title}
             </h1>
             <p className="mx-auto mt-3 max-w-xl text-base leading-relaxed text-muted">
-              {duplicate ? s.duplicateText : s.text}
+              {duplicate ? s.duplicateText : twoCategories ? s.textTwo : s.text}
             </p>
             {!duplicate && email ? (
               <p className="mt-4 text-sm text-muted">
