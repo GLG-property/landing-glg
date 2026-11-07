@@ -876,7 +876,7 @@ const ro: Dict = {
         "Dacă emailul nu ajunge în câteva minute, verifică și folderul Spam. Nu aștepta emailul: achită direct de pe butoanele de mai jos.",
       deadlineTitle: "Locul în grupă se rezervă doar după achitare",
       deadlineText:
-        "Cererea singură nu îți ține locul. Ai 24 de ore ca să achiți taxa de înscriere 1/2, de 500 lei, sau taxa de bază, de 3500 lei.",
+        "Cererea singură nu îți ține locul. Ai 24 de ore ca să achiți taxa de înscriere 1/2, de 500 lei, sau taxa de bază, de 3500 lei. Dacă trimiți cererea în weekend, termenul este marți la ora 00:00.",
       deadlinePrefix: "Achită până",
       deadlineTimeWord: "ora",
       countdownPrefix: "mai ai",
@@ -1615,7 +1615,7 @@ const ru: Dict = {
         "Если письмо не придёт за несколько минут, проверь папку Спам. Не жди письмо: оплати прямо с кнопок ниже.",
       deadlineTitle: "Место в группе бронируется только после оплаты",
       deadlineText:
-        "Сама заявка место не держит. У тебя есть 24 часа, чтобы оплатить регистрационный взнос 1/2, 500 лей, или базовый тариф, 3500 лей.",
+        "Сама заявка место не держит. У тебя есть 24 часа, чтобы оплатить регистрационный взнос 1/2, 500 лей, или базовый тариф, 3500 лей. Если заявка отправлена в выходные, срок до вторника 00:00.",
       deadlinePrefix: "Оплати до",
       deadlineTimeWord: "в",
       countdownPrefix: "осталось",
