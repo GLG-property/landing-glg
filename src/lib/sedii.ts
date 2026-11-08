@@ -166,8 +166,10 @@ export const sedii: Sediu[] = [
     // („SC GLG PROPERTY SRL”): mun. Chișinău, str. Alba Iulia 75, blocul V,
     // etajul 5. Înlocuiește varianta publică anterioară („bd. Alba Iulia 75/N”).
     address: { street: "str. Alba Iulia 75, bloc V, etaj 5", locality: "Chișinău", region: "Municipiul Chișinău" },
-    // Harta primește doar strada și numărul: blocul și etajul nu ajută Google.
-    mapQuery: "str. Alba Iulia 75, Chișinău",
+    // Harta primește COORDONATELE intersecției str. Alba Iulia cu str. Onisifor
+    // Ghibu (8.11.2026, Jardan): căutarea „Alba Iulia 75" punea pinul pe altă
+    // școală auto, mai la vest.
+    mapQuery: "47.0353,28.7759",
     areaServed: ["Chișinău"],
     schedule: chisinauSchedule(true),
     ro: {
