@@ -12,6 +12,7 @@ import {
   needsTheoryGroup,
   needsTransmission,
   buildEnrollPayload,
+  chosenCategories,
   emptyEnrollValues,
   interpretEnrollResponse,
   validateEnroll,
@@ -496,7 +497,7 @@ export function EnrollForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(buildEnrollPayload(values)),
       });
-      outcome = interpretEnrollResponse(await res.json().catch(() => null));
+      outcome = interpretEnrollResponse(await res.json().catch(() => null), chosenCategories(values));
     } catch {
       setBanner(e.errors.network);
       setStatus({ phase: "idle" });

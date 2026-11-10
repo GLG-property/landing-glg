@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { site } from "@/lib/content";
 import type { PaymentInfo } from "@/lib/enroll";
-import { formatDueAt, remainingUntil } from "@/lib/plata";
+import { PLATA, formatDueAt, remainingUntil } from "@/lib/plata";
 import { EV, track } from "@/lib/analytics";
 import { useI18n } from "./LanguageProvider";
 import { Container } from "./primitives";
@@ -23,9 +23,15 @@ import { Container } from "./primitives";
  *
  * Omul trebuie să plece de aici cu un singur lucru în cap: are 24 de ore ca să
  * achite, altfel cererea nu îi mai ține locul în grupă. Ordinea e fixă:
- * verifică emailul, termenul exact cu contor, cele două butoane de plată,
- * varianta „vin la sediu”, verificarea plății de către un angajat și ce se
- * întâmplă dacă nu achită.
+ * verifică emailul, termenul exact cu contor, butoanele de plată, varianta
+ * „vin la sediu”, verificarea plății de către un angajat și ce se întâmplă
+ * dacă nu achită.
+ *
+ * Plata e pe categorie (10.11.2026), după planurile din `payment.plans`:
+ * B și A1, A2, A au două butoane (taxa de înscriere 1/2, 500 lei, și taxa de
+ * bază), celelalte categorii un singur buton, taxa de bază dintr-o dată, iar
+ * unde școala nu are link pe sumă, taxa se achită la sediu. La două categorii
+ * blocul se repetă, fiecare sub titlul „Categoria X”.
  *
  * ATENȚIE: emailul poate întârzia sau poate să nu plece deloc (cheia
  * serviciului de email). De aceea linkurile de plată stau AICI, pe ecran, nu
@@ -34,6 +40,15 @@ import { Container } from "./primitives";
  * Componentă separată de formular ca să-și țină singură contorul (hook-ul de
  * tic nu are ce căuta în formularul lung, care se demontează la succes).
  */
+/** Pune valorile în locul marcajelor `{nume}` dintr-un text din dicționar. */
+function fill(text: string, values: Record<string, string | number>): string {
+  let out = text;
+  for (const [key, value] of Object.entries(values)) {
+    out = out.split(`{${key}}`).join(String(value));
+  }
+  return out;
+}
+
 export function EnrollSuccess({
   email,
   payment,
@@ -67,6 +82,13 @@ export function EnrollSuccess({
   const payBtn =
     "inline-flex h-12 w-full items-center justify-center gap-2 rounded-[10px] px-5 text-[0.95rem] font-medium transition-colors duration-200";
 
+  const plans = payment.plans;
+  const many = plans.length > 1;
+  // Măcar o categorie cu taxa în două părți: textul termenului pomenește și cei 500 lei.
+  const anyInstallments = plans.some((p) => p.installments && p.reserve);
+  // Nicio categorie cu link de plată: totul se achită la sediu, deci textele nu promit butoane.
+  const anyLink = plans.some((p) => (p.installments && p.reserve) || p.full);
+
   return (
     <section className="bg-white py-10 sm:py-14">
       <Container>
@@ -80,17 +102,25 @@ export function EnrollSuccess({
               {duplicate ? s.duplicateTitle : s.title}
             </h1>
             <p className="mx-auto mt-3 max-w-xl text-base leading-relaxed text-muted">
-              {duplicate ? s.duplicateText : twoCategories ? s.textTwo : s.text}
+              {duplicate
+                ? anyLink
+                  ? s.duplicateText
+                  : s.duplicateTextNoLink
+                : !anyLink
+                  ? s.textNoLink
+                  : twoCategories
+                    ? s.textTwo
+                    : s.text}
             </p>
             {!duplicate && email ? (
               <p className="mt-4 text-sm text-muted">
-                {s.sentTo}{" "}
+                {anyLink ? s.sentTo : s.sentToNoLink}{" "}
                 <span className="font-semibold text-ink">{email}</span>
               </p>
             ) : null}
             {!duplicate ? (
               <p className="mx-auto mt-2 max-w-xl text-[13px] leading-relaxed text-faint">
-                {s.noEmail}
+                {anyLink ? s.noEmail : s.noEmailNoLink}
               </p>
             ) : null}
           </div>
@@ -102,7 +132,9 @@ export function EnrollSuccess({
             </span>
             <div>
               <h2 className="text-base font-semibold tracking-tight text-ink">{s.deadlineTitle}</h2>
-              <p className="mt-1.5 text-sm leading-relaxed text-muted">{s.deadlineText}</p>
+              <p className="mt-1.5 text-sm leading-relaxed text-muted">
+                {anyInstallments ? s.deadlineText : s.deadlineTextOnce}
+              </p>
               <p className="mt-3 text-sm font-semibold text-ink">
                 {s.deadlinePrefix} {dueLabel}
               </p>
@@ -110,36 +142,80 @@ export function EnrollSuccess({
             </div>
           </div>
 
-          {/* 3. Cele două butoane de plată, filă nouă */}
+          {/* 3. Plata, pe fiecare categorie aleasă; linkurile se deschid în filă nouă */}
           <div className="card mt-4 p-5">
-            <h2 className="text-base font-semibold tracking-tight text-ink">{s.payTitle}</h2>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              <div className="flex flex-col">
-                <a
-                  href={payment.links.reserve}
-                  target="_blank"
-                  rel="noopener"
-                  onClick={() => track(EV.plata500, { duplicat: duplicate })}
-                  className={`btn-3d text-white ${payBtn}`}
-                >
-                  {s.payReserve}
-                  <ExternalLink className="size-4" strokeWidth={1.5} />
-                </a>
-                <p className="mt-2 text-[13px] leading-relaxed text-muted">{s.payReserveNote}</p>
-              </div>
-              <div className="flex flex-col">
-                <a
-                  href={payment.links.full}
-                  target="_blank"
-                  rel="noopener"
-                  onClick={() => track(EV.plata3500, { duplicat: duplicate })}
-                  className={`btn-3d-light text-ink ${payBtn}`}
-                >
-                  {s.payFull}
-                  <ExternalLink className="size-4" strokeWidth={1.5} />
-                </a>
-                <p className="mt-2 text-[13px] leading-relaxed text-muted">{s.payFullNote}</p>
-              </div>
+            <h2 className="text-base font-semibold tracking-tight text-ink">
+              {anyLink ? s.payTitle : s.payTitleOffice}
+            </h2>
+            <div className="mt-4 space-y-5">
+              {plans.map((plan, i) => {
+                const reserve = plan.installments ? plan.reserve : null;
+                const heading = many && plan.category !== "";
+                return (
+                  <div
+                    key={`${i}-${plan.category}`}
+                    className={many && i > 0 ? "border-t border-line pt-5" : undefined}
+                  >
+                    {heading ? (
+                      <h3 className="text-sm font-semibold text-ink">
+                        {fill(s.planHeading, { category: plan.category })}
+                      </h3>
+                    ) : null}
+                    {reserve || plan.full ? (
+                      <div
+                        className={`grid gap-4 ${reserve && plan.full ? "sm:grid-cols-2" : ""} ${heading ? "mt-3" : ""}`}
+                      >
+                        {reserve ? (
+                          <div className="flex flex-col">
+                            <a
+                              href={reserve}
+                              target="_blank"
+                              rel="noopener"
+                              onClick={() =>
+                                track(EV.plata500, { duplicat: duplicate, categorie: plan.category })
+                              }
+                              className={`btn-3d text-white ${payBtn}`}
+                            >
+                              {fill(s.payReserve, { sum: PLATA.reserve })}
+                              <ExternalLink className="size-4" strokeWidth={1.5} />
+                            </a>
+                            <p className="mt-2 text-[13px] leading-relaxed text-muted">
+                              {fill(s.payReserveNote, { rest: plan.price - PLATA.reserve })}
+                            </p>
+                          </div>
+                        ) : null}
+                        {plan.full ? (
+                          <div className="flex flex-col">
+                            <a
+                              href={plan.full}
+                              target="_blank"
+                              rel="noopener"
+                              onClick={() =>
+                                track(EV.plata3500, {
+                                  duplicat: duplicate,
+                                  suma: plan.price,
+                                  categorie: plan.category,
+                                })
+                              }
+                              className={`${reserve ? "btn-3d-light text-ink" : "btn-3d text-white"} ${payBtn}`}
+                            >
+                              {fill(s.payFull, { sum: plan.price })}
+                              <ExternalLink className="size-4" strokeWidth={1.5} />
+                            </a>
+                            <p className="mt-2 text-[13px] leading-relaxed text-muted">
+                              {plan.installments ? s.payFullNote : s.payOnceNote}
+                            </p>
+                          </div>
+                        ) : null}
+                      </div>
+                    ) : (
+                      <p className={`text-sm leading-relaxed text-muted ${heading ? "mt-2" : ""}`}>
+                        {fill(s.payOffice, { sum: plan.price })}
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -149,7 +225,9 @@ export function EnrollSuccess({
               <Building2 className="size-4" strokeWidth={1.5} />
             </span>
             <div>
-              <h2 className="text-base font-semibold tracking-tight text-ink">{s.officeTitle}</h2>
+              <h2 className="text-base font-semibold tracking-tight text-ink">
+                {anyLink ? s.officeTitle : s.officeTitleOnly}
+              </h2>
               <p className="mt-1.5 text-sm leading-relaxed text-muted">{s.officeText}</p>
               <Link
                 href="/#contact"

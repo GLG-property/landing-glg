@@ -7,12 +7,20 @@
  *  și de datele structurate FAQPage din pagina serverului.
  *
  *  Reguli respectate:
- *   - cifrele de preț sunt cele confirmate de patron (31.10.2026), cu
- *     denumirile oficiale ale taxelor (2.11.2026): taxa de bază, 3500 lei,
- *     pachetul Standard categoria B, până la 25 de rate; taxa de înscriere
- *     1/2, 500 lei, + taxa de înscriere 2/2, 3000 lei, până la prima lecție
- *     de teorie; taxa de bază dintr-o dată dacă grupa începe în cel mult
- *     7 zile. Taxa de înscriere 1/2 + 2/2 = taxa de bază;
+ *   - cifrele de preț sunt cele confirmate de patron, cu denumirile
+ *     oficiale ale taxelor (2.11.2026). Taxa de bază depinde de categorie
+ *     (10.11.2026, aceleași cifre ca în src/lib/categories.ts): B, 3500 lei
+ *     (pachetul Standard, până la 25 de rate); A1, A2, A, 3200 lei (A2 și
+ *     A, 1200 lei împreună cu B, C, D sau CE, în aceeași înscriere); C,
+ *     1800 lei; D și CE, 1500 lei; „B la A1”, 900 lei (fără teorie, se
+ *     achită la sediu); „B la A2” și „B la A”, 2000 lei. Trecerile fără
+ *     preț confirmat nu au nicio cifră pe pagină;
+ *   - în două părți (taxa de înscriere 1/2, 500 lei, + taxa de înscriere
+ *     2/2, până la prima lecție de teorie) se achită doar B și A1, A2, A:
+ *     2/2 = 3000 lei la B, 2700 lei la A1, A2, A. Celelalte categorii și
+ *     trecerile achită taxa de bază dintr-o dată; la fel orice categorie
+ *     dacă grupa începe în cel mult 7 zile. Taxa de înscriere 1/2 + 2/2 =
+ *     taxa de bază;
  *   - secțiunile „documente” sunt transcrierea fidelă a celor două foi
  *     oficiale „SC GLG PROPERTY SRL” trimise de patron, fără
  *     reinterpretări; termenii juridici (HG 181/2022, Legea 273/1994,
@@ -296,18 +304,18 @@ const ro: InfoDict = {
     eyebrow: "Preț și achitare",
     title: "Cât costă și cum se achită",
     subtitle:
-      "Pachetul Standard pentru categoria B, cu toate variantele de achitare. Pentru celelalte categorii prețul se comunică la telefon sau la sediu.",
+      "Taxa de bază depinde de categorie. Mai jos găsești taxa fiecărei categorii și variantele de achitare.",
     totalLabel: "Pachetul Standard, categoria B",
     totalValue: "3500 lei",
     totalNote: "Taxa de bază a cursului, teorie și practică.",
     installmentsLabel: "Achitare în rate",
     installmentsValue: "până la 25 de rate",
     installmentsNote: "Se aplică pachetului Standard pentru categoria B.",
-    reserveLabel: "Taxa de înscriere 1/2",
+    reserveLabel: "Taxa de înscriere 1/2, la B și la A1, A2, A",
     reserveValue: "500 lei",
     reserveRuleTitle: "Rezervarea locului: 24 de ore de la trimiterea cererii",
     reserveRuleText:
-      "Cererea online nu garantează locul în grupă. După trimitere primești pe email linkurile de plată și ai 24 de ore ca să achiți taxa de înscriere 1/2, 500 lei, sau taxa de bază, 3500 lei, online sau la sediu. Plata o verifică un angajat al școlii și o confirmă în aceeași zi sau a doua zi. Dacă în 24 de ore plata nu este înregistrată, cererea nu mai ține locul și trebuie depusă din nou. Taxa de înscriere 2/2, 3000 lei, în cazul achitării taxei de înscriere 1/2, se achită până la prima lecție de teorie.",
+      "Cererea online nu garantează locul în grupă. După trimitere primești pe email linkurile de plată și ai 24 de ore ca să achiți taxa de bază a categoriei, online sau la sediu. La B și la A1, A2, A poți achita mai întâi taxa de înscriere 1/2, 500 lei; la celelalte categorii și la treceri taxa de bază se achită dintr-o dată. Plata o verifică un angajat al școlii și o confirmă în aceeași zi sau a doua zi. Dacă în 24 de ore plata nu este înregistrată, cererea nu mai ține locul și trebuie depusă din nou. Taxa de înscriere 2/2 (3000 lei la B, 2700 lei la A1, A2, A), în cazul achitării taxei de înscriere 1/2, se achită până la prima lecție de teorie.",
     reserveRuleCta: "Vezi procesul de înscriere, pas cu pas",
     stepsTitle: "Pașii achitării",
     steps: [
@@ -316,12 +324,12 @@ const ro: InfoDict = {
         text: "Online, de pe telefon, sau la sediu. Alegi sediul, limba și grupa, iar noi te sunăm să confirmăm.",
       },
       {
-        title: "Dacă grupa începe peste mai mult de 7 zile, rezervi locul cu taxa de înscriere 1/2",
-        text: "Taxa de înscriere 1/2, 500 lei, îți ține locul în grupă. Taxa de înscriere 2/2, 3000 lei, se achită până la prima lecție de teorie.",
+        title: "La B și la A1, A2, A, dacă grupa începe peste mai mult de 7 zile, rezervi locul cu taxa de înscriere 1/2",
+        text: "Taxa de înscriere 1/2, 500 lei, îți ține locul în grupă. Taxa de înscriere 2/2 (3000 lei la B, 2700 lei la A1, A2, A) se achită până la prima lecție de teorie.",
       },
       {
-        title: "Dacă grupa începe în cel mult 7 zile sau a început deja, achiți taxa de bază de 3500 lei",
-        text: "În acest caz nu mai există varianta în două taxe de înscriere: taxa de bază se achită dintr-o dată, la înscriere.",
+        title: "Dacă grupa începe în cel mult 7 zile sau a început deja, achiți taxa de bază dintr-o dată",
+        text: "În acest caz nu mai există varianta în două taxe de înscriere: taxa de bază se achită dintr-o dată, la înscriere. La C, D, CE și la treceri taxa de bază se achită oricum dintr-o dată.",
       },
       {
         title: "Semnezi contractul de studii",
@@ -329,19 +337,19 @@ const ro: InfoDict = {
       },
       {
         title: "Începi lecțiile de practică",
-        text: "Practica pornește doar după ce contractul este semnat și taxa de bază de 3500 lei este achitată.",
+        text: "Practica pornește doar după ce contractul este semnat și taxa de bază a categoriei este achitată.",
       },
     ],
     ruleTitle: "Regula de care depinde practica",
     ruleText:
-      "Nu poți începe lecțiile de practică până nu ai semnat contractul de studii și nu ai achitat taxa de bază, 3500 lei. Chiar dacă suma este achitată, fără contract semnat nu se face nicio programare la instructor.",
+      "Nu poți începe lecțiile de practică până nu ai semnat contractul de studii și nu ai achitat taxa de bază a categoriei. Chiar dacă suma este achitată, fără contract semnat nu se face nicio programare la instructor.",
     contractTitle: "Contractul de studii",
     contractText:
       "Se semnează la sediu sau online. Este documentul care, împreună cu achitarea taxei de bază, deschide accesul la orele de practică.",
-    otherTitle: "Celelalte categorii",
+    otherTitle: "Taxa de bază la celelalte categorii",
     otherText:
-      "Pentru aceste categorii prețul depinde de categorie și de grupa care se deschide, de aceea se comunică la telefon sau la sediu. Nu publicăm cifre pe care nu le putem garanta.",
-    otherCategories: "A1, A2, A, C, CE, D",
+      "A2 sau A, împreună cu B, C, D sau CE în aceeași înscriere: 1200 lei. Treceri de categorie: B la A1, 900 lei (fără teorie, se achită la sediu); B la A2 și B la A, 2000 lei. La C, D, CE și la treceri taxa de bază se achită dintr-o dată. Pentru celelalte treceri sună-ne sau treci pe la sediu.",
+    otherCategories: "A1, A2, A: 3200 lei. C: 1800 lei. D și CE: 1500 lei.",
   },
   gallery: {
     eyebrow: "Galerie",
@@ -429,15 +437,15 @@ const ro: InfoDict = {
   faq: [
     {
       q: "Cât costă cursul pentru categoria B?",
-      a: "Pachetul Standard acoperă categoriile B1 și B, taxa de bază este de 3500 lei și se poate achita în până la 25 de rate. Pentru celelalte categorii (A1, A2, A, C, CE, D) prețul se comunică la telefon sau la sediu.",
+      a: "Pachetul Standard acoperă categoriile B1 și B, taxa de bază este de 3500 lei și se poate achita în până la 25 de rate. La celelalte categorii taxa de bază este: A1, A2, A, 3200 lei; C, 1800 lei; D și CE, 1500 lei. A2 sau A, împreună cu B, C, D sau CE în aceeași înscriere, 1200 lei. Treceri de categorie: B la A1, 900 lei (fără teorie, se achită la sediu); B la A2 și B la A, 2000 lei.",
     },
     {
       q: "Pot rezerva locul în grupă cu taxa de înscriere 1/2?",
-      a: "Da, dacă grupa începe peste mai mult de 7 zile: rezervi locul cu taxa de înscriere 1/2, 500 lei, iar taxa de înscriere 2/2, 3000 lei, se achită până la prima lecție de teorie. Dacă grupa începe în cel mult 7 zile sau a început deja, se achită taxa de bază, 3500 lei, dintr-o dată.",
+      a: "Da, la categoriile B, A1, A2 și A, dacă grupa începe peste mai mult de 7 zile: rezervi locul cu taxa de înscriere 1/2, 500 lei, iar taxa de înscriere 2/2 (3000 lei la B, 2700 lei la A1, A2, A) se achită până la prima lecție de teorie. Dacă grupa începe în cel mult 7 zile sau a început deja, se achită taxa de bază dintr-o dată. La C, D, CE și la treceri taxa de bază se achită întotdeauna dintr-o dată.",
     },
     {
       q: "Când pot începe lecțiile de practică?",
-      a: "Doar după ce ai semnat contractul de studii și ai achitat taxa de bază, 3500 lei. Chiar dacă suma este achitată, fără contract semnat nu se face nicio programare la instructor. Contractul se semnează la sediu sau online.",
+      a: "Doar după ce ai semnat contractul de studii și ai achitat taxa de bază a categoriei. Chiar dacă suma este achitată, fără contract semnat nu se face nicio programare la instructor. Contractul se semnează la sediu sau online.",
     },
     {
       q: "Câte ore de teorie pot lipsi?",
@@ -520,18 +528,18 @@ const ru: InfoDict = {
     eyebrow: "Цена и оплата",
     title: "Сколько стоит и как оплачивается",
     subtitle:
-      "Пакет Стандарт для категории B со всеми вариантами оплаты. По остальным категориям цену сообщаем по телефону или в филиале.",
+      "Базовый тариф зависит от категории. Ниже указаны тариф каждой категории и варианты оплаты.",
     totalLabel: "Пакет Стандарт, категория B",
     totalValue: "3500 лей",
     totalNote: "Базовый тариф курса, теория и практика.",
     installmentsLabel: "Оплата частями",
     installmentsValue: "до 25 частей",
     installmentsNote: "Относится к пакету Стандарт для категории B.",
-    reserveLabel: "Регистрационный взнос 1/2",
+    reserveLabel: "Регистрационный взнос 1/2, для B и для A1, A2, A",
     reserveValue: "500 лей",
     reserveRuleTitle: "Бронирование места: 24 часа с момента отправки заявки",
     reserveRuleText:
-      "Заявка онлайн не гарантирует место в группе. После отправки на email приходят ссылки для оплаты, и у вас есть 24 часа, чтобы оплатить регистрационный взнос 1/2, 500 лей, или базовый тариф, 3500 лей, онлайн или в филиале. Оплату проверяет сотрудник школы и подтверждает её в тот же день или на следующий. Если за 24 часа оплата не зарегистрирована, заявка больше не держит место и её нужно подать заново. Регистрационный взнос 2/2, 3000 лей, при оплате регистрационного взноса 1/2, оплачивается до первого занятия теории.",
+      "Заявка онлайн не гарантирует место в группе. После отправки на email приходят ссылки для оплаты, и у вас есть 24 часа, чтобы оплатить базовый тариф категории, онлайн или в филиале. Для B и для A1, A2, A можно сначала оплатить регистрационный взнос 1/2, 500 лей; для остальных категорий и для переходов с категории на категорию базовый тариф оплачивается сразу. Оплату проверяет сотрудник школы и подтверждает её в тот же день или на следующий. Если за 24 часа оплата не зарегистрирована, заявка больше не держит место и её нужно подать заново. Регистрационный взнос 2/2 (3000 лей для B, 2700 лей для A1, A2, A), при оплате регистрационного взноса 1/2, оплачивается до первого занятия теории.",
     reserveRuleCta: "Посмотреть процесс записи, шаг за шагом",
     stepsTitle: "Порядок оплаты",
     steps: [
@@ -540,12 +548,12 @@ const ru: InfoDict = {
         text: "Онлайн, с телефона, или в филиале. Выбираете филиал, язык и группу, а мы звоним для подтверждения.",
       },
       {
-        title: "Если группа начинается более чем через 7 дней, бронируете место регистрационным взносом 1/2",
-        text: "Регистрационный взнос 1/2, 500 лей, закрепляет за вами место в группе. Регистрационный взнос 2/2, 3000 лей, оплачивается до первого занятия теории.",
+        title: "Для B и для A1, A2, A, если группа начинается более чем через 7 дней, бронируете место регистрационным взносом 1/2",
+        text: "Регистрационный взнос 1/2, 500 лей, закрепляет за вами место в группе. Регистрационный взнос 2/2 (3000 лей для B, 2700 лей для A1, A2, A) оплачивается до первого занятия теории.",
       },
       {
-        title: "Если группа начинается в течение 7 дней или уже началась, оплачиваете базовый тариф 3500 лей",
-        text: "В этом случае варианта с двумя регистрационными взносами нет: базовый тариф оплачивается сразу, при записи.",
+        title: "Если группа начинается в течение 7 дней или уже началась, оплачиваете базовый тариф сразу",
+        text: "В этом случае варианта с двумя регистрационными взносами нет: базовый тариф оплачивается сразу, при записи. Для C, D, CE и для переходов с категории на категорию базовый тариф в любом случае оплачивается сразу.",
       },
       {
         title: "Подписываете договор об обучении",
@@ -553,19 +561,19 @@ const ru: InfoDict = {
       },
       {
         title: "Начинаете практические занятия",
-        text: "Практика начинается только после того, как договор подписан и базовый тариф 3500 лей оплачен.",
+        text: "Практика начинается только после того, как договор подписан и базовый тариф категории оплачен.",
       },
     ],
     ruleTitle: "Правило, от которого зависит практика",
     ruleText:
-      "Нельзя начать практические занятия, пока не подписан договор об обучении и не оплачен базовый тариф, 3500 лей. Даже если сумма оплачена, без подписанного договора запись к инструктору не производится.",
+      "Нельзя начать практические занятия, пока не подписан договор об обучении и не оплачен базовый тариф категории. Даже если сумма оплачена, без подписанного договора запись к инструктору не производится.",
     contractTitle: "Договор об обучении",
     contractText:
       "Подписывается в филиале или онлайн. Именно он вместе с оплатой базового тарифа открывает доступ к практическим занятиям.",
-    otherTitle: "Остальные категории",
+    otherTitle: "Базовый тариф остальных категорий",
     otherText:
-      "По этим категориям цена зависит от категории и от того, какая группа открывается, поэтому её сообщают по телефону или в филиале. Мы не публикуем цифры, которые не можем гарантировать.",
-    otherCategories: "A1, A2, A, C, CE, D",
+      "A2 или A вместе с B, C, D или CE в одной записи: 1200 лей. Переходы с категории на категорию: с B на A1, 900 лей (без теории, оплачивается в филиале); с B на A2 и с B на A, 2000 лей. Для C, D, CE и для переходов базовый тариф оплачивается сразу. По остальным переходам позвоните нам или зайдите в филиал.",
+    otherCategories: "A1, A2, A: 3200 лей. C: 1800 лей. D и CE: 1500 лей.",
   },
   gallery: {
     eyebrow: "Галерея",
@@ -653,15 +661,15 @@ const ru: InfoDict = {
   faq: [
     {
       q: "Сколько стоит курс категории B?",
-      a: "Пакет Стандарт охватывает категории B1 и B, базовый тариф составляет 3500 лей и оплачивается до 25 частей. По остальным категориям (A1, A2, A, C, CE, D) цену сообщаем по телефону или в филиале.",
+      a: "Пакет Стандарт охватывает категории B1 и B, базовый тариф составляет 3500 лей и оплачивается до 25 частей. Базовый тариф остальных категорий: A1, A2, A, 3200 лей; C, 1800 лей; D и CE, 1500 лей. A2 или A вместе с B, C, D или CE в одной записи, 1200 лей. Переходы с категории на категорию: с B на A1, 900 лей (без теории, оплачивается в филиале); с B на A2 и с B на A, 2000 лей.",
     },
     {
       q: "Можно ли забронировать место в группе регистрационным взносом 1/2?",
-      a: "Да, если группа начинается более чем через 7 дней: место бронируется регистрационным взносом 1/2, 500 лей, а регистрационный взнос 2/2, 3000 лей, оплачивается до первого занятия теории. Если группа начинается в течение 7 дней или уже началась, базовый тариф, 3500 лей, оплачивается сразу.",
+      a: "Да, для категорий B, A1, A2 и A, если группа начинается более чем через 7 дней: место бронируется регистрационным взносом 1/2, 500 лей, а регистрационный взнос 2/2 (3000 лей для B, 2700 лей для A1, A2, A) оплачивается до первого занятия теории. Если группа начинается в течение 7 дней или уже началась, базовый тариф оплачивается сразу. Для C, D, CE и для переходов с категории на категорию базовый тариф всегда оплачивается сразу.",
     },
     {
       q: "Когда можно начать практические занятия?",
-      a: "Только после того, как подписан договор об обучении и оплачен базовый тариф, 3500 лей. Даже если сумма оплачена, без подписанного договора запись к инструктору не производится. Договор подписывается в филиале или онлайн.",
+      a: "Только после того, как подписан договор об обучении и оплачен базовый тариф категории. Даже если сумма оплачена, без подписанного договора запись к инструктору не производится. Договор подписывается в филиале или онлайн.",
     },
     {
       q: "Сколько часов теории можно пропустить?",

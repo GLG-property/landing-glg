@@ -40,32 +40,46 @@ export interface CategoryDef {
   priceLei: number;
   /** Termenul de studii din contract, în luni. */
   months: number;
+  /**
+   * Taxa de bază se poate achita în două părți (taxa de înscriere 1/2, 500 lei,
+   * apoi 2/2)? Patronul, 10.11.2026: doar la B și la A1, A2, A; la celelalte
+   * categorii și la treceri taxa de bază se achită dintr-o dată.
+   */
+  installments: boolean;
+  /**
+   * Taxa de bază când categoria se face ÎMPREUNĂ cu B, C, D sau CE, în aceeași
+   * înscriere (patronul, 10.11.2026: A2 și A, 1200 lei).
+   */
+  comboPriceLei?: number;
 }
 
 const curs = (key: string, months: number, extra: Partial<CategoryDef> = {}): CategoryDef => ({
-  key, kind: "curs", hasTheory: true, hasTransmission: false, priceLei: STANDARD_PRICE_LEI, months, ...extra,
+  key, kind: "curs", hasTheory: true, hasTransmission: false, priceLei: STANDARD_PRICE_LEI, months, installments: false, ...extra,
 });
 const trecere = (key: string, extra: Partial<CategoryDef> = {}): CategoryDef => ({
-  key, kind: "trecere", hasTheory: true, hasTransmission: false, priceLei: STANDARD_PRICE_LEI, months: 1, ...extra,
+  key, kind: "trecere", hasTheory: true, hasTransmission: false, priceLei: STANDARD_PRICE_LEI, months: 1, installments: false, ...extra,
 });
 
 /**
  * Tabelul categoriilor, în ordinea din selector.
  * Cutia de viteze se alege DOAR la B (patronul: „la C, D, E, A nu este cutie").
- * Deocamdată doar „B la A1" are parametri proprii confirmați (900 lei, fără
- * teorie); restul rămân pe valorile obișnuite până vin datele.
+ * Taxele de bază confirmate de patron pe 10.11.2026, odată cu linkurile de plată:
+ * A1, A2, A = 3200 lei (A2 și A = 1200 lei împreună cu B, C, D sau CE); B = 3500;
+ * C = 1800; D și CE = 1500; „B la A1" = 900 (fără teorie); „B la A2" și
+ * „B la A" = 2000. Trecerile fără preț confirmat rămân pe 3500 până vin datele.
+ * În două părți (500 lei + restul) se achită doar B și A1, A2, A.
  */
 export const CATEGORIES: readonly CategoryDef[] = [
-  curs("A1", 3),
-  curs("A2", 3),
-  curs("A", 3),
-  curs("B", 3, { hasTransmission: true }),
-  curs("C", 2),
-  curs("D", 2),
-  curs("CE", 1.5),
+  curs("A1", 3, { priceLei: 3200, installments: true }),
+  curs("A2", 3, { priceLei: 3200, installments: true, comboPriceLei: 1200 }),
+  curs("A", 3, { priceLei: 3200, installments: true, comboPriceLei: 1200 }),
+  curs("B", 3, { hasTransmission: true, installments: true }),
+  curs("C", 2, { priceLei: 1800 }),
+  curs("D", 2, { priceLei: 1500 }),
+  curs("CE", 1.5, { priceLei: 1500 }),
   trecere("B la A1", { hasTheory: false, priceLei: 900 }),
-  trecere("B la A2"),
-  trecere("B la A"),
+  trecere("B la A2", { priceLei: 2000 }),
+  trecere("B la A", { priceLei: 2000 }),
   trecere("A1 la A2"),
   trecere("A2 la A"),
   trecere("B1 la B", { hasTransmission: true }),
@@ -110,7 +124,32 @@ export function categoryDef(raw: string | null | undefined): CategoryDef {
     hasTransmission: n === "" || /^B1?$/.test(target),
     priceLei: STANDARD_PRICE_LEI,
     months: isTransition ? 1 : 3,
+    // Gol sau necunoscut scris ca B: în două părți, ca la B; orice altceva, dintr-o dată.
+    installments: n === "" || n === "B",
   };
+}
+
+/** Taxa de bază se poate achita în două părți (500 lei + restul)? Doar B și A1, A2, A. */
+export function categoryAllowsInstallments(raw: string | null | undefined): boolean {
+  return categoryDef(raw).installments;
+}
+
+/** Categoriile cu care A2 și A au taxa de bază redusă, dacă se fac în aceeași înscriere. */
+const COMBO_WITH = new Set(["B", "C", "D", "CE"]);
+
+/**
+ * Taxa de bază a categoriei într-o înscriere cu mai multe categorii: A2 și A
+ * costă 1200 lei împreună cu B, C, D sau CE; altfel taxa din catalog.
+ */
+export function categoryPriceIn(raw: string | null | undefined, all: readonly (string | null | undefined)[]): number {
+  const def = categoryDef(raw);
+  if (def.comboPriceLei && all.some((o) => COMBO_WITH.has(norm(o)))) return def.comboPriceLei;
+  return def.priceLei;
+}
+
+/** Opțiunile selectorului pe două grupe: categorii de la zero și treceri de categorie. */
+export function categoryGroups(): { curs: CategoryDef[]; trecere: CategoryDef[] } {
+  return { curs: CATEGORIES.filter((c) => c.kind === "curs"), trecere: CATEGORIES.filter((c) => c.kind === "trecere") };
 }
 
 /** Textul canonic al categoriei („B-A1" => „B la A1"); ce nu e în catalog rămâne cum a fost scris. */

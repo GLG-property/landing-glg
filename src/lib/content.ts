@@ -223,21 +223,29 @@ export type EnrollDict = {
   };
   /**
    * Ecranul de după trimiterea cererii: „Verifică-ți emailul”, termenul de 24
-   * de ore și cele două butoane de plată. Emailul poate întârzia sau poate să
-   * nu plece deloc, de aceea linkurile de aici sunt calea sigură.
+   * de ore și butoanele de plată, pe fiecare categorie aleasă. Emailul poate
+   * întârzia sau poate să nu plece deloc, de aceea linkurile de aici sunt
+   * calea sigură. Variantele „NoLink” / „Office” / „Only” se folosesc când
+   * nicio categorie aleasă nu are link de plată online (taxa se achită la sediu).
    */
   success: {
     title: string;
     text: string;
     /** Varianta cu două categorii: s-au trimis două cereri. */
     textTwo: string;
+    textNoLink: string;
     /** „Am trimis linkurile de plată la” (urmează adresa completată). */
     sentTo: string;
+    sentToNoLink: string;
     /** Ce face omul dacă emailul nu ajunge. */
     noEmail: string;
+    noEmailNoLink: string;
     /** Blocul cu termenul. */
     deadlineTitle: string;
+    /** Când măcar o categorie aleasă se poate achita în două părți (B, A1, A2, A). */
     deadlineText: string;
+    /** Când taxa de bază se achită doar dintr-o dată. */
+    deadlineTextOnce: string;
     /** „Achită până” (urmează data și ora în fusul Chișinăului). */
     deadlinePrefix: string;
     /** Cuvântul dinaintea orei: „ora” / „в”. */
@@ -247,14 +255,26 @@ export type EnrollDict = {
     hoursShort: string;
     minutesShort: string;
     countdownExpired: string;
-    /** Blocul cu cele două butoane de plată. */
+    /**
+     * Blocul de plată, repetat pe fiecare categorie aleasă. În texte:
+     * `{sum}` = suma butonului, `{rest}` = taxa de înscriere 2/2,
+     * `{category}` = categoria.
+     */
     payTitle: string;
+    payTitleOffice: string;
+    /** Titlul mic de deasupra fiecărui bloc, doar la două categorii. */
+    planHeading: string;
     payReserve: string;
     payReserveNote: string;
     payFull: string;
     payFullNote: string;
+    /** Sub butonul unic, la categoriile cu taxa de bază achitată dintr-o dată. */
+    payOnceNote: string;
+    /** Când școala nu are link de plată pe suma respectivă. */
+    payOffice: string;
     /** Varianta „vin la sediu”. */
     officeTitle: string;
+    officeTitleOnly: string;
     officeText: string;
     officeCta: string;
     /** Plata e verificată de un angajat. */
@@ -265,6 +285,7 @@ export type EnrollDict = {
     missedText: string;
     duplicateTitle: string;
     duplicateText: string;
+    duplicateTextNoLink: string;
     back: string;
     call: string;
   };
@@ -341,7 +362,7 @@ export type Dict = {
     enrollCta: Cta;
     note: string;
     noteCta: Cta;
-    /** Categoriile din afara pachetului Standard: preț la telefon sau la sediu. */
+    /** Categoriile din afara pachetului Standard: taxa de bază e pe pagina de informații, orarul la telefon sau la sediu. */
     other: { title: string; text: string; categories: string[]; cta: Cta };
   };
   /** Formularul scurt de pe prima pagină (nume, telefon, sediu). */
@@ -660,7 +681,7 @@ const ro: Dict = {
     title: "Un singur pachet,",
     titleAccent: "simplu și complet",
     subtitle:
-      "Pachetul Standard este pentru categoriile B1 și B, cu program flexibil și plata în rate. Pregătim și categoriile A1, A2, A, C, CE și D, iar prețul lor ți-l spunem la telefon sau la sediu.",
+      "Pachetul Standard este pentru categoriile B1 și B, cu program flexibil și plata în rate. Pregătim și categoriile A1, A2, A, C, CE și D, iar taxa de bază a fiecăreia o găsești pe pagina „Informație înscriere”.",
     categoryLabel: "Categoriile",
     plan: {
       name: "Standard",
@@ -680,7 +701,7 @@ const ro: Dict = {
     noteCta: { label: "Contactează-ne", href: "#contact" },
     other: {
       title: "Celelalte categorii",
-      text: "Pregătim și categoriile A1, A2, A, C, CE și D. Pentru ele, prețul și orarul depind de categorie, așa că ți le spunem la telefon sau la sediu.",
+      text: "Pregătim și categoriile A1, A2, A, C, CE și D. Taxa de bază a fiecărei categorii este pe pagina „Informație înscriere”, iar orarul ți-l spunem la telefon sau la sediu.",
       categories: ["A1", "A2", "A", "C", "CE", "D"],
       cta: { label: site.phone, href: site.phoneHref },
     },
@@ -843,7 +864,7 @@ const ro: Dict = {
     consentSuffix: ".",
     reserveNotice: {
       title: "Locul în grupă se rezervă doar după achitare",
-      text: "După ce trimiți cererea primești pe email linkurile de plată și ai 24 de ore ca să achiți taxa de înscriere 1/2, 500 lei (taxa de înscriere 2/2, 3000 lei, la sediu, până la prima lecție de teorie), sau taxa de bază, 3500 lei, dintr-o dată. Poți achita online sau la sediu. Dacă în 24 de ore plata nu este înregistrată, cererea nu mai ține locul în grupă.",
+      text: "După ce trimiți cererea primești pe email linkurile de plată și ai 24 de ore ca să achiți taxa de bază a categoriei alese (la categoria B: 3500 lei). La B și la A1, A2, A poți achita mai întâi taxa de înscriere 1/2, 500 lei, iar taxa de înscriere 2/2 la sediu, până la prima lecție de teorie. La celelalte categorii și la treceri taxa de bază se achită dintr-o dată. Poți achita online sau la sediu. Dacă în 24 de ore plata nu este înregistrată, cererea nu mai ține locul în grupă.",
     },
     submit: "Trimite cererea",
     submitting: "Se trimite…",
@@ -876,12 +897,19 @@ const ro: Dict = {
       text: "Cererea a fost trimisă. Pe email ai linkurile de plată, iar aceleași linkuri le ai și mai jos, ca să poți achita chiar acum.",
       textTwo:
         "Cererile au fost trimise, câte una pentru fiecare categorie aleasă. Pe email ai linkurile de plată, iar aceleași linkuri le ai și mai jos, ca să poți achita chiar acum.",
+      textNoLink:
+        "Cererea a fost trimisă. La categoria aleasă taxa de bază se achită la sediu. Suma și termenul sunt mai jos și pe email.",
       sentTo: "Am trimis linkurile de plată la",
+      sentToNoLink: "Am trimis detaliile de plată la",
       noEmail:
         "Dacă emailul nu ajunge în câteva minute, verifică și folderul Spam. Nu aștepta emailul: achită direct de pe butoanele de mai jos.",
+      noEmailNoLink:
+        "Dacă emailul nu ajunge în câteva minute, verifică și folderul Spam. Nu aștepta emailul: suma și termenul sunt mai jos.",
       deadlineTitle: "Locul în grupă se rezervă doar după achitare",
       deadlineText:
-        "Cererea singură nu îți ține locul. Ai 24 de ore ca să achiți taxa de înscriere 1/2, de 500 lei, sau taxa de bază, de 3500 lei. Dacă trimiți cererea în weekend, termenul este marți la ora 00:00.",
+        "Cererea singură nu îți ține locul. Ai 24 de ore ca să achiți taxa de înscriere 1/2, de 500 lei, sau taxa de bază. Dacă trimiți cererea în weekend, termenul este marți la ora 00:00.",
+      deadlineTextOnce:
+        "Cererea singură nu îți ține locul. Ai 24 de ore ca să achiți taxa de bază. Dacă trimiți cererea în weekend, termenul este marți la ora 00:00.",
       deadlinePrefix: "Achită până",
       deadlineTimeWord: "ora",
       countdownPrefix: "mai ai",
@@ -889,12 +917,17 @@ const ro: Dict = {
       minutesShort: "min",
       countdownExpired: "termenul de 24 de ore a trecut",
       payTitle: "Achită online, acum",
-      payReserve: "Achită 500 lei (taxa de înscriere 1/2)",
+      payTitleOffice: "Achită la sediu",
+      planHeading: "Categoria {category}",
+      payReserve: "Achită {sum} lei, taxa de înscriere 1/2",
       payReserveNote:
-        "Îți rezervă locul în grupă. Taxa de înscriere 2/2, 3000 lei, se achită la sediu, până la prima lecție de teorie.",
-      payFull: "Achită 3500 lei (taxa de bază)",
+        "Îți rezervă locul în grupă. Taxa de înscriere 2/2, {rest} lei, se achită la sediu, până la prima lecție de teorie.",
+      payFull: "Achită {sum} lei, taxa de bază",
       payFullNote: "Taxa de bază acoperă tot cursul, teorie și practică. Nu mai ai nimic de achitat la sediu.",
+      payOnceNote: "La această categorie taxa de bază se achită dintr-o dată.",
+      payOffice: "Taxa de bază, {sum} lei, se achită la sediu.",
       officeTitle: "Sau vino la unul dintre sedii în 24 de ore",
+      officeTitleOnly: "Vino la unul dintre sedii în 24 de ore",
       officeText:
         "Poți achita și la sediu, în numerar sau prin card, în același termen de 24 de ore. Adresele și programul sediilor sunt în secțiunea de contact.",
       officeCta: "Vezi sediile și programul",
@@ -907,6 +940,8 @@ const ro: Dict = {
       duplicateTitle: "Cererea ta există deja",
       duplicateText:
         "Am primit deja o cerere cu acest telefon sau IDNP în ultimele 24 de ore. Nu e nevoie să o retrimiți, dar locul se rezervă doar după achitare, din butoanele de mai jos.",
+      duplicateTextNoLink:
+        "Am primit deja o cerere cu acest telefon sau IDNP în ultimele 24 de ore. Nu e nevoie să o retrimiți, dar locul se rezervă doar după achitare, la sediu.",
       back: "Înapoi la pagina principală",
       call: "Sună-ne",
     },
@@ -932,7 +967,7 @@ const ro: Dict = {
       {
         icon: "clock",
         title: "În 24 de ore achiți",
-        text: "Taxa de înscriere 1/2, 500 lei, iar taxa de înscriere 2/2, 3000 lei, la sediu, sau taxa de bază, 3500 lei, dintr-o dată. Online, prin link, sau la sediu.",
+        text: "Taxa de bază a categoriei alese (la categoria B: 3500 lei). La B și la A1, A2, A poți achita mai întâi taxa de înscriere 1/2, 500 lei, iar taxa de înscriere 2/2 la sediu. La celelalte categorii și la treceri, taxa de bază dintr-o dată. Online, prin link, sau la sediu.",
         warn: "Fără achitare în 24 de ore cererea nu mai ține locul în grupă și trebuie trimisă din nou.",
       },
       {
@@ -971,7 +1006,7 @@ const ro: Dict = {
     items: [
       {
         q: "Ce categorii pot obține la GLG Property?",
-        a: "Pregătim categoriile A1, A2, A, B1, B, C, CE și D. Pachetul Standard de pe site este pentru categoriile B1 și B (autoturism); pentru A1, A2, A, C, CE și D, prețul și orarul ți le spunem la telefon sau la sediu.",
+        a: "Pregătim categoriile A1, A2, A, B1, B, C, CE și D. Pachetul Standard de pe site este pentru categoriile B1 și B (autoturism); pentru A1, A2, A, C, CE și D, taxa de bază este pe pagina „Informație înscriere”, iar orarul ți-l spunem la telefon sau la sediu.",
       },
       {
         q: "Cum mă înscriu?",
@@ -1153,7 +1188,7 @@ const ro: Dict = {
       },
       {
         h: "Rezervarea locului în grupă",
-        p: "Cererea trimisă online nu garantează locul în grupă. Locul se rezervă doar după achitarea taxei de înscriere 1/2, de 500 lei, sau a taxei de bază, de 3500 lei, în 24 de ore de la trimiterea cererii. Plata se poate face online, prin linkurile primite pe email, sau la sediu. Plățile sunt verificate de un angajat al școlii și se confirmă în aceeași zi sau a doua zi. Dacă în 24 de ore plata nu este înregistrată, cererea nu mai ține locul și trebuie depusă din nou. Taxa de înscriere 2/2, 3000 lei, în cazul achitării taxei de înscriere 1/2, se achită până la prima lecție de teorie.",
+        p: "Cererea trimisă online nu garantează locul în grupă. Locul se rezervă doar după achitarea taxei de bază a categoriei alese (la categoria B: 3500 lei), în 24 de ore de la trimiterea cererii. La categoriile B, A1, A2 și A locul se poate rezerva și cu taxa de înscriere 1/2, de 500 lei, în același termen; la celelalte categorii și la trecerile de categorie taxa de bază se achită dintr-o dată. Plata se poate face online, prin linkurile primite pe email, sau la sediu. Plățile sunt verificate de un angajat al școlii și se confirmă în aceeași zi sau a doua zi. Dacă în 24 de ore plata nu este înregistrată, cererea nu mai ține locul și trebuie depusă din nou. Taxa de înscriere 2/2, în cazul achitării taxei de înscriere 1/2, se achită până la prima lecție de teorie.",
       },
       {
         h: "Utilizarea site-ului",
@@ -1402,7 +1437,7 @@ const ru: Dict = {
     title: "Один пакет,",
     titleAccent: "простой и полный",
     subtitle:
-      "Пакет Standard предназначен для категорий B1 и B, с гибким графиком и рассрочкой. Мы готовим также к категориям A1, A2, A, C, CE и D, а их цену сообщим по телефону или в филиале.",
+      "Пакет Standard предназначен для категорий B1 и B, с гибким графиком и рассрочкой. Мы готовим также к категориям A1, A2, A, C, CE и D, базовый тариф каждой указан на странице «Информация о записи».",
     categoryLabel: "Категории",
     plan: {
       name: "Standard",
@@ -1422,7 +1457,7 @@ const ru: Dict = {
     noteCta: { label: "Свяжись с нами", href: "#contact" },
     other: {
       title: "Остальные категории",
-      text: "Мы готовим также к категориям A1, A2, A, C, CE и D. Для них цена и расписание зависят от категории, поэтому сообщим их по телефону или в филиале.",
+      text: "Мы готовим также к категориям A1, A2, A, C, CE и D. Базовый тариф каждой категории указан на странице «Информация о записи», а расписание сообщим по телефону или в филиале.",
       categories: ["A1", "A2", "A", "C", "CE", "D"],
       cta: { label: site.phone, href: site.phoneHref },
     },
@@ -1584,7 +1619,7 @@ const ru: Dict = {
     consentSuffix: ".",
     reserveNotice: {
       title: "Место в группе бронируется только после оплаты",
-      text: "После отправки заявки на email придут ссылки для оплаты, и у тебя есть 24 часа, чтобы оплатить регистрационный взнос 1/2, 500 лей (регистрационный взнос 2/2, 3000 лей, в филиале, до первого занятия теории), или базовый тариф, 3500 лей, сразу. Оплатить можно онлайн или в филиале. Если за 24 часа оплата не зарегистрирована, заявка больше не держит место в группе.",
+      text: "После отправки заявки на email придут ссылки для оплаты, и у тебя есть 24 часа, чтобы оплатить базовый тариф выбранной категории (для категории B: 3500 лей). Для B и для A1, A2, A можно сначала оплатить регистрационный взнос 1/2, 500 лей, а регистрационный взнос 2/2 в филиале, до первого занятия теории. Для остальных категорий и для переходов с категории на категорию базовый тариф оплачивается сразу. Оплатить можно онлайн или в филиале. Если за 24 часа оплата не зарегистрирована, заявка больше не держит место в группе.",
     },
     submit: "Отправить заявку",
     submitting: "Отправляем…",
@@ -1617,12 +1652,19 @@ const ru: Dict = {
       text: "Заявка отправлена. Ссылки для оплаты пришли на email, и те же ссылки есть ниже, чтобы можно было оплатить сразу.",
       textTwo:
         "Заявки отправлены, по одной на каждую выбранную категорию. Ссылки для оплаты пришли на email, и те же ссылки есть ниже, чтобы можно было оплатить сразу.",
+      textNoLink:
+        "Заявка отправлена. По выбранной категории базовый тариф оплачивается в филиале. Сумма и срок указаны ниже и в письме.",
       sentTo: "Ссылки для оплаты отправлены на",
+      sentToNoLink: "Детали оплаты отправлены на",
       noEmail:
         "Если письмо не придёт за несколько минут, проверь папку Спам. Не жди письмо: оплати прямо с кнопок ниже.",
+      noEmailNoLink:
+        "Если письмо не придёт за несколько минут, проверь папку Спам. Не жди письмо: сумма и срок указаны ниже.",
       deadlineTitle: "Место в группе бронируется только после оплаты",
       deadlineText:
-        "Сама заявка место не держит. У тебя есть 24 часа, чтобы оплатить регистрационный взнос 1/2, 500 лей, или базовый тариф, 3500 лей. Если заявка отправлена в выходные, срок до вторника 00:00.",
+        "Сама заявка место не держит. У тебя есть 24 часа, чтобы оплатить регистрационный взнос 1/2, 500 лей, или базовый тариф. Если заявка отправлена в выходные, срок до вторника 00:00.",
+      deadlineTextOnce:
+        "Сама заявка место не держит. У тебя есть 24 часа, чтобы оплатить базовый тариф. Если заявка отправлена в выходные, срок до вторника 00:00.",
       deadlinePrefix: "Оплати до",
       deadlineTimeWord: "в",
       countdownPrefix: "осталось",
@@ -1630,12 +1672,17 @@ const ru: Dict = {
       minutesShort: "мин",
       countdownExpired: "срок в 24 часа истёк",
       payTitle: "Оплатить онлайн, сейчас",
-      payReserve: "Оплатить 500 лей (регистрационный взнос 1/2)",
+      payTitleOffice: "Оплата в филиале",
+      planHeading: "Категория {category}",
+      payReserve: "Оплатить {sum} лей, регистрационный взнос 1/2",
       payReserveNote:
-        "Закрепляет за тобой место в группе. Регистрационный взнос 2/2, 3000 лей, оплачивается в филиале, до первого занятия теории.",
-      payFull: "Оплатить 3500 лей (базовый тариф)",
+        "Закрепляет за тобой место в группе. Регистрационный взнос 2/2, {rest} лей, оплачивается в филиале, до первого занятия теории.",
+      payFull: "Оплатить {sum} лей, базовый тариф",
       payFullNote: "Базовый тариф покрывает весь курс, теорию и практику. В филиале платить больше нечего.",
+      payOnceNote: "По этой категории базовый тариф оплачивается сразу, одной суммой.",
+      payOffice: "Базовый тариф, {sum} лей, оплачивается в филиале.",
       officeTitle: "Или приходи в один из филиалов в течение 24 часов",
+      officeTitleOnly: "Приходи в один из филиалов в течение 24 часов",
       officeText:
         "Оплатить можно и в филиале, наличными или картой, в тот же срок, 24 часа. Адреса и график филиалов есть в разделе контактов.",
       officeCta: "Посмотреть филиалы и график",
@@ -1648,6 +1695,8 @@ const ru: Dict = {
       duplicateTitle: "Твоя заявка уже есть",
       duplicateText:
         "Мы уже получили заявку с этим телефоном или IDNP за последние 24 часа. Отправлять повторно не нужно, но место бронируется только после оплаты, с кнопок ниже.",
+      duplicateTextNoLink:
+        "Мы уже получили заявку с этим телефоном или IDNP за последние 24 часа. Отправлять повторно не нужно, но место бронируется только после оплаты, в филиале.",
       back: "Вернуться на главную",
       call: "Позвонить",
     },
@@ -1673,7 +1722,7 @@ const ru: Dict = {
       {
         icon: "clock",
         title: "За 24 часа оплачиваешь",
-        text: "Регистрационный взнос 1/2, 500 лей, а регистрационный взнос 2/2, 3000 лей, в филиале, или базовый тариф, 3500 лей, сразу. Онлайн, по ссылке, или в филиале.",
+        text: "Базовый тариф выбранной категории (для категории B: 3500 лей). Для B и для A1, A2, A можно сначала оплатить регистрационный взнос 1/2, 500 лей, а регистрационный взнос 2/2 в филиале. Для остальных категорий и для переходов с категории на категорию базовый тариф сразу. Онлайн, по ссылке, или в филиале.",
         warn: "Без оплаты за 24 часа заявка больше не держит место в группе, и её нужно отправить заново.",
       },
       {
@@ -1712,7 +1761,7 @@ const ru: Dict = {
     items: [
       {
         q: "Какие категории можно получить в GLG Property?",
-        a: "Мы готовим к категориям A1, A2, A, B1, B, C, CE и D. Пакет Standard на сайте предназначен для категорий B1 и B (легковой автомобиль); для A1, A2, A, C, CE и D цену и расписание сообщим по телефону или в филиале.",
+        a: "Мы готовим к категориям A1, A2, A, B1, B, C, CE и D. Пакет Standard на сайте предназначен для категорий B1 и B (легковой автомобиль); для A1, A2, A, C, CE и D базовый тариф указан на странице «Информация о записи», а расписание сообщим по телефону или в филиале.",
       },
       {
         q: "Как записаться?",
@@ -1892,7 +1941,7 @@ const ru: Dict = {
       },
       {
         h: "Бронирование места в группе",
-        p: "Отправленная онлайн заявка не гарантирует место в группе. Место бронируется только после оплаты регистрационного взноса 1/2, 500 лей, или базового тарифа, 3500 лей, в течение 24 часов с момента отправки заявки. Оплатить можно онлайн, по ссылкам, полученным на email, или в филиале. Платежи проверяет сотрудник школы и подтверждает их в тот же день или на следующий. Если за 24 часа оплата не зарегистрирована, заявка больше не держит место и её нужно подать заново. Регистрационный взнос 2/2, 3000 лей, при оплате регистрационного взноса 1/2, оплачивается до первого занятия теории.",
+        p: "Отправленная онлайн заявка не гарантирует место в группе. Место бронируется только после оплаты базового тарифа выбранной категории (для категории B: 3500 лей) в течение 24 часов с момента отправки заявки. Для категорий B, A1, A2 и A место можно забронировать и регистрационным взносом 1/2, 500 лей, в тот же срок; для остальных категорий и для переходов с категории на категорию базовый тариф оплачивается сразу. Оплатить можно онлайн, по ссылкам, полученным на email, или в филиале. Платежи проверяет сотрудник школы и подтверждает их в тот же день или на следующий. Если за 24 часа оплата не зарегистрирована, заявка больше не держит место и её нужно подать заново. Регистрационный взнос 2/2, при оплате регистрационного взноса 1/2, оплачивается до первого занятия теории.",
       },
       {
         h: "Использование сайта",

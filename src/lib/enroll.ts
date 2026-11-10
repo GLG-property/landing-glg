@@ -5,7 +5,13 @@
  */
 
 import type { Lang } from "./content";
-import { safePaymentDueAt, safePaymentLinks, type PaymentLinks } from "./plata";
+import {
+  safePaymentDueAt,
+  safePaymentLinks,
+  safePaymentPlans,
+  type PaymentLinks,
+  type PaymentPlan,
+} from "./plata";
 import { isSelectable, optionsFor, type EnrollOptions } from "./schedule";
 import { CATEGORIES, categoryHasTheory, categoryHasTransmission } from "./categories";
 
@@ -324,11 +330,14 @@ export function buildEnrollPayload(v: EnrollValues): Record<string, unknown> {
 }
 
 /**
- * Ce trebuie achitat ca să se rezerve locul: termenul (ISO) și linkurile de
- * plată. Vine de la aplicație, dar e mereu completat local dacă lipsește (vezi
- * lib/plata.ts): ecranul de după trimitere nu are voie să rămână fără butoane.
+ * Ce trebuie achitat ca să se rezerve locul: termenul (ISO) și planul de plată
+ * al fiecărei categorii alese (`plans`: taxa de bază, în câte părți se achită
+ * și linkurile ei). Vine de la aplicație, dar e mereu completat local dacă
+ * lipsește (vezi lib/plata.ts): ecranul de după trimitere nu are voie să
+ * rămână fără indicații de plată. `links` (500 / 3500 lei) rămâne pentru
+ * compatibilitate; ecranul citește `plans`.
  */
-export type PaymentInfo = { dueAt: string; links: PaymentLinks };
+export type PaymentInfo = { dueAt: string; links: PaymentLinks; plans: PaymentPlan[] };
 
 export type EnrollOutcome =
   | { kind: "ok"; payment: PaymentInfo }
@@ -338,8 +347,15 @@ export type EnrollOutcome =
   | { kind: "rate_limited" }
   | { kind: "error" };
 
-/** Interpretează corpul JSON al răspunsului (sau null la corp ilizibil). */
-export function interpretEnrollResponse(data: unknown): EnrollOutcome {
+/**
+ * Interpretează corpul JSON al răspunsului (sau null la corp ilizibil).
+ * `categories` = categoriile alese în formular: din ele se calculează local
+ * planurile de plată când răspunsul nu are `payments` (aplicație mai veche).
+ */
+export function interpretEnrollResponse(
+  data: unknown,
+  categories: readonly string[] = [],
+): EnrollOutcome {
   if (typeof data === "object" && data !== null) {
     const d = data as {
       ok?: unknown;
@@ -348,14 +364,17 @@ export function interpretEnrollResponse(data: unknown): EnrollOutcome {
       fields?: unknown;
       paymentDueAt?: unknown;
       links?: unknown;
+      payments?: unknown;
     };
     if (d.ok === true) {
       // Numele câmpurilor sunt cele convenite cu aplicația (`paymentDueAt`,
-      // `links.reserve`, `links.full`); dacă lipsesc (aplicație mai veche),
-      // folosim linkurile locale și termenul de 24 de ore de acum.
+      // `links.reserve`, `links.full`, `payments`); dacă lipsesc (aplicație
+      // mai veche), folosim linkurile locale, planurile calculate din
+      // categoriile alese și termenul de 24 de ore de acum.
       const payment: PaymentInfo = {
         dueAt: safePaymentDueAt(d.paymentDueAt),
         links: safePaymentLinks(d.links),
+        plans: safePaymentPlans(d.payments, categories),
       };
       return d.duplicate === true ? { kind: "duplicate", payment } : { kind: "ok", payment };
     }
