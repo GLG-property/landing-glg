@@ -98,6 +98,7 @@ export type EnrollDict = {
     category: string;
     category2: string;
     transmission: string;
+    practiceLocation: string;
     workplace: string;
     referral: string;
   };
@@ -147,6 +148,8 @@ export type EnrollDict = {
     transmission: string;
     transmissionManual: string;
     transmissionAuto: string;
+    /** Textul pentru categoriile fără curs teoretic (nu se alege grupă). */
+    noTheoryGroup: string;
     sediu: string;
     sediuPlaceholder: string;
     slot: string;
@@ -746,6 +749,7 @@ const ro: Dict = {
       category: "Categoria pe care vrei să o obții. Pentru autoturism alegi B.",
       category2: "Doar dacă vrei două categorii deodată (de exemplu B și A). Primim câte o cerere pentru fiecare categorie.",
       transmission: "Cutia de viteze pe care faci practica. Cu permis luat pe automată nu ai voie să conduci mașină cu cutie mecanică.",
+      practiceLocation: "Sediul de unde pornești la lecțiile de condus. Poate fi altul decât cel de teorie: de exemplu teoria la Buiucani și practica la Botanica.",
       workplace: "Cu ce te ocupi: unde lucrezi sau unde înveți (de exemplu student, elev, angajat la…). Opțional, apare în cererea-contract.",
       referral: "De unde ai aflat de noi. Ne ajută să știm ce funcționează.",
     },
@@ -794,6 +798,7 @@ const ro: Dict = {
       transmission: "Instruirea practică la cutie",
       transmissionManual: "Mecanică",
       transmissionAuto: "Automată",
+      noTheoryGroup: "Categoria aleasă nu are curs teoretic, deci nu alegi o grupă.",
       sediu: "Sediul (grupa de teorie)",
       sediuPlaceholder: "Alege sediul",
       slot: "Grupa (zilele și ora)",
@@ -1486,6 +1491,7 @@ const ru: Dict = {
       category: "Категория, которую хочешь получить. Для легкового автомобиля выбирай B.",
       category2: "Только если хочешь две категории сразу (например B и A). Мы получим отдельную заявку на каждую категорию.",
       transmission: "Коробка передач, на которой проходишь практику. С правами на автомат нельзя водить машину с механикой.",
+      practiceLocation: "Филиал, откуда ты выезжаешь на уроки вождения. Может отличаться от филиала теории: например теория на Буюканах, а практика на Ботанике.",
       workplace: "Чем ты занимаешься: где работаешь или учишься (например студент, школьник, работаю в…). Необязательно, указывается в заявлении-договоре.",
       referral: "Откуда ты узнал о нас. Помогает понять, что работает.",
     },
@@ -1534,6 +1540,7 @@ const ru: Dict = {
       transmission: "Практика на коробке передач",
       transmissionManual: "Механика",
       transmissionAuto: "Автомат",
+      noTheoryGroup: "У выбранной категории нет теоретического курса, поэтому группу выбирать не нужно.",
       sediu: "Филиал (группа теории)",
       sediuPlaceholder: "Выбери филиал",
       slot: "Время группы",

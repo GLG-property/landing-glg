@@ -7,6 +7,7 @@
 import type { Lang } from "./content";
 import { safePaymentDueAt, safePaymentLinks, type PaymentLinks } from "./plata";
 import { isSelectable, optionsFor, type EnrollOptions } from "./schedule";
+import { CATEGORIES, categoryHasTheory, categoryHasTransmission } from "./categories";
 
 /**
  * Endpoint-ul de înscriere, SAME-ORIGIN. Formularul postează aici, iar ruta
@@ -16,21 +17,22 @@ import { isSelectable, optionsFor, type EnrollOptions } from "./schedule";
 export const ENROLL_API = "/api/inscriere";
 
 /** Categoriile din formularul oficial „CERERE - CONTRACT". */
-export const enrollCategories = [
-  "A1",
-  "A2",
-  "A",
-  "B",
-  "C",
-  "D",
-  "CE",
-  "B la A/A2",
-  "A1 la A2",
-  "A2 la A",
-  "B1 la B",
-  "C1 la C",
-  "D1 la D",
-] as const;
+export const enrollCategories: readonly string[] = CATEGORIES.map((c) => c.key);
+
+/** Categoriile alese în formular (una sau două), fără goluri. */
+export function chosenCategories(v: Pick<EnrollValues, "category" | "category2">): string[] {
+  return [v.category, v.category2].map((c) => c.trim()).filter((c) => c !== "");
+}
+
+/** Se alege cutia de viteze? Doar dacă măcar o categorie aleasă o are (la C, D, CE și moto nu). */
+export function needsTransmission(v: Pick<EnrollValues, "category" | "category2">): boolean {
+  return chosenCategories(v).some((c) => categoryHasTransmission(c));
+}
+
+/** Se alege grupa de teorie? Doar dacă măcar o categorie aleasă are curs teoretic. */
+export function needsTheoryGroup(v: Pick<EnrollValues, "category" | "category2">): boolean {
+  return chosenCategories(v).some((c) => categoryHasTheory(c));
+}
 
 export type EnrollValues = {
   last_name: string;
@@ -59,10 +61,11 @@ export type EnrollValues = {
   category2: string;
   language: Lang;
   transmission: "" | "manual" | "automatic";
-  location: string; // sediul grupei de teorie
+  location: string; // sediul (grupa de teorie)
   group_id: string; // grupa deschisă aleasă (opțiune publică), id opac
   slot: string; // cheia orei grupei (Slot.key), validă pentru sediu + limbă
   preferred_schedule: string; // altă preferință de orar, text liber opțional
+  /** Sediul unde vrea lecțiile practice; poate fi altul decât cel de teorie. */
   practice_location: string;
   license_number: string;
   license_issued: string;
@@ -150,8 +153,9 @@ const REQUIRED: (keyof EnrollValues)[] = [
   "id_issued_date",
   "referral",
   "category",
-  "transmission",
+  // cutia de viteze: obligatorie doar la categoriile care o au (vezi validateEnroll)
   "location",
+  "practice_location",
   // Telefonul unei rude / prieten / cunoscut: obligatoriu (cerința școlii, 22.10.2026).
   "phone_family",
 ];
@@ -176,6 +180,9 @@ export function validateEnroll(v: EnrollValues, options: EnrollOptions | null = 
     const value = v[key];
     if (typeof value === "string" && value.trim() === "") errors[key] = "required";
   }
+
+  // Cutia de viteze se cere doar la autoturism; la C, D, CE și moto nu există alegerea.
+  if (needsTransmission(v) && v.transmission === "") errors.transmission = "required";
 
   if (!errors.idnp && !/^\d{13}$/.test(v.idnp.trim())) errors.idnp = "idnp";
   if (!errors.email && !EMAIL_RE.test(v.email.trim())) errors.email = "email";
@@ -207,7 +214,8 @@ export function validateEnroll(v: EnrollValues, options: EnrollOptions | null = 
   // trebuie să fie una din orarul fix al sediului pentru limba respectivă.
   // Grupa aleasă trebuie să fie una din opțiunile deschise la sediu, în limba
   // aleasă, și să NU fie plină (capacitate 30 RO / 15 RU).
-  if (v.location && options) {
+  // Categoriile fără curs teoretic (ex. „B la A1”) nu au grupă de ales.
+  if (v.location && options && needsTheoryGroup(v)) {
     const opts = optionsFor(options, v.location, v.language);
     const anyAtLocation = options.locations.find((l) => l.name === v.location)?.options.length ?? 0;
     if (v.language === "ru" && anyAtLocation > 0 && opts.length === 0) errors.location = "noRuGroup";
@@ -276,13 +284,15 @@ export function buildEnrollPayload(v: EnrollValues): Record<string, unknown> {
     id_document: `${v.id_series.trim()} ${v.id_number.trim()}`.trim().slice(0, 40),
     // fără pachete (22.10.2026): nu mai trimitem „package”
     package: undefined,
-    transmission: v.transmission || undefined,
+    transmission: needsTransmission(v) ? v.transmission || undefined : undefined,
     location: opt(v.location),
-    slot: opt(v.slot),
-    group_id: opt(v.group_id),
-    // Orarul se alege doar din orarul fix (sediu + oră); lecțiile practice se țin la sediul ales.
+    slot: needsTheoryGroup(v) ? opt(v.slot) : undefined,
+    group_id: needsTheoryGroup(v) ? opt(v.group_id) : undefined,
+    // Orarul se alege doar din orarul fix (sediu + oră).
     preferred_schedule: undefined,
-    practice_location: opt(v.location),
+    // Locația lecțiilor practice se alege separat (teorie la Buiucani, practică
+    // la Botanica sau invers); nealeasă, rămâne sediul de teorie.
+    practice_location: opt(v.practice_location) ?? opt(v.location),
     language: v.language,
     consent_gdpr: v.consent,
     contract_read: v.contract_read,

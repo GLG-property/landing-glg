@@ -9,6 +9,8 @@ import {
   ENROLL_API,
   apiFieldToKey,
   enrollCategories,
+  needsTheoryGroup,
+  needsTransmission,
   buildEnrollPayload,
   emptyEnrollValues,
   interpretEnrollResponse,
@@ -393,6 +395,8 @@ function withPrefill(base: EnrollValues, p?: EnrollPrefill): EnrollValues {
     first_name: parts.slice(1).join(" "),
     phone: telefon,
     location: (LOCATION_NAMES as readonly string[]).includes(sediu) ? sediu : "",
+    // Lecțiile practice: implicit la același sediu, se poate schimba în formular.
+    practice_location: (LOCATION_NAMES as readonly string[]).includes(sediu) ? sediu : "",
   };
 }
 
@@ -568,6 +572,11 @@ export function EnrollForm({
   // Eroare la alegerea fișierului (tip / mărime): pe câmp, fără să atingem restul.
   const photoError = (key: "id_photo_front" | "id_photo_back") => (code: EnrollErrorCode) =>
     setErrors((prev) => ({ ...prev, [key]: code }));
+
+  // Parametrii categoriilor alese (src/lib/categories.ts): cutia de viteze
+  // doar la autoturism, grupa de teorie doar la categoriile cu curs teoretic.
+  const needsBox = needsTransmission(values);
+  const needsTheory = needsTheoryGroup(values);
 
   // Grupele DESCHISE la sediul ales, în limba aleasă (din aplicație, prin API).
   const groupOpts = values.location ? optionsFor(options, values.location, values.language) : [];
@@ -915,6 +924,10 @@ export function EnrollForm({
                   style={selectStyle}
                   value={values.location}
                   onChange={(ev) => {
+                    // Locația practicii urmează sediul de teorie cât timp nu a fost aleasă alta.
+                    if (values.practice_location === "" || values.practice_location === values.location) {
+                      set("practice_location", ev.target.value);
+                    }
                     set("location", ev.target.value);
                     keepSlotIfValid(ev.target.value, values.language);
                   }}
@@ -952,10 +965,12 @@ export function EnrollForm({
               </Field>
               <Field
                 label={f.slot} help={e.help.slot} helpLabel={e.helpLabel}
-                hint={noOpenGroup ? undefined : f.slotDaysHint}
-                error={noRuGroup ? e.errors.noRuGroup : msg("group_id")}
+                hint={noOpenGroup || !needsTheory ? undefined : f.slotDaysHint}
+                error={!needsTheory ? undefined : noRuGroup ? e.errors.noRuGroup : msg("group_id")}
               >
-                {!values.location ? (
+                {!needsTheory ? (
+                  <p className="text-sm text-muted">{f.noTheoryGroup}</p>
+                ) : !values.location ? (
                   <p className="flex h-9 items-center text-sm text-faint">{f.slotPickSediu}</p>
                 ) : noOpenGroup ? (
                   <p className="text-sm text-muted">{f.noOpenGroups}</p>
@@ -973,6 +988,26 @@ export function EnrollForm({
                     <p className="mt-2 text-xs leading-relaxed text-faint">{f.fillLegend}</p>
                   </>
                 )}
+              </Field>
+              <Field
+                label={f.practiceLocation} help={e.help.practiceLocation} helpLabel={e.helpLabel}
+                htmlFor="practice_location"
+                error={msg("practice_location")}
+              >
+                <select
+                  id="practice_location"
+                  className={selectClass(!!errors.practice_location)}
+                  style={selectStyle}
+                  value={values.practice_location}
+                  onChange={(ev) => set("practice_location", ev.target.value)}
+                >
+                  <option value="">{f.practiceLocationPlaceholder}</option>
+                  {LOCATION_NAMES.map((name) => (
+                    <option key={name} value={name}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
               </Field>
               <Field label={f.category} help={e.help.category} helpLabel={e.helpLabel} htmlFor="category" error={msg("category")}>
                 <select
@@ -1012,18 +1047,21 @@ export function EnrollForm({
                     ))}
                 </select>
               </Field>
-              <Field label={f.transmission} help={e.help.transmission} helpLabel={e.helpLabel} error={msg("transmission")}>
-                <PillGroup
-                  name="transmission"
-                  value={values.transmission}
-                  invalid={!!errors.transmission}
-                  options={[
-                    { value: "manual", label: f.transmissionManual },
-                    { value: "automatic", label: f.transmissionAuto },
-                  ]}
-                  onChange={(v) => set("transmission", v as EnrollValues["transmission"])}
-                />
-              </Field>
+              {/* Cutia de viteze: doar la autoturism; la C, D, CE și moto nu se alege (10.11.2026). */}
+              {needsBox && (
+                <Field label={f.transmission} help={e.help.transmission} helpLabel={e.helpLabel} error={msg("transmission")}>
+                  <PillGroup
+                    name="transmission"
+                    value={values.transmission}
+                    invalid={!!errors.transmission}
+                    options={[
+                      { value: "manual", label: f.transmissionManual },
+                      { value: "automatic", label: f.transmissionAuto },
+                    ]}
+                    onChange={(v) => set("transmission", v as EnrollValues["transmission"])}
+                  />
+                </Field>
+              )}
               <Field
                 label={f.workplace} help={e.help.workplace} helpLabel={e.helpLabel}
                 htmlFor="workplace"
