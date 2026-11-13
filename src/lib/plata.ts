@@ -79,8 +79,8 @@ export function safePaymentLinks(raw: unknown): PaymentLinks {
  * două trebuie ținute la fel.
  *   3500 lei: B · 3200 lei: A1, A2, A · 2000 lei: trecerile spre A2, A și spre B ·
  *   1800 lei: C · 1500 lei: CE, C1 la C, D1 la D · 1200 lei: motocicleta împreună cu
- *   B, C, CE sau D. Pe 1700 lei (D, din 13.11.2026) și pe 900 lei (B la A1) școala nu
- *   are încă link: acolo taxa se achită la sediu.
+ *   B, C, CE sau D · 1700 lei: D · 900 lei: B la A1 (ultimele două linkuri, trimise de
+ *   patron pe 13.11.2026). Din ziua aceea fiecare taxă din catalog are link.
  */
 const FULL_LINK_BY_AMOUNT: Record<number, string> = {
   [PLATA.full]: PLATA.links.full,
@@ -88,7 +88,9 @@ const FULL_LINK_BY_AMOUNT: Record<number, string> = {
   2000: "https://mia-qr.bnm.md/1/m/BNM/AGR9f837accd3d0498294c9680fff7d86f4",
   1800: "https://mia-qr.bnm.md/1/m/BNM/AGRf2729bb805e04d558bd34a19102e1490",
   1500: "https://mia-qr.bnm.md/1/m/BNM/AGR10d092f5663e4438b76e665d6edfe6dd",
+  1700: "https://mia-qr.bnm.md/1/m/BNM/AGRc46dd73614154abea2332fed90a3f7f2",
   1200: "https://mia-qr.bnm.md/1/m/BNM/AGRaf7b2a09c9454dc38b34350acffa1ba3",
+  900: "https://mia-qr.bnm.md/1/m/BNM/AGRc1d2748eb83d455e928819661e89ddf6",
 };
 
 /** Linkul de plată pentru taxa de bază de `amount` lei; null dacă școala nu are link pe suma asta. */
