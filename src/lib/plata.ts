@@ -77,8 +77,10 @@ export function safePaymentLinks(raw: unknown): PaymentLinks {
  * MIA încasează o sumă fixă. COPIE a tabelului din aplicație
  * (practica-glg/lib/enrollment/payment-links.ts, FULL_LINK_BY_AMOUNT); cele
  * două trebuie ținute la fel.
- *   3500 lei: B · 3200 lei: A1, A2, A · 2000 lei: B la A2, B la A ·
- *   1800 lei: C · 1500 lei: D și CE · 1200 lei: A2 sau A împreună cu B, C, D, CE.
+ *   3500 lei: B · 3200 lei: A1, A2, A · 2000 lei: trecerile spre A2, A și spre B ·
+ *   1800 lei: C · 1500 lei: CE, C1 la C, D1 la D · 1200 lei: motocicleta împreună cu
+ *   B, C, CE sau D. Pe 1700 lei (D, din 13.11.2026) și pe 900 lei (B la A1) școala nu
+ *   are încă link: acolo taxa se achită la sediu.
  */
 const FULL_LINK_BY_AMOUNT: Record<number, string> = {
   [PLATA.full]: PLATA.links.full,
@@ -128,8 +130,8 @@ function localPlan(category: string, price: number): PaymentPlan {
 
 /**
  * Planurile calculate LOCAL, din catalogul categoriilor și tabelul de linkuri
- * (aceeași regulă ca `paymentPlans` din aplicație, inclusiv taxa redusă la A2
- * și A împreună cu B, C, D sau CE). Folosite când răspunsul aplicației nu are
+ * (aceeași regulă ca `paymentPlans` din aplicație, inclusiv taxa redusă la
+ * motocicletă împreună cu B, C, CE sau D). Folosite când răspunsul aplicației nu are
  * `payments` (aplicație mai veche) sau când acesta nu trece verificarea.
  */
 export function localPaymentPlans(categories: readonly (string | null | undefined)[] = []): PaymentPlan[] {

@@ -62,17 +62,30 @@ export function Footer() {
                     // Next încearcă navigare internă și linkul de e-mail ducea la
                     // o eroare (auditul RAP-CVFM6G).
                     const external = /^(mailto:|tel:|https?:)/.test(link.href);
+                    // Adresa de e-mail e mai lungă decât coloana: se rupe după „@”, altfel
+                    // lățea toată pagina la 1366 px (derulare în lateral pe tot site-ul).
                     const cls =
-                      "text-sm text-muted transition-colors duration-200 hover:text-ink";
+                      "text-sm text-muted transition-colors duration-200 hover:text-ink [overflow-wrap:anywhere]";
+                    const at = link.label.indexOf("@");
+                    const label =
+                      at > 0 ? (
+                        <>
+                          {link.label.slice(0, at + 1)}
+                          <wbr />
+                          {link.label.slice(at + 1)}
+                        </>
+                      ) : (
+                        link.label
+                      );
                     return (
                       <li key={link.label}>
                         {external ? (
                           <a href={link.href} className={cls}>
-                            {link.label}
+                            {label}
                           </a>
                         ) : (
                           <Link href={link.href} className={cls}>
-                            {link.label}
+                            {label}
                           </Link>
                         )}
                       </li>

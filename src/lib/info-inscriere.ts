@@ -9,12 +9,13 @@
  *  Reguli respectate:
  *   - cifrele de preț sunt cele confirmate de patron, cu denumirile
  *     oficiale ale taxelor (2.11.2026). Taxa de bază depinde de categorie
- *     (10.11.2026, aceleași cifre ca în src/lib/categories.ts): B, 3500 lei
- *     (pachetul Standard, până la 25 de rate); A1, A2, A, 3200 lei (A2 și
- *     A, 1200 lei împreună cu B, C, D sau CE, în aceeași înscriere); C,
- *     1800 lei; D și CE, 1500 lei; „B la A1”, 900 lei (fără teorie, se
- *     achită la sediu); „B la A2” și „B la A”, 2000 lei. Trecerile fără
- *     preț confirmat nu au nicio cifră pe pagină;
+ *     (lista patronului din 13.11.2026, aceleași cifre ca în
+ *     src/lib/categories.ts): B, 3500 lei (pachetul Standard, până la 25
+ *     de rate); A1, A2, A, 3200 lei (motocicleta, 1200 lei împreună cu B,
+ *     C, CE sau D, în aceeași înscriere); C, 1800 lei; CE, 1500 lei; D,
+ *     1700 lei; treceri: spre A2 și A și spre B, 2000 lei; „C1 la C” și
+ *     „D1 la D”, 1500 lei; „B la A1”, 900 lei (fără teorie, se achită la
+ *     sediu). Trecerile fără preț confirmat nu au nicio cifră pe pagină;
  *   - în două părți (taxa de înscriere 1/2, 500 lei, + taxa de înscriere
  *     2/2, până la prima lecție de teorie) se achită doar B și A1, A2, A:
  *     2/2 = 3000 lei la B, 2700 lei la A1, A2, A. Celelalte categorii și
@@ -348,8 +349,8 @@ const ro: InfoDict = {
       "Se semnează la sediu sau online. Este documentul care, împreună cu achitarea taxei de bază, deschide accesul la orele de practică.",
     otherTitle: "Taxa de bază la celelalte categorii",
     otherText:
-      "A2 sau A, împreună cu B, C, D sau CE în aceeași înscriere: 1200 lei. Treceri de categorie: B la A1, 900 lei (fără teorie, se achită la sediu); B la A2 și B la A, 2000 lei. La C, D, CE și la treceri taxa de bază se achită dintr-o dată. Pentru celelalte treceri sună-ne sau treci pe la sediu.",
-    otherCategories: "A1, A2, A: 3200 lei. C: 1800 lei. D și CE: 1500 lei.",
+      "Motocicleta (A1, A2 sau A), împreună cu B, C, CE sau D în aceeași înscriere: 1200 lei. Treceri de categorie: de la B la A2 sau A, de la A1 la A2 și de la A2 la A, 2000 lei; de la A1, A2, A sau B1 la B, 2000 lei; de la C1 la C și de la D1 la D, 1500 lei; de la B la A1, 900 lei (fără teorie, se achită la sediu). La C, CE, D și la treceri taxa de bază se achită dintr-o dată. Pentru alte treceri sună-ne sau treci pe la sediu.",
+    otherCategories: "A1, A2, A: 3200 lei. C: 1800 lei. CE: 1500 lei. D: 1700 lei.",
   },
   gallery: {
     eyebrow: "Galerie",
@@ -437,7 +438,7 @@ const ro: InfoDict = {
   faq: [
     {
       q: "Cât costă cursul pentru categoria B?",
-      a: "Pachetul Standard acoperă categoriile B1 și B, taxa de bază este de 3500 lei și se poate achita în până la 25 de rate. La celelalte categorii taxa de bază este: A1, A2, A, 3200 lei; C, 1800 lei; D și CE, 1500 lei. A2 sau A, împreună cu B, C, D sau CE în aceeași înscriere, 1200 lei. Treceri de categorie: B la A1, 900 lei (fără teorie, se achită la sediu); B la A2 și B la A, 2000 lei.",
+      a: "Pachetul Standard acoperă categoriile B1 și B, taxa de bază este de 3500 lei și se poate achita în până la 25 de rate. La celelalte categorii taxa de bază este: A1, A2, A, 3200 lei; C, 1800 lei; CE, 1500 lei; D, 1700 lei. Motocicleta (A1, A2 sau A), împreună cu B, C, CE sau D în aceeași înscriere, 1200 lei. Treceri de categorie: de la B la A2 sau A, de la A1 la A2 și de la A2 la A, 2000 lei; de la A1, A2, A sau B1 la B, 2000 lei; de la C1 la C și de la D1 la D, 1500 lei; de la B la A1, 900 lei (fără teorie, se achită la sediu).",
     },
     {
       q: "Pot rezerva locul în grupă cu taxa de înscriere 1/2?",
@@ -572,8 +573,8 @@ const ru: InfoDict = {
       "Подписывается в филиале или онлайн. Именно он вместе с оплатой базового тарифа открывает доступ к практическим занятиям.",
     otherTitle: "Базовый тариф остальных категорий",
     otherText:
-      "A2 или A вместе с B, C, D или CE в одной записи: 1200 лей. Переходы с категории на категорию: с B на A1, 900 лей (без теории, оплачивается в филиале); с B на A2 и с B на A, 2000 лей. Для C, D, CE и для переходов базовый тариф оплачивается сразу. По остальным переходам позвоните нам или зайдите в филиал.",
-    otherCategories: "A1, A2, A: 3200 лей. C: 1800 лей. D и CE: 1500 лей.",
+      "Мотоцикл (A1, A2 или A) вместе с B, C, CE или D в одной записи: 1200 лей. Переходы с категории на категорию: с B на A2 или A, с A1 на A2 и с A2 на A, 2000 лей; с A1, A2, A или B1 на B, 2000 лей; с C1 на C и с D1 на D, 1500 лей; с B на A1, 900 лей (без теории, оплачивается в филиале). Для C, CE, D и для переходов базовый тариф оплачивается сразу. По остальным переходам позвоните нам или зайдите в филиал.",
+    otherCategories: "A1, A2, A: 3200 лей. C: 1800 лей. CE: 1500 лей. D: 1700 лей.",
   },
   gallery: {
     eyebrow: "Галерея",
@@ -661,7 +662,7 @@ const ru: InfoDict = {
   faq: [
     {
       q: "Сколько стоит курс категории B?",
-      a: "Пакет Стандарт охватывает категории B1 и B, базовый тариф составляет 3500 лей и оплачивается до 25 частей. Базовый тариф остальных категорий: A1, A2, A, 3200 лей; C, 1800 лей; D и CE, 1500 лей. A2 или A вместе с B, C, D или CE в одной записи, 1200 лей. Переходы с категории на категорию: с B на A1, 900 лей (без теории, оплачивается в филиале); с B на A2 и с B на A, 2000 лей.",
+      a: "Пакет Стандарт охватывает категории B1 и B, базовый тариф составляет 3500 лей и оплачивается до 25 частей. Базовый тариф остальных категорий: A1, A2, A, 3200 лей; C, 1800 лей; CE, 1500 лей; D, 1700 лей. Мотоцикл (A1, A2 или A) вместе с B, C, CE или D в одной записи, 1200 лей. Переходы с категории на категорию: с B на A2 или A, с A1 на A2 и с A2 на A, 2000 лей; с A1, A2, A или B1 на B, 2000 лей; с C1 на C и с D1 на D, 1500 лей; с B на A1, 900 лей (без теории, оплачивается в филиале).",
     },
     {
       q: "Можно ли забронировать место в группе регистрационным взносом 1/2?",

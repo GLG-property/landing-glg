@@ -13,7 +13,7 @@ import {
   type PaymentPlan,
 } from "./plata";
 import { isSelectable, optionsFor, type EnrollOptions } from "./schedule";
-import { CATEGORIES, categoryHasTheory, categoryHasTransmission } from "./categories";
+import { CATEGORIES, CATEGORY_COMBOS, categoryHasTheory, categoryHasTransmission } from "./categories";
 
 /**
  * Endpoint-ul de înscriere, SAME-ORIGIN. Formularul postează aici, iar ruta
@@ -24,6 +24,20 @@ export const ENROLL_API = "/api/inscriere";
 
 /** Categoriile din formularul oficial „CERERE - CONTRACT". */
 export const enrollCategories: readonly string[] = CATEGORIES.map((c) => c.key);
+
+/**
+ * Două categorii împreună (13.11.2026): în lista primei categorii, perechile din
+ * Ordinul de taxe apar ca o singură opțiune, cu valoarea „B+A2”. Alegerea ei
+ * completează ambele câmpuri; spre aplicație pleacă tot două categorii.
+ */
+export function pairOptionValue(first: string, second: string): string {
+  return first + "+" + second;
+}
+
+/** Perechea aleasă din listă; null dacă valoarea e o singură categorie. */
+export function pairFromOption(value: string): readonly [string, string] | null {
+  return CATEGORY_COMBOS.find(([a, b]) => pairOptionValue(a, b) === value) ?? null;
+}
 
 /** Categoriile alese în formular (una sau două), fără goluri. */
 export function chosenCategories(v: Pick<EnrollValues, "category" | "category2">): string[] {

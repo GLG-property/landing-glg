@@ -47,8 +47,8 @@ export interface CategoryDef {
    */
   installments: boolean;
   /**
-   * Taxa de bază când categoria se face ÎMPREUNĂ cu B, C, D sau CE, în aceeași
-   * înscriere (patronul, 10.11.2026: A2 și A, 1200 lei).
+   * Taxa de bază când categoria se face ÎMPREUNĂ cu B, C, CE sau D, în aceeași
+   * înscriere (Ordinul de taxe din 01.09.2026: motocicleta, 1200 lei).
    */
   comboPriceLei?: number;
 }
@@ -62,29 +62,46 @@ const trecere = (key: string, extra: Partial<CategoryDef> = {}): CategoryDef => 
 
 /**
  * Tabelul categoriilor, în ordinea din selector.
- * Cutia de viteze se alege DOAR la B (patronul: „la C, D, E, A nu este cutie").
- * Taxele de bază confirmate de patron pe 10.11.2026, odată cu linkurile de plată:
- * A1, A2, A = 3200 lei (A2 și A = 1200 lei împreună cu B, C, D sau CE); B = 3500;
- * C = 1800; D și CE = 1500; „B la A1" = 900 (fără teorie); „B la A2" și
- * „B la A" = 2000. Trecerile fără preț confirmat rămân pe 3500 până vin datele.
+ * Cutia de viteze se alege DOAR la autoturism (patronul: „la C, D, E, A nu este cutie").
+ * Taxele de bază sunt cele din Ordinul de taxe din 01.09.2026 (Anexa 1) și din lista
+ * „Posibilități de înscriere" trimisă de patron pe 13.11.2026:
+ *   A1, A2, A = 3200 lei (1200 lei împreună cu B, C, CE sau D); B = 3500; C = 1800;
+ *   CE = 1500; D = 1700;
+ *   de la B la A2 sau A = 2000; în cadrul categoriei A (A1 la A2, A2 la A) = 2000
+ *   (tot 1200 lei împreună cu B, C, CE sau D); de la A1, A2, A sau B1 la B = 2000;
+ *   de la C1 la C = 1500; de la D1 la D = 1500.
+ * „B la A1" rămâne 900 lei, fără teorie (confirmat de patron pe 10.11.2026; lista din
+ * 13.11 numește la 2000 lei doar trecerile spre A2 și A).
  * În două părți (500 lei + restul) se achită doar B și A1, A2, A.
  */
 export const CATEGORIES: readonly CategoryDef[] = [
-  curs("A1", 3, { priceLei: 3200, installments: true }),
+  curs("A1", 3, { priceLei: 3200, installments: true, comboPriceLei: 1200 }),
   curs("A2", 3, { priceLei: 3200, installments: true, comboPriceLei: 1200 }),
   curs("A", 3, { priceLei: 3200, installments: true, comboPriceLei: 1200 }),
   curs("B", 3, { hasTransmission: true, installments: true }),
   curs("C", 2, { priceLei: 1800 }),
-  curs("D", 2, { priceLei: 1500 }),
   curs("CE", 1.5, { priceLei: 1500 }),
+  curs("D", 2, { priceLei: 1700 }),
   trecere("B la A1", { hasTheory: false, priceLei: 900 }),
-  trecere("B la A2", { priceLei: 2000 }),
-  trecere("B la A", { priceLei: 2000 }),
-  trecere("A1 la A2"),
-  trecere("A2 la A"),
-  trecere("B1 la B", { hasTransmission: true }),
-  trecere("C1 la C"),
-  trecere("D1 la D"),
+  trecere("B la A2", { priceLei: 2000, comboPriceLei: 1200 }),
+  trecere("B la A", { priceLei: 2000, comboPriceLei: 1200 }),
+  trecere("A1 la A2", { priceLei: 2000, comboPriceLei: 1200 }),
+  trecere("A2 la A", { priceLei: 2000, comboPriceLei: 1200 }),
+  trecere("A1 la B", { hasTransmission: true, priceLei: 2000 }),
+  trecere("A2 la B", { hasTransmission: true, priceLei: 2000 }),
+  trecere("A la B", { hasTransmission: true, priceLei: 2000 }),
+  trecere("B1 la B", { hasTransmission: true, priceLei: 2000 }),
+  trecere("C1 la C", { priceLei: 1500 }),
+  trecere("D1 la D", { priceLei: 1500 }),
+];
+
+/**
+ * Cele mai dese înscrieri la două categorii deodată (lista patronului, 13.11.2026,
+ * punctele 6-9): prima categorie la taxa ei, a doua (A2 sau A) la 1200 lei.
+ * Selectorul le arată ca alegeri rapide; în cerere rămân două categorii separate.
+ */
+export const CATEGORY_COMBOS: readonly (readonly [string, string])[] = [
+  ["B", "A2"], ["B", "A"], ["C", "A2"], ["C", "A"], ["CE", "A2"], ["CE", "A"], ["D", "A"],
 ];
 
 /** „B-A1", „b -> a1", „B → A1", „B LA A1" => „B LA A1" (forma de comparat). */
@@ -134,17 +151,52 @@ export function categoryAllowsInstallments(raw: string | null | undefined): bool
   return categoryDef(raw).installments;
 }
 
-/** Categoriile cu care A2 și A au taxa de bază redusă, dacă se fac în aceeași înscriere. */
-const COMBO_WITH = new Set(["B", "C", "D", "CE"]);
+/** Categoriile cu care motocicleta are taxa de bază redusă, dacă se fac în aceeași înscriere. */
+const COMBO_WITH = new Set(["B", "C", "CE", "D"]);
+
+/** Categoria la care se ajunge, cu majuscule: „B la A2" => „A2", „C" => „C". */
+export function categoryTarget(raw: string | null | undefined): string {
+  const n = norm(raw);
+  return n.includes(" LA ") ? n.split(" LA ").pop() ?? "" : n;
+}
+
+/** Categoria de la care se pleacă la o trecere: „B la A2" => „B"; null la un curs de la zero. */
+export function categoryFrom(raw: string | null | undefined): string | null {
+  const n = norm(raw);
+  return n.includes(" LA ") ? n.split(" LA ")[0] ?? null : null;
+}
+
+export type CategoryVehicle = "moto" | "auto" | "camion" | "remorca" | "autobuz";
+
+/** Vehiculul categoriei (eticheta din selector). */
+export function categoryVehicle(raw: string | null | undefined): CategoryVehicle {
+  const t = categoryTarget(raw);
+  if (t === "AM" || t === "A" || t === "A1" || t === "A2") return "moto";
+  if (t === "CE" || t === "C1E") return "remorca";
+  if (t === "C" || t === "C1") return "camion";
+  if (t === "D" || t === "D1") return "autobuz";
+  return "auto";
+}
 
 /**
- * Taxa de bază a categoriei într-o înscriere cu mai multe categorii: A2 și A
- * costă 1200 lei împreună cu B, C, D sau CE; altfel taxa din catalog.
+ * Taxa de bază a categoriei într-o înscriere cu mai multe categorii: motocicleta
+ * (A1, A2, A și trecerile spre A2 și A) costă 1200 lei când în aceeași înscriere se
+ * face și B, C, CE sau D (de la zero sau prin trecere); altfel taxa din catalog.
  */
 export function categoryPriceIn(raw: string | null | undefined, all: readonly (string | null | undefined)[]): number {
   const def = categoryDef(raw);
-  if (def.comboPriceLei && all.some((o) => COMBO_WITH.has(norm(o)))) return def.comboPriceLei;
+  if (def.comboPriceLei && all.some((o) => COMBO_WITH.has(categoryTarget(o)))) return def.comboPriceLei;
   return def.priceLei;
+}
+
+/** Perechile din selector, cu taxa fiecărei categorii din pereche. */
+export function categoryCombos(): { first: CategoryDef; second: CategoryDef; firstLei: number; secondLei: number }[] {
+  return CATEGORY_COMBOS.map(([a, b]) => ({
+    first: categoryDef(a),
+    second: categoryDef(b),
+    firstLei: categoryPriceIn(a, [a, b]),
+    secondLei: categoryPriceIn(b, [a, b]),
+  }));
 }
 
 /** Opțiunile selectorului pe două grupe: categorii de la zero și treceri de categorie. */

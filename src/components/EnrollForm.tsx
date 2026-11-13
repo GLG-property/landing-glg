@@ -8,7 +8,8 @@ import { site } from "@/lib/content";
 import {
   ENROLL_API,
   apiFieldToKey,
-  enrollCategories,
+  pairFromOption,
+  pairOptionValue,
   needsTheoryGroup,
   needsTransmission,
   buildEnrollPayload,
@@ -21,6 +22,7 @@ import {
   type EnrollValues,
   type PaymentInfo,
 } from "@/lib/enroll";
+import { categoryCombos, categoryGroups, categoryPriceIn } from "@/lib/categories";
 import { preparePhoto } from "@/lib/imageCompress";
 import { LOCATION_NAMES, fillOf, isSelectable, optionsFor, type EnrollOptions, type GroupFill } from "@/lib/schedule";
 import { EV, track } from "@/lib/analytics";
@@ -562,6 +564,11 @@ export function EnrollForm({
 
   const submitting = status.phase === "submitting";
   const f = e.fields;
+  // Lista de categorii (13.11.2026): grupată, cu taxa de bază în fiecare etichetă. Taxa
+  // ține cont de cealaltă categorie aleasă: motocicleta costă mai puțin împreună cu B, C, CE sau D.
+  const catGroups = categoryGroups();
+  const catPairs = categoryCombos();
+  const catLabel = (key: string, other: string) => `${key} · ${categoryPriceIn(key, [key, other])} ${f.catLei}`;
   const photoLabels = {
     take: f.idPhotoTake,
     choose: f.idPhotoChoose,
@@ -1017,16 +1024,39 @@ export function EnrollForm({
                   style={selectStyle}
                   value={values.category}
                   onChange={(ev) => {
+                    // O pereche din listă completează ambele câmpuri.
+                    const pair = pairFromOption(ev.target.value);
+                    if (pair) {
+                      set("category", pair[0]);
+                      set("category2", pair[1]);
+                      return;
+                    }
                     set("category", ev.target.value);
                     // A doua categorie nu poate fi aceeași cu prima.
                     if (values.category2 === ev.target.value) set("category2", "");
                   }}
                 >
-                  {enrollCategories.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
+                  <optgroup label={f.catGroupCourse}>
+                    {catGroups.curs.map((c) => (
+                      <option key={c.key} value={c.key}>
+                        {catLabel(c.key, values.category2)}
+                      </option>
+                    ))}
+                  </optgroup>
+                  <optgroup label={f.catGroupPair}>
+                    {catPairs.map((p) => (
+                      <option key={pairOptionValue(p.first.key, p.second.key)} value={pairOptionValue(p.first.key, p.second.key)}>
+                        {`${p.first.key} + ${p.second.key} · ${p.firstLei} + ${p.secondLei} ${f.catLei}`}
+                      </option>
+                    ))}
+                  </optgroup>
+                  <optgroup label={f.catGroupTransition}>
+                    {catGroups.trecere.map((c) => (
+                      <option key={c.key} value={c.key}>
+                        {catLabel(c.key, values.category2)}
+                      </option>
+                    ))}
+                  </optgroup>
                 </select>
               </Field>
               {/* Două categorii deodată = două cereri (6.11.2026): aceleași opțiuni, fără cea deja aleasă. */}
@@ -1039,13 +1069,20 @@ export function EnrollForm({
                   onChange={(ev) => set("category2", ev.target.value)}
                 >
                   <option value="">{f.category2None}</option>
-                  {enrollCategories
-                    .filter((c) => c !== values.category)
-                    .map((c) => (
-                      <option key={c} value={c}>
-                        {c}
+                  <optgroup label={f.catGroupCourse}>
+                    {catGroups.curs.filter((c) => c.key !== values.category).map((c) => (
+                      <option key={c.key} value={c.key}>
+                        {catLabel(c.key, values.category)}
                       </option>
                     ))}
+                  </optgroup>
+                  <optgroup label={f.catGroupTransition}>
+                    {catGroups.trecere.filter((c) => c.key !== values.category).map((c) => (
+                      <option key={c.key} value={c.key}>
+                        {catLabel(c.key, values.category)}
+                      </option>
+                    ))}
+                  </optgroup>
                 </select>
               </Field>
               {/* Cutia de viteze: doar la autoturism; la C, D, CE și moto nu se alege (10.11.2026). */}

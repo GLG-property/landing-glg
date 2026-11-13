@@ -142,6 +142,11 @@ export type EnrollDict = {
     /** A doua categorie (opțional) și opțiunea „doar una”. */
     category2: string;
     category2None: string;
+    /** Grupele din lista de categorii și moneda scrisă lângă taxa de bază. */
+    catGroupCourse: string;
+    catGroupPair: string;
+    catGroupTransition: string;
+    catLei: string;
     studyLanguage: string;
     langRo: string;
     langRu: string;
@@ -767,7 +772,7 @@ const ro: Dict = {
       sediu: "Sediul unde vrei să faci cursul de teorie: Buiucani sau Botanica în Chișinău, Strășeni sau Vorniceni.",
       studyLanguage: "Limba în care vrei să înveți. Grupe în română sunt la toate sediile; în rusă doar la Buiucani.",
       slot: "Grupa deschisă acum la sediul ales: zilele și ora cursului de teorie. Dacă nu îți convine, alege alt sediu sau te sunăm când pornește următoarea.",
-      category: "Categoria pe care vrei să o obții. Pentru autoturism alegi B.",
+      category: "Categoria pe care vrei să o obții. Pentru autoturism alegi B. Lângă fiecare categorie vezi taxa de bază.",
       category2: "Doar dacă vrei două categorii deodată (de exemplu B și A). Primim câte o cerere pentru fiecare categorie.",
       transmission: "Cutia de viteze pe care faci practica. Cu permis luat pe automată nu ai voie să conduci mașină cu cutie mecanică.",
       practiceLocation: "Sediul de unde pornești la lecțiile de condus. Poate fi altul decât cel de teorie: de exemplu teoria la Buiucani și practica la Botanica.",
@@ -813,6 +818,10 @@ const ro: Dict = {
       category: "Categoria solicitată",
       category2: "A doua categorie (opțional)",
       category2None: "Doar o categorie",
+      catGroupCourse: "Categorii",
+      catGroupPair: "Două categorii împreună",
+      catGroupTransition: "Treceri de categorie",
+      catLei: "lei",
       studyLanguage: "Limba de studii",
       langRo: "Română",
       langRu: "Rusă",
@@ -1523,7 +1532,7 @@ const ru: Dict = {
       sediu: "Филиал, где хочешь проходить теорию: Буюканы или Ботаника в Кишинёве, Стрэшены или Ворничены.",
       studyLanguage: "Язык обучения. Группы на румынском есть во всех филиалах; на русском только в Буюканах.",
       slot: "Открытая сейчас группа в выбранном филиале: дни и время занятий по теории. Если не подходит, выбери другой филиал или мы позвоним, когда стартует следующая.",
-      category: "Категория, которую хочешь получить. Для легкового автомобиля выбирай B.",
+      category: "Категория, которую хочешь получить. Для легкового автомобиля выбирай B. Рядом с каждой категорией указан базовый тариф.",
       category2: "Только если хочешь две категории сразу (например B и A). Мы получим отдельную заявку на каждую категорию.",
       transmission: "Коробка передач, на которой проходишь практику. С правами на автомат нельзя водить машину с механикой.",
       practiceLocation: "Филиал, откуда ты выезжаешь на уроки вождения. Может отличаться от филиала теории: например теория на Буюканах, а практика на Ботанике.",
@@ -1569,6 +1578,10 @@ const ru: Dict = {
       category: "Желаемая категория",
       category2: "Вторая категория (необязательно)",
       category2None: "Только одна категория",
+      catGroupCourse: "Категории",
+      catGroupPair: "Две категории вместе",
+      catGroupTransition: "Переход с категории на категорию",
+      catLei: "лей",
       studyLanguage: "Язык обучения",
       langRo: "Румынский",
       langRu: "Русский",
