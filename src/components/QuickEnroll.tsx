@@ -8,6 +8,7 @@ import clsx from "clsx";
 import { site } from "@/lib/content";
 import { LOCATION_NAMES } from "@/lib/schedule";
 import { EV, track } from "@/lib/analytics";
+import { phoneDigits } from "@/lib/phoneInput";
 import { useI18n } from "./LanguageProvider";
 import { Container, SectionHeading } from "./primitives";
 import { Reveal } from "./Reveal";
@@ -144,7 +145,7 @@ export function QuickEnroll() {
                     className={inputClass(!!errors.phone)}
                     value={phone}
                     onChange={(ev) => {
-                      setPhone(ev.target.value);
+                      setPhone(phoneDigits(ev.target.value));
                       clear("phone");
                     }}
                     placeholder={q.phonePlaceholder}

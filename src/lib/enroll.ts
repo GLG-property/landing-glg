@@ -14,6 +14,7 @@ import {
 } from "./plata";
 import { isSelectable, optionsFor, type EnrollOptions } from "./schedule";
 import { CATEGORIES, CATEGORY_COMBOS, categoryHasTheory, categoryHasTransmission } from "./categories";
+import { isPhoneDigits, phoneDigits } from "./phoneInput";
 
 /**
  * Endpoint-ul de înscriere, SAME-ORIGIN. Formularul postează aici, iar ruta
@@ -217,10 +218,16 @@ export function validateEnroll(v: EnrollValues, options: EnrollOptions | null = 
     const n = digitCount(v.phone_home);
     if (n < 5 || n > 15) errors.phone_home = "phone";
   }
-  // Persoana de contact: „nume și telefon” — trebuie să conțină un număr de telefon.
+  // Persoana de contact: numărul ei de telefon.
   if (!errors.phone_family) {
     const n = digitCount(v.phone_family);
     if (n < 8 || n > 15) errors.phone_family = "phone";
+  }
+  // Doar cifre, cel mult cu „+” în față (patronul, 14.11.2026). Lungimea rămâne liberă între limitele de mai sus.
+  for (const key of ["phone", "phone_home", "phone_family"] as const) {
+    if (errors[key]) continue;
+    const value = v[key].trim();
+    if (value !== "" && !isPhoneDigits(value)) errors[key] = "phone";
   }
 
   if (!errors.birth_date && !isValidPastDate(v.birth_date)) errors.birth_date = "date";
@@ -296,7 +303,7 @@ export function buildEnrollPayload(v: EnrollValues): Record<string, unknown> {
   return {
     first_name: v.first_name.trim(),
     last_name: v.last_name.trim(),
-    phone: v.phone.trim(),
+    phone: phoneDigits(v.phone),
     email: opt(v.email),
     idnp: v.idnp.trim(),
     birth_date: v.birth_date,
@@ -336,8 +343,8 @@ export function buildEnrollPayload(v: EnrollValues): Record<string, unknown> {
     id_issued_date: opt(v.id_issued_date),
     workplace: opt(v.workplace),
     referral: v.referral || undefined,
-    phone_home: opt(v.phone_home),
-    phone_family: opt(v.phone_family),
+    phone_home: opt(phoneDigits(v.phone_home)),
+    phone_family: opt(phoneDigits(v.phone_family)),
     license_number: opt(v.license_number),
     license_issued: opt(v.license_issued),
   };

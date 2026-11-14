@@ -26,6 +26,7 @@ import { categoryCombos, categoryGroups, categoryPriceIn } from "@/lib/categorie
 import { preparePhoto } from "@/lib/imageCompress";
 import { LOCATION_NAMES, fillOf, isSelectable, optionsFor, type EnrollOptions, type GroupFill } from "@/lib/schedule";
 import { EV, track } from "@/lib/analytics";
+import { phoneDigits } from "@/lib/phoneInput";
 import { EnrollSuccess } from "./EnrollSuccess";
 import { useI18n } from "./LanguageProvider";
 import { Container, SectionHeading } from "./primitives";
@@ -387,7 +388,7 @@ export type EnrollPrefill = { name?: string; phone?: string; location?: string }
 
 function withPrefill(base: EnrollValues, p?: EnrollPrefill): EnrollValues {
   const nume = (p?.name ?? "").trim().slice(0, 120);
-  const telefon = (p?.phone ?? "").trim().slice(0, 24);
+  const telefon = phoneDigits(p?.phone).slice(0, 24);
   const sediu = (p?.location ?? "").trim();
   if (!nume && !telefon && !sediu) return base;
   // „Nume și prenume”: primul cuvânt e numele de familie, restul prenumele.
@@ -712,10 +713,10 @@ export function EnrollForm({
                   type="tel"
                   className={inputClass(!!errors.phone)}
                   value={values.phone}
-                  onChange={(ev) => set("phone", ev.target.value)}
+                  onChange={(ev) => set("phone", phoneDigits(ev.target.value))}
                   autoComplete="tel"
                   inputMode="tel"
-                  placeholder="069 xxx xxx"
+                  placeholder="069000000"
                   maxLength={40}
                 />
               </Field>
@@ -743,7 +744,7 @@ export function EnrollForm({
                   type="tel"
                   className={inputClass(!!errors.phone_home)}
                   value={values.phone_home}
-                  onChange={(ev) => set("phone_home", ev.target.value)}
+                  onChange={(ev) => set("phone_home", phoneDigits(ev.target.value))}
                   inputMode="tel"
                   maxLength={40}
                 />
@@ -751,11 +752,13 @@ export function EnrollForm({
               <Field label={f.phoneFamily} help={e.help.phoneFamily} helpLabel={e.helpLabel} htmlFor="phone_family" error={msg("phone_family")}>
                 <input
                   id="phone_family"
+                  type="tel"
                   className={inputClass(!!errors.phone_family)}
                   value={values.phone_family}
-                  onChange={(ev) => set("phone_family", ev.target.value)}
+                  onChange={(ev) => set("phone_family", phoneDigits(ev.target.value))}
+                  inputMode="tel"
                   placeholder={f.phoneFamilyPlaceholder}
-                  maxLength={160}
+                  maxLength={40}
                 />
               </Field>
             </FormSection>
