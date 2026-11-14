@@ -247,7 +247,7 @@ export type EnrollDict = {
     noEmailNoLink: string;
     /** Blocul cu termenul. */
     deadlineTitle: string;
-    /** Când măcar o categorie aleasă se poate achita în două părți (B, A1, A2, A). */
+    /** Când măcar o categorie aleasă se poate achita în două părți (doar B, din 14.11.2026). */
     deadlineText: string;
     /** Când taxa de bază se achită doar dintr-o dată. */
     deadlineTextOnce: string;
@@ -873,7 +873,7 @@ const ro: Dict = {
     consentSuffix: ".",
     reserveNotice: {
       title: "Locul în grupă se rezervă doar după achitare",
-      text: "După ce trimiți cererea primești pe email linkurile de plată și ai 24 de ore ca să achiți taxa de bază a categoriei alese (la categoria B: 3500 lei). La B și la A1, A2, A poți achita mai întâi taxa de înscriere 1/2, 500 lei, iar taxa de înscriere 2/2 la sediu, până la prima lecție de teorie. La celelalte categorii și la treceri taxa de bază se achită dintr-o dată. Poți achita online sau la sediu. Dacă în 24 de ore plata nu este înregistrată, cererea nu mai ține locul în grupă.",
+      text: "După ce trimiți cererea primești pe email linkurile de plată și ai 24 de ore ca să achiți taxa de bază a categoriei alese (la categoria B: 3500 lei). La categoria B poți achita mai întâi taxa de înscriere 1/2, 500 lei, iar taxa de înscriere 2/2 la sediu, până la prima lecție de teorie. La celelalte categorii și la treceri taxa de bază se achită dintr-o dată. Poți achita online sau la sediu. Dacă în 24 de ore plata nu este înregistrată, cererea nu mai ține locul în grupă.",
     },
     submit: "Trimite cererea",
     submitting: "Se trimite…",
@@ -976,7 +976,7 @@ const ro: Dict = {
       {
         icon: "clock",
         title: "În 24 de ore achiți",
-        text: "Taxa de bază a categoriei alese (la categoria B: 3500 lei). La B și la A1, A2, A poți achita mai întâi taxa de înscriere 1/2, 500 lei, iar taxa de înscriere 2/2 la sediu. La celelalte categorii și la treceri, taxa de bază dintr-o dată. Online, prin link, sau la sediu.",
+        text: "Taxa de bază a categoriei alese (la categoria B: 3500 lei). La categoria B poți achita mai întâi taxa de înscriere 1/2, 500 lei, iar taxa de înscriere 2/2 la sediu. La celelalte categorii și la treceri, taxa de bază dintr-o dată. Online, prin link, sau la sediu.",
         warn: "Fără achitare în 24 de ore cererea nu mai ține locul în grupă și trebuie trimisă din nou.",
       },
       {
@@ -1197,7 +1197,7 @@ const ro: Dict = {
       },
       {
         h: "Rezervarea locului în grupă",
-        p: "Cererea trimisă online nu garantează locul în grupă. Locul se rezervă doar după achitarea taxei de bază a categoriei alese (la categoria B: 3500 lei), în 24 de ore de la trimiterea cererii. La categoriile B, A1, A2 și A locul se poate rezerva și cu taxa de înscriere 1/2, de 500 lei, în același termen; la celelalte categorii și la trecerile de categorie taxa de bază se achită dintr-o dată. Plata se poate face online, prin linkurile primite pe email, sau la sediu. Plățile sunt verificate de un angajat al școlii și se confirmă în aceeași zi sau a doua zi. Dacă în 24 de ore plata nu este înregistrată, cererea nu mai ține locul și trebuie depusă din nou. Taxa de înscriere 2/2, în cazul achitării taxei de înscriere 1/2, se achită până la prima lecție de teorie.",
+        p: "Cererea trimisă online nu garantează locul în grupă. Locul se rezervă doar după achitarea taxei de bază a categoriei alese (la categoria B: 3500 lei), în 24 de ore de la trimiterea cererii. La categoria B locul se poate rezerva și cu taxa de înscriere 1/2, de 500 lei, în același termen; la celelalte categorii și la trecerile de categorie taxa de bază se achită dintr-o dată. Plata se poate face online, prin linkurile primite pe email, sau la sediu. Plățile sunt verificate de un angajat al școlii și se confirmă în aceeași zi sau a doua zi. Dacă în 24 de ore plata nu este înregistrată, cererea nu mai ține locul și trebuie depusă din nou. Taxa de înscriere 2/2, în cazul achitării taxei de înscriere 1/2, se achită până la prima lecție de teorie.",
       },
       {
         h: "Utilizarea site-ului",
@@ -1632,7 +1632,7 @@ const ru: Dict = {
     consentSuffix: ".",
     reserveNotice: {
       title: "Место в группе бронируется только после оплаты",
-      text: "После отправки заявки на email придут ссылки для оплаты, и у тебя есть 24 часа, чтобы оплатить базовый тариф выбранной категории (для категории B: 3500 лей). Для B и для A1, A2, A можно сначала оплатить регистрационный взнос 1/2, 500 лей, а регистрационный взнос 2/2 в филиале, до первого занятия теории. Для остальных категорий и для переходов с категории на категорию базовый тариф оплачивается сразу. Оплатить можно онлайн или в филиале. Если за 24 часа оплата не зарегистрирована, заявка больше не держит место в группе.",
+      text: "После отправки заявки на email придут ссылки для оплаты, и у тебя есть 24 часа, чтобы оплатить базовый тариф выбранной категории (для категории B: 3500 лей). Для категории B можно сначала оплатить регистрационный взнос 1/2, 500 лей, а регистрационный взнос 2/2 в филиале, до первого занятия теории. Для остальных категорий и для переходов с категории на категорию базовый тариф оплачивается сразу. Оплатить можно онлайн или в филиале. Если за 24 часа оплата не зарегистрирована, заявка больше не держит место в группе.",
     },
     submit: "Отправить заявку",
     submitting: "Отправляем…",
@@ -1735,7 +1735,7 @@ const ru: Dict = {
       {
         icon: "clock",
         title: "За 24 часа оплачиваешь",
-        text: "Базовый тариф выбранной категории (для категории B: 3500 лей). Для B и для A1, A2, A можно сначала оплатить регистрационный взнос 1/2, 500 лей, а регистрационный взнос 2/2 в филиале. Для остальных категорий и для переходов с категории на категорию базовый тариф сразу. Онлайн, по ссылке, или в филиале.",
+        text: "Базовый тариф выбранной категории (для категории B: 3500 лей). Для категории B можно сначала оплатить регистрационный взнос 1/2, 500 лей, а регистрационный взнос 2/2 в филиале. Для остальных категорий и для переходов с категории на категорию базовый тариф сразу. Онлайн, по ссылке, или в филиале.",
         warn: "Без оплаты за 24 часа заявка больше не держит место в группе, и её нужно отправить заново.",
       },
       {
@@ -1954,7 +1954,7 @@ const ru: Dict = {
       },
       {
         h: "Бронирование места в группе",
-        p: "Отправленная онлайн заявка не гарантирует место в группе. Место бронируется только после оплаты базового тарифа выбранной категории (для категории B: 3500 лей) в течение 24 часов с момента отправки заявки. Для категорий B, A1, A2 и A место можно забронировать и регистрационным взносом 1/2, 500 лей, в тот же срок; для остальных категорий и для переходов с категории на категорию базовый тариф оплачивается сразу. Оплатить можно онлайн, по ссылкам, полученным на email, или в филиале. Платежи проверяет сотрудник школы и подтверждает их в тот же день или на следующий. Если за 24 часа оплата не зарегистрирована, заявка больше не держит место и её нужно подать заново. Регистрационный взнос 2/2, при оплате регистрационного взноса 1/2, оплачивается до первого занятия теории.",
+        p: "Отправленная онлайн заявка не гарантирует место в группе. Место бронируется только после оплаты базового тарифа выбранной категории (для категории B: 3500 лей) в течение 24 часов с момента отправки заявки. Для категории B место можно забронировать и регистрационным взносом 1/2, 500 лей, в тот же срок; для остальных категорий и для переходов с категории на категорию базовый тариф оплачивается сразу. Оплатить можно онлайн, по ссылкам, полученным на email, или в филиале. Платежи проверяет сотрудник школы и подтверждает их в тот же день или на следующий. Если за 24 часа оплата не зарегистрирована, заявка больше не держит место и её нужно подать заново. Регистрационный взнос 2/2, при оплате регистрационного взноса 1/2, оплачивается до первого занятия теории.",
       },
       {
         h: "Использование сайта",

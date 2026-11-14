@@ -15,7 +15,7 @@
  *  achitare în 24 de ore cererea nu mai ține locul în grupă.
  *
  *  Taxa de bază depinde de categorie (10.11.2026): în două părți (taxa de
- *  înscriere 1/2, 500 lei, apoi 2/2) se achită doar B și A1, A2, A; celelalte
+ *  înscriere 1/2, 500 lei, apoi 2/2) se achită doar B (din 14.11.2026); celelalte
  *  categorii și trecerile achită taxa de bază dintr-o dată. Fiecare taxă de
  *  bază are linkul ei, pe sumă; unde școala nu are link, plata se face la
  *  sediu. Vezi `PaymentPlan`, `localPaymentPlans` și `safePaymentPlans`.

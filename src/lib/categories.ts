@@ -42,8 +42,9 @@ export interface CategoryDef {
   months: number;
   /**
    * Taxa de bază se poate achita în două părți (taxa de înscriere 1/2, 500 lei,
-   * apoi 2/2)? Patronul, 10.11.2026: doar la B și la A1, A2, A; la celelalte
-   * categorii și la treceri taxa de bază se achită dintr-o dată.
+   * apoi 2/2)? Patronul, 14.11.2026: „Doar la B pe bucăți”. La toate celelalte
+   * categorii (și la A1, A2, A, care între 10.11 și 14.11 se puteau achita în două
+   * părți) și la treceri taxa de bază se achită dintr-o dată.
    */
   installments: boolean;
   /**
@@ -72,12 +73,12 @@ const trecere = (key: string, extra: Partial<CategoryDef> = {}): CategoryDef => 
  *   de la C1 la C = 1500; de la D1 la D = 1500.
  * „B la A1" rămâne 900 lei, fără teorie (confirmat de patron pe 10.11.2026; lista din
  * 13.11 numește la 2000 lei doar trecerile spre A2 și A).
- * În două părți (500 lei + restul) se achită doar B și A1, A2, A.
+ * În două părți (500 lei + restul) se achită doar B (din 14.11.2026; A1, A2, A dintr-o dată).
  */
 export const CATEGORIES: readonly CategoryDef[] = [
-  curs("A1", 3, { priceLei: 3200, installments: true, comboPriceLei: 1200 }),
-  curs("A2", 3, { priceLei: 3200, installments: true, comboPriceLei: 1200 }),
-  curs("A", 3, { priceLei: 3200, installments: true, comboPriceLei: 1200 }),
+  curs("A1", 3, { priceLei: 3200, comboPriceLei: 1200 }),
+  curs("A2", 3, { priceLei: 3200, comboPriceLei: 1200 }),
+  curs("A", 3, { priceLei: 3200, comboPriceLei: 1200 }),
   curs("B", 3, { hasTransmission: true, installments: true }),
   curs("C", 2, { priceLei: 1800 }),
   curs("CE", 1.5, { priceLei: 1500 }),
@@ -146,7 +147,7 @@ export function categoryDef(raw: string | null | undefined): CategoryDef {
   };
 }
 
-/** Taxa de bază se poate achita în două părți (500 lei + restul)? Doar B și A1, A2, A. */
+/** Taxa de bază se poate achita în două părți (500 lei + restul)? Doar B (din 14.11.2026). */
 export function categoryAllowsInstallments(raw: string | null | undefined): boolean {
   return categoryDef(raw).installments;
 }

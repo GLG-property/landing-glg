@@ -28,8 +28,8 @@ import { Container } from "./primitives";
  * dacă nu achită.
  *
  * Plata e pe categorie (10.11.2026), după planurile din `payment.plans`:
- * B și A1, A2, A au două butoane (taxa de înscriere 1/2, 500 lei, și taxa de
- * bază), celelalte categorii un singur buton, taxa de bază dintr-o dată, iar
+ * doar B are două butoane (taxa de înscriere 1/2, 500 lei, și taxa de bază;
+ * din 14.11.2026 fără A1, A2, A), celelalte categorii un singur buton, taxa de bază dintr-o dată, iar
  * unde școala nu are link pe sumă, taxa se achită la sediu. La două categorii
  * blocul se repetă, fiecare sub titlul „Categoria X”.
  *
