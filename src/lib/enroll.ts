@@ -14,7 +14,7 @@ import {
 } from "./plata";
 import { isSelectable, optionsFor, type EnrollOptions } from "./schedule";
 import { CATEGORIES, CATEGORY_COMBOS, categoryHasTheory, categoryHasTransmission } from "./categories";
-import { isPhoneDigits, phoneDigits, samePhone } from "./phoneInput";
+import { isPhoneDigits, isRequestPhone, phoneDigits, samePhone } from "./phoneInput";
 
 /**
  * Endpoint-ul de înscriere, SAME-ORIGIN. Formularul postează aici, iar ruta
@@ -146,6 +146,7 @@ export type EnrollErrorCode =
   | "email"
   | "phone"
   | "samePhone"
+  | "phoneFormat"
   | "date"
   | "consent"
   | "contract"
@@ -209,22 +210,23 @@ export function validateEnroll(v: EnrollValues, options: EnrollOptions | null = 
   if (!errors.idnp && !/^\d{13}$/.test(v.idnp.trim())) errors.idnp = "idnp";
   if (!errors.email && !EMAIL_RE.test(v.email.trim())) errors.email = "email";
 
-  // Mobil: 8-15 cifre după eliminarea separatoarelor (regula serverului).
-  if (!errors.phone) {
-    const n = digitCount(v.phone);
-    if (n < 8 || n > 15) errors.phone = "phone";
+  // Mobilul și telefonul unei rude: exact 9 cifre cu 0 în față, sau „+373” și 8 cifre; alt prefix
+  // de țară rămâne liber (isRequestPhone din lib/phoneInput.ts, aceeași regulă în aplicație).
+  // Regula veche, „8-15 cifre, lungime liberă” (14.11.2026), a fost înlocuită pe 17.11.2026 la
+  // cererea școlii: cursanții scapă o cifră sau scriu una în plus. Nimic nu se taie la scriere,
+  // greșeala se arată la trimitere. Textul cu alte semne rămâne pe mesajul general de telefon.
+  for (const key of ["phone", "phone_family"] as const) {
+    if (errors[key]) continue;
+    const value = v[key].trim();
+    if (!isPhoneDigits(value)) errors[key] = "phone";
+    else if (!isRequestPhone(value)) errors[key] = "phoneFormat";
   }
   // Telefonul de domiciliu e opțional, dar dacă e completat trebuie să arate a telefon.
   if (v.phone_home.trim() !== "") {
     const n = digitCount(v.phone_home);
     if (n < 5 || n > 15) errors.phone_home = "phone";
   }
-  // Persoana de contact: numărul ei de telefon.
-  if (!errors.phone_family) {
-    const n = digitCount(v.phone_family);
-    if (n < 8 || n > 15) errors.phone_family = "phone";
-  }
-  // Doar cifre, cel mult cu „+” în față (patronul, 14.11.2026). Lungimea rămâne liberă între limitele de mai sus.
+  // Doar cifre, cel mult cu „+” în față (patronul, 14.11.2026). La mobil și la telefonul rudei e verificat mai sus.
   for (const key of ["phone", "phone_home", "phone_family"] as const) {
     if (errors[key]) continue;
     const value = v[key].trim();

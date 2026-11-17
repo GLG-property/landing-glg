@@ -218,6 +218,7 @@ export type EnrollDict = {
     fileTooBig: string;
     fileType: string;
     samePhone: string;
+    phoneFormat: string;
     checkField: string;
     noRuGroup: string;
     formInvalid: string;
@@ -734,7 +735,7 @@ const ro: Dict = {
     callLabel: "Preferi să vorbim la telefon?",
     errors: {
       name: "Scrie numele și prenumele",
-      phone: "Număr de telefon invalid",
+      phone: "Telefonul trebuie să aibă exact 9 cifre și să înceapă cu 0, de exemplu 069123456. Numărul din altă țară se scrie cu + în față.",
       sediu: "Alege sediul",
       consent: "Bifează acordul ca să poți continua",
     },
@@ -755,10 +756,10 @@ const ro: Dict = {
       birthDate: "Data nașterii, ca în buletin. Te poți înscrie și înainte de 18 ani; examenul la ASP se dă de la 18 ani.",
       sex: "Alege așa cum apare în buletin.",
       citizenship: "Țara al cărei cetățean ești, de regulă Republica Moldova. Dacă ai alt buletin, scrie cetățenia de pe el.",
-      phoneMobile: "Numărul tău de mobil. Pe el te sunăm ca să confirmăm înscrierea și grupa.",
+      phoneMobile: "Numărul tău de mobil, din 9 cifre, cu 0 în față (de exemplu 069000000). Pe el te sunăm ca să confirmăm înscrierea și grupa.",
       email: "Adresa ta de e-mail. Aici primești confirmarea și informațiile despre curs.",
       phoneHome: "Telefonul fix de acasă, dacă ai. Poți lăsa gol.",
-      phoneFamily: "Numărul de telefon al unei persoane apropiate (rudă, prieten, cunoscut) pe care o putem suna dacă nu răspunzi tu. Scrie doar cifrele. Este obligatoriu.",
+      phoneFamily: "Numărul de telefon al unei persoane apropiate (rudă, prieten, cunoscut) pe care o putem suna dacă nu răspunzi tu. Scrie cele 9 cifre, cu 0 în față. Este obligatoriu.",
       raion: "Raionul sau municipiul din adresa de domiciliu, de exemplu Chișinău sau Strășeni.",
       locality: "Orașul, satul sau comuna din adresa de domiciliu.",
       street: "Strada din adresa de domiciliu, fără număr. Dacă localitatea nu are străzi, poți lăsa gol.",
@@ -893,6 +894,7 @@ const ro: Dict = {
       fileTooBig: "Fișier prea mare: alege o poză sau un PDF de cel mult 2 MB",
       fileType: "Fișier neacceptat: alege o poză (JPG, PNG) sau un PDF",
       samePhone: "Numărul unei rude nu poate fi același cu numărul tău de mobil. Scrie numărul altei persoane.",
+      phoneFormat: "Telefonul trebuie să aibă exact 9 cifre și să înceapă cu 0, de exemplu 069123456. Numărul din altă țară se scrie cu + în față.",
       checkField: "Verifică acest câmp",
       noRuGroup:
         "Grupe în limba rusă avem doar la Buiucani (17:30 și 19:00). Alege Buiucani sau limba română.",
@@ -1495,7 +1497,7 @@ const ru: Dict = {
     callLabel: "Удобнее по телефону?",
     errors: {
       name: "Укажи фамилию и имя",
-      phone: "Неверный номер телефона",
+      phone: "Телефон должен состоять ровно из 9 цифр и начинаться с 0, например 069123456. Номер другой страны пишется с + в начале.",
       sediu: "Выбери филиал",
       consent: "Отметь согласие, чтобы продолжить",
     },
@@ -1516,10 +1518,10 @@ const ru: Dict = {
       birthDate: "Дата рождения, как в удостоверении. Записаться можно и до 18 лет; экзамен в ASP сдают с 18 лет.",
       sex: "Выбери так, как указано в удостоверении.",
       citizenship: "Страна, гражданином которой ты являешься, обычно Республика Молдова. Если у тебя другой документ, укажи гражданство из него.",
-      phoneMobile: "Твой мобильный номер. По нему мы позвоним, чтобы подтвердить запись и группу.",
+      phoneMobile: "Твой мобильный номер из 9 цифр, начиная с 0 (например 069000000). По нему мы позвоним, чтобы подтвердить запись и группу.",
       email: "Твой адрес электронной почты. Сюда придут подтверждение и информация о курсе.",
       phoneHome: "Домашний стационарный телефон, если есть. Можно оставить пустым.",
-      phoneFamily: "Номер телефона близкого человека (родственник, друг, знакомый), которому мы можем позвонить, если ты не отвечаешь. Пиши только цифры. Обязательно.",
+      phoneFamily: "Номер телефона близкого человека (родственник, друг, знакомый), которому мы можем позвонить, если ты не отвечаешь. Напиши все 9 цифр, начиная с 0. Обязательно.",
       raion: "Район или муниципий из адреса проживания, например Кишинёв или Стрэшены.",
       locality: "Город, село или коммуна из адреса проживания.",
       street: "Улица из адреса проживания, без номера. Если в населённом пункте нет улиц, можно оставить пустым.",
@@ -1653,6 +1655,7 @@ const ru: Dict = {
       fileTooBig: "Файл слишком большой: выбери фото или PDF не больше 2 МБ",
       fileType: "Неподдерживаемый файл: выбери фото (JPG, PNG) или PDF",
       samePhone: "Номер родственника не может совпадать с твоим мобильным номером. Укажи номер другого человека.",
+      phoneFormat: "Телефон должен состоять ровно из 9 цифр и начинаться с 0, например 069123456. Номер другой страны пишется с + в начале.",
       checkField: "Проверь это поле",
       noRuGroup:
         "Группы на русском языке есть только в филиале Buiucani (17:30 и 19:00). Выбери Buiucani или румынский язык.",

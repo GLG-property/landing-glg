@@ -8,7 +8,7 @@ import clsx from "clsx";
 import { site } from "@/lib/content";
 import { LOCATION_NAMES } from "@/lib/schedule";
 import { EV, track } from "@/lib/analytics";
-import { phoneDigits } from "@/lib/phoneInput";
+import { isRequestPhone, phoneDigits } from "@/lib/phoneInput";
 import { useI18n } from "./LanguageProvider";
 import { Container, SectionHeading } from "./primitives";
 import { Reveal } from "./Reveal";
@@ -66,7 +66,7 @@ export function QuickEnroll() {
     ev.preventDefault();
     const next: Errors = {};
     if (name.trim().length < 3) next.name = q.errors.name;
-    if (phone.replace(/\D/g, "").length < 8) next.phone = q.errors.phone;
+    if (!isRequestPhone(phone)) next.phone = q.errors.phone;
     if (!sediu) next.sediu = q.errors.sediu;
     if (!consent) next.consent = q.errors.consent;
 
