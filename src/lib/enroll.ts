@@ -14,7 +14,7 @@ import {
 } from "./plata";
 import { isSelectable, optionsFor, type EnrollOptions } from "./schedule";
 import { CATEGORIES, CATEGORY_COMBOS, categoryHasTheory, categoryHasTransmission } from "./categories";
-import { isPhoneDigits, phoneDigits } from "./phoneInput";
+import { isPhoneDigits, phoneDigits, samePhone } from "./phoneInput";
 
 /**
  * Endpoint-ul de înscriere, SAME-ORIGIN. Formularul postează aici, iar ruta
@@ -145,6 +145,7 @@ export type EnrollErrorCode =
   | "idnp"
   | "email"
   | "phone"
+  | "samePhone"
   | "date"
   | "consent"
   | "contract"
@@ -229,6 +230,10 @@ export function validateEnroll(v: EnrollValues, options: EnrollOptions | null = 
     const value = v[key].trim();
     if (value !== "" && !isPhoneDigits(value)) errors[key] = "phone";
   }
+  // Telefonul unei rude trebuie să fie ALT număr decât mobilul (17.11.2026): școala are nevoie
+  // de două numere, ca să poată suna o rudă când cursantul nu răspunde. Același număr scris
+  // altfel (cu 0, fără 0, cu 373) e tot același. Aplicația verifică la fel la primire.
+  if (!errors.phone_family && samePhone(v.phone, v.phone_family)) errors.phone_family = "samePhone";
 
   if (!errors.birth_date && !isValidPastDate(v.birth_date)) errors.birth_date = "date";
   if (!errors.id_issued_date && !isValidPastDate(v.id_issued_date)) {

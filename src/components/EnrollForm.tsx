@@ -26,7 +26,7 @@ import { categoryCombos, categoryGroups, categoryPriceIn } from "@/lib/categorie
 import { preparePhoto } from "@/lib/imageCompress";
 import { LOCATION_NAMES, fillOf, isSelectable, optionsFor, type EnrollOptions, type GroupFill } from "@/lib/schedule";
 import { EV, track } from "@/lib/analytics";
-import { phoneDigits } from "@/lib/phoneInput";
+import { phoneDigits, samePhone } from "@/lib/phoneInput";
 import { EnrollSuccess } from "./EnrollSuccess";
 import { useI18n } from "./LanguageProvider";
 import { Container, SectionHeading } from "./primitives";
@@ -468,6 +468,15 @@ export function EnrollForm({
     return code ? e.errors[code] : undefined;
   };
 
+  // Telefonul unei rude scris la fel ca mobilul: eroarea apare de cum coincid cele două numere,
+  // nu abia la trimitere, și dispare când unul dintre ele e schimbat (17.11.2026). Regula e în lib/enroll.ts.
+  const familySame = samePhone(values.phone, values.phone_family);
+  const familyError = familySame
+    ? e.errors.samePhone
+    : errors.phone_family === "samePhone"
+      ? undefined
+      : msg("phone_family");
+
   const scrollToFirstError = () => {
     setTimeout(() => {
       formRef.current
@@ -749,11 +758,11 @@ export function EnrollForm({
                   maxLength={40}
                 />
               </Field>
-              <Field label={f.phoneFamily} help={e.help.phoneFamily} helpLabel={e.helpLabel} htmlFor="phone_family" error={msg("phone_family")}>
+              <Field label={f.phoneFamily} help={e.help.phoneFamily} helpLabel={e.helpLabel} htmlFor="phone_family" error={familyError}>
                 <input
                   id="phone_family"
                   type="tel"
-                  className={inputClass(!!errors.phone_family)}
+                  className={inputClass(!!familyError)}
                   value={values.phone_family}
                   onChange={(ev) => set("phone_family", phoneDigits(ev.target.value))}
                   inputMode="tel"

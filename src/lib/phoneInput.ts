@@ -19,3 +19,25 @@ export function phoneDigits(raw: string | null | undefined): string {
 export function isPhoneDigits(raw: string | null | undefined): boolean {
   return /^[+]?[0-9]+$/.test(String(raw ?? "").trim());
 }
+
+/**
+ * Cheia de comparare a două numere: doar cifrele, fără prefixul țării (373 sau 00373) și
+ * fără 0 din față, ca „069123456”, „69123456”, „37369123456” și „+37369123456” să fie
+ * același număr. Numerele din alte țări rămân cu toate cifrele lor.
+ */
+export function phoneCompareKey(raw: string | null | undefined): string {
+  let d = String(raw ?? "").replace(/[^0-9]/g, "");
+  if (d.startsWith("00")) d = d.slice(2);
+  if (d.startsWith("373") && d.length >= 11) d = d.slice(3);
+  if (d.startsWith("0") && d.length === 9) d = d.slice(1);
+  return d;
+}
+
+/**
+ * Cele două câmpuri au același număr (17.11.2026: telefonul unei rude nu poate fi mobilul
+ * cursantului, școala sună ruda când cursantul nu răspunde). Un câmp gol nu e „același”.
+ */
+export function samePhone(a: string | null | undefined, b: string | null | undefined): boolean {
+  const key = phoneCompareKey(a);
+  return key !== "" && key === phoneCompareKey(b);
+}

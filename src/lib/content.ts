@@ -217,6 +217,7 @@ export type EnrollDict = {
     photoMissing: string;
     fileTooBig: string;
     fileType: string;
+    samePhone: string;
     checkField: string;
     noRuGroup: string;
     formInvalid: string;
@@ -891,6 +892,7 @@ const ro: Dict = {
       photoMissing: "Poza buletinului lipsește: adaugă cel puțin fața buletinului",
       fileTooBig: "Fișier prea mare: alege o poză sau un PDF de cel mult 2 MB",
       fileType: "Fișier neacceptat: alege o poză (JPG, PNG) sau un PDF",
+      samePhone: "Numărul unei rude nu poate fi același cu numărul tău de mobil. Scrie numărul altei persoane.",
       checkField: "Verifică acest câmp",
       noRuGroup:
         "Grupe în limba rusă avem doar la Buiucani (17:30 și 19:00). Alege Buiucani sau limba română.",
@@ -1650,6 +1652,7 @@ const ru: Dict = {
       photoMissing: "Нет фото удостоверения: добавь хотя бы лицевую сторону",
       fileTooBig: "Файл слишком большой: выбери фото или PDF не больше 2 МБ",
       fileType: "Неподдерживаемый файл: выбери фото (JPG, PNG) или PDF",
+      samePhone: "Номер родственника не может совпадать с твоим мобильным номером. Укажи номер другого человека.",
       checkField: "Проверь это поле",
       noRuGroup:
         "Группы на русском языке есть только в филиале Buiucani (17:30 и 19:00). Выбери Buiucani или румынский язык.",
