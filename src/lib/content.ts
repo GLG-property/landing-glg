@@ -646,7 +646,7 @@ const ro: Dict = {
       {
         label: "Manageri",
         people: [
-          { name: "Vlad", role: "Manager 1", photo: "/echipa/vlad.jpg" },
+          { name: "Nicolaescu Vladislav", role: "Manager 1", photo: "/echipa/vlad.jpg" },
           { name: "Malai Cristian", role: "Manager 2", photo: "/echipa/malai-cristian-birou.jpg" },
           { name: "Ion", role: "Manager 3" },
         ],
@@ -1425,7 +1425,7 @@ const ru: Dict = {
       {
         label: "Менеджеры",
         people: [
-          { name: "Влад", role: "Менеджер 1", photo: "/echipa/vlad.jpg" },
+          { name: "Николаеску Владислав", role: "Менеджер 1", photo: "/echipa/vlad.jpg" },
           { name: "Малай Кристиан", role: "Менеджер 2", photo: "/echipa/malai-cristian-birou.jpg" },
           { name: "Ион", role: "Менеджер 3" },
         ],
