@@ -647,7 +647,7 @@ const ro: Dict = {
         label: "Manageri",
         people: [
           { name: "Vlad", role: "Manager 1" },
-          { name: "Malai Cristian", role: "Manager 2", photo: "/echipa/malai-cristian.jpg" },
+          { name: "Malai Cristian", role: "Manager 2", photo: "/echipa/malai-cristian-birou.jpg" },
           { name: "Ion", role: "Manager 3" },
         ],
       },
@@ -655,7 +655,7 @@ const ro: Dict = {
         label: "Secretariat administrativ",
         people: [
           { name: "Dosca Viorica", role: "Secretar", photo: "/echipa/dosca-viorica.jpg" },
-          { name: "Rebeca", role: "Secretar" },
+          { name: "Rebeca", role: "Secretar", photo: "/echipa/rebeca-birou.jpg" },
         ],
       },
     ],
@@ -1426,7 +1426,7 @@ const ru: Dict = {
         label: "Менеджеры",
         people: [
           { name: "Влад", role: "Менеджер 1" },
-          { name: "Малай Кристиан", role: "Менеджер 2", photo: "/echipa/malai-cristian.jpg" },
+          { name: "Малай Кристиан", role: "Менеджер 2", photo: "/echipa/malai-cristian-birou.jpg" },
           { name: "Ион", role: "Менеджер 3" },
         ],
       },
@@ -1434,7 +1434,7 @@ const ru: Dict = {
         label: "Административный секретариат",
         people: [
           { name: "Доска Виорика", role: "Секретарь", photo: "/echipa/dosca-viorica.jpg" },
-          { name: "Ребека", role: "Секретарь" },
+          { name: "Ребека", role: "Секретарь", photo: "/echipa/rebeca-birou.jpg" },
         ],
       },
     ],
