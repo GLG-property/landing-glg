@@ -99,11 +99,11 @@ export function Team() {
                 {level.people.map((p) => (
                   <div
                     key={p.name + p.role}
-                    className="card flex w-full items-center gap-3 p-4 sm:w-[calc(50%-0.5rem)] md:w-56"
+                    className="card flex w-full items-center gap-3 p-4 sm:w-[calc(50%-0.5rem)] md:w-64"
                   >
                     <Avatar person={p} />
                     <div className="min-w-0">
-                      <p className="truncate text-base font-semibold tracking-tight text-ink">{p.name}</p>
+                      <p className="text-base font-semibold leading-snug tracking-tight text-ink">{p.name}</p>
                       <p className="text-sm text-muted">{p.role}</p>
                     </div>
                   </div>
