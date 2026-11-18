@@ -25,7 +25,7 @@ Regulile de mai jos sunt obligatorii pentru orice sectiune. Cand ai dubii, alege
 
 ## Borduri, raze, umbre
 - Bordura standard: `border border-line` (1px, hairline). Niciodata 2px, niciodata borduri colorate permanente.
-- Raza maxima: 12px. Carduri: `.card` sau `rounded-xl` (12px). Butoane si inputuri: `rounded-[10px]`. Fara `rounded-2xl`, `rounded-3xl`, fara `rounded-full` in afara de avatare si dot-uri de status.
+- Raza maxima: 12px. Carduri: `.card` sau `rounded-xl` (12px). Butoane si inputuri: `rounded-[10px]`. Fara `rounded-2xl`, `rounded-3xl`, fara `rounded-full` in afara de avatare si dot-uri de status. Exceptie (decizia patronului, 18.11.2026): bulele albastre cu filialele din hero, `rounded-full` cu `.btn-3d`, doar acolo.
 - Umbre: doar cele integrate in clasele 3D de mai jos si `shadow-soft` pe nav-ul sticky. Nimic altceva. `shadow-card` si `shadow-pop` nu mai exista, stergeti orice utilizare.
 - Sistem 3D (decizia patronului), singurele locuri cu gradiente si umbre:
   - `.btn-3d` (butoane brand: gradient deschis sus spre inchis jos, bordura brand-700) si `.btn-3d-light` (butoane albe: alb spre surface).

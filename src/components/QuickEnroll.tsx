@@ -8,7 +8,8 @@ import clsx from "clsx";
 import { site } from "@/lib/content";
 import { LOCATION_NAMES } from "@/lib/schedule";
 import { EV, track } from "@/lib/analytics";
-import { isRequestPhone, phoneDigits } from "@/lib/phoneInput";
+import { isRequestPhone, phonePasteRejected, phoneTyped } from "@/lib/phoneInput";
+import { PhoneHint } from "./PhoneHint";
 import { useI18n } from "./LanguageProvider";
 import { Container, SectionHeading } from "./primitives";
 import { Reveal } from "./Reveal";
@@ -50,6 +51,9 @@ export function QuickEnroll() {
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  // Indiciul de sub telefon (18.11.2026): câmpul părăsit și numărul lipit care n-a încăput.
+  const [phoneLeft, setPhoneLeft] = useState(false);
+  const [phonePasted, setPhonePasted] = useState(0);
   const [sediu, setSediu] = useState("");
   const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
@@ -145,16 +149,21 @@ export function QuickEnroll() {
                     className={inputClass(!!errors.phone)}
                     value={phone}
                     onChange={(ev) => {
-                      setPhone(phoneDigits(ev.target.value));
+                      // Peste lungimea maximă nu mai intră nimic (18.11.2026, src/lib/phoneInput.ts).
+                      setPhonePasted(phonePasteRejected(phone, ev.target.value));
+                      setPhone(phoneTyped(phone, ev.target.value));
                       clear("phone");
                     }}
+                    onBlur={() => setPhoneLeft(true)}
                     placeholder={q.phonePlaceholder}
                     autoComplete="tel"
                     maxLength={24}
                   />
                   {errors.phone ? (
                     <p className="mt-1 text-xs font-medium text-red-600">{errors.phone}</p>
-                  ) : null}
+                  ) : (
+                    <PhoneHint value={phone} left={phoneLeft} pasted={phonePasted} testId="quick-phone-hint" />
+                  )}
                 </div>
 
                 <div>

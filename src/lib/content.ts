@@ -206,6 +206,17 @@ export type EnrollDict = {
   callOption: string;
   /** Mesajul de sus când datele vin din formularul scurt al primei pagini. */
   prefillNotice: string;
+  /** Indiciul viu de sub câmpurile de telefon (18.11.2026); {have} și {need} sunt numere de cifre. */
+  phoneHint: {
+    empty: string;
+    progress: string;
+    noZero: string;
+    extraZero: string;
+    foreign: string;
+    foreignOk: string;
+    long: string;
+    pasted: string;
+  };
   errors: {
     required: string;
     idnp: string;
@@ -315,6 +326,9 @@ export type Dict = {
     /** Categoriile predate, ca etichete mici sub titlu (nu în titlu). */
     categoriesLabel: string;
     categories: string[];
+    /** Filialele, ca bule albastre sub categorii (patronul, 18.11.2026); fiecare duce la pagina sediului. */
+    branchesLabel: string;
+    branches: Cta[];
     chips: string[];
   };
   /** Butoanele de mesagerie și bara fixă de pe telefon. */
@@ -531,6 +545,13 @@ const ro: Dict = {
     priceCta: { label: "Vezi prețul", href: "#preturi" },
     categoriesLabel: "Categorii",
     categories: ["A1", "A2", "A", "B1", "B", "C", "CE", "D"],
+    branchesLabel: "Filiale",
+    branches: [
+      { label: "Buiucani", href: "/scoala-auto-buiucani" },
+      { label: "Botanica", href: "/scoala-auto-botanica" },
+      { label: "Strășeni", href: "/scoala-auto-straseni" },
+      { label: "Vorniceni", href: "/scoala-auto-vorniceni" },
+    ],
     chips: [
       "20.000+ absolvenți",
       "10 ani de experiență",
@@ -882,6 +903,16 @@ const ro: Dict = {
     callOption: "Preferi să vorbim la telefon?",
     prefillNotice:
       "Am preluat datele din formularul scurt. Verifică-le și completează restul câmpurilor, ca să putem întocmi cererea-contract.",
+    phoneHint: {
+      empty: "9 cifre, cu 0 în față: 069123456",
+      progress: "{have} din {need} cifre",
+      noZero: "Numărul începe cu 0: 069123456",
+      extraZero: "După +373 numărul se scrie fără 0: +37369123456",
+      foreign: "Număr din altă țară: {have} cifre, trebuie cel puțin 8",
+      foreignOk: "Număr din altă țară, {have} cifre",
+      long: "Prea multe cifre: {have} în loc de {need}",
+      pasted: "Numărul lipit e prea lung: are {have} cifre. Câmpul a rămas cum era.",
+    },
     errors: {
       required: "Câmp obligatoriu",
       idnp: "IDNP-ul are exact 13 cifre",
@@ -1295,6 +1326,13 @@ const ru: Dict = {
     priceCta: { label: "Смотреть цену", href: "#preturi" },
     categoriesLabel: "Категории",
     categories: ["A1", "A2", "A", "B1", "B", "C", "CE", "D"],
+    branchesLabel: "Филиалы",
+    branches: [
+      { label: "Буюканы", href: "/scoala-auto-buiucani" },
+      { label: "Ботаника", href: "/scoala-auto-botanica" },
+      { label: "Стрэшены", href: "/scoala-auto-straseni" },
+      { label: "Ворничены", href: "/scoala-auto-vorniceni" },
+    ],
     chips: [
       "20 000+ выпускников",
       "10 лет опыта",
@@ -1643,6 +1681,16 @@ const ru: Dict = {
     callOption: "Удобнее по телефону?",
     prefillNotice:
       "Мы перенесли данные из короткой формы. Проверь их и заполни остальные поля, чтобы мы могли оформить заявление-договор.",
+    phoneHint: {
+      empty: "9 цифр, начиная с 0: 069123456",
+      progress: "{have} из {need} цифр",
+      noZero: "Номер начинается с 0: 069123456",
+      extraZero: "После +373 номер пишется без 0: +37369123456",
+      foreign: "Номер другой страны: {have} цифр, нужно не меньше 8",
+      foreignOk: "Номер другой страны, {have} цифр",
+      long: "Слишком много цифр: {have} вместо {need}",
+      pasted: "Вставленный номер слишком длинный: в нём {have} цифр. Поле осталось как было.",
+    },
     errors: {
       required: "Обязательное поле",
       idnp: "IDNP состоит ровно из 13 цифр",

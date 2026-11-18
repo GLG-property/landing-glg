@@ -26,7 +26,8 @@ import { categoryCombos, categoryGroups, categoryPriceIn } from "@/lib/categorie
 import { preparePhoto } from "@/lib/imageCompress";
 import { LOCATION_NAMES, fillOf, isSelectable, optionsFor, type EnrollOptions, type GroupFill } from "@/lib/schedule";
 import { EV, track } from "@/lib/analytics";
-import { phoneDigits, samePhone } from "@/lib/phoneInput";
+import { phoneDigits, phonePasteRejected, phoneTyped, samePhone } from "@/lib/phoneInput";
+import { PhoneHint } from "./PhoneHint";
 import { EnrollSuccess } from "./EnrollSuccess";
 import { useI18n } from "./LanguageProvider";
 import { Container, SectionHeading } from "./primitives";
@@ -463,6 +464,17 @@ export function EnrollForm({
     });
   };
 
+  // Mobilul și telefonul unei rude nu primesc nimic peste lungimea maximă (18.11.2026): cifra în
+  // plus nu intră, iar numărul lipit prea lung lasă câmpul cum era și indiciul de sub el spune de
+  // ce. Regulile sunt în src/lib/phoneInput.ts. Telefonul fix rămâne la regula lui (5 până la 15 cifre).
+  const [phoneLeft, setPhoneLeft] = useState<Record<string, boolean>>({});
+  const [phonePasted, setPhonePasted] = useState<Record<string, number>>({});
+  const leavePhone = (key: "phone" | "phone_family") => setPhoneLeft((s) => (s[key] ? s : { ...s, [key]: true }));
+  const typePhone = (key: "phone" | "phone_family", raw: string) => {
+    setPhonePasted((p) => ({ ...p, [key]: phonePasteRejected(values[key], raw) }));
+    set(key, phoneTyped(values[key], raw));
+  };
+
   const msg = (key: keyof EnrollValues): string | undefined => {
     const code = errors[key];
     return code ? e.errors[code] : undefined;
@@ -722,12 +734,16 @@ export function EnrollForm({
                   type="tel"
                   className={inputClass(!!errors.phone)}
                   value={values.phone}
-                  onChange={(ev) => set("phone", phoneDigits(ev.target.value))}
+                  onChange={(ev) => typePhone("phone", ev.target.value)}
+                  onBlur={() => leavePhone("phone")}
                   autoComplete="tel"
                   inputMode="tel"
                   placeholder="069000000"
                   maxLength={40}
                 />
+                {!msg("phone") ? (
+                  <PhoneHint value={values.phone} left={!!phoneLeft.phone} pasted={phonePasted.phone} testId="phone-hint" />
+                ) : null}
               </Field>
               <Field label={f.email} help={e.help.email} helpLabel={e.helpLabel} htmlFor="email" error={msg("email")}>
                 <input
@@ -764,11 +780,15 @@ export function EnrollForm({
                   type="tel"
                   className={inputClass(!!familyError)}
                   value={values.phone_family}
-                  onChange={(ev) => set("phone_family", phoneDigits(ev.target.value))}
+                  onChange={(ev) => typePhone("phone_family", ev.target.value)}
+                  onBlur={() => leavePhone("phone_family")}
                   inputMode="tel"
                   placeholder={f.phoneFamilyPlaceholder}
                   maxLength={40}
                 />
+                {!familyError || (phonePasted.phone_family ?? 0) > 0 ? (
+                  <PhoneHint value={values.phone_family} left={!!phoneLeft.phone_family} pasted={phonePasted.phone_family} testId="phone-family-hint" />
+                ) : null}
               </Field>
             </FormSection>
 

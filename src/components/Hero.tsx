@@ -54,6 +54,26 @@ export function Hero() {
             ))}
           </ul>
 
+          {/* Filialele, ca bule albastre (cerința patronului, 18.11.2026): fiecare duce la
+              pagina sediului. Rotunde de tot doar aici, vezi DESIGN.md. */}
+          <ul
+            className="animate-rise mt-2.5 flex flex-wrap items-center gap-1 sm:gap-1.5"
+            style={{ animationDelay: "120ms" }}
+            aria-label={hero.branchesLabel}
+            data-testid="hero-branches"
+          >
+            {hero.branches.map((b) => (
+              <li key={b.href}>
+                <Link
+                  href={b.href}
+                  className="btn-3d inline-flex items-center rounded-full px-2 py-1.5 text-[13px] sm:px-2.5 font-semibold leading-none text-white"
+                >
+                  {b.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+
           <p
             className="animate-rise mt-4 max-w-lg text-[0.9375rem] text-muted sm:mt-5 sm:text-lg"
             style={{ animationDelay: "140ms" }}
