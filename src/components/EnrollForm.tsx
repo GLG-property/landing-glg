@@ -10,6 +10,7 @@ import {
   apiFieldToKey,
   pairFromOption,
   pairOptionValue,
+  hourNotes,
   needsTheoryGroup,
   needsTransmission,
   buildEnrollPayload,
@@ -607,6 +608,19 @@ export function EnrollForm({
   // doar la autoturism, grupa de teorie doar la categoriile cu curs teoretic.
   const needsBox = needsTransmission(values);
   const needsTheory = needsTheoryGroup(values);
+  // Categoriile care nu sunt B (19.11.2026): fără grupă de ales, doar un rând cu ora lor.
+  const notes = hourNotes(values);
+  const twoCats = chosenCategories(values).length > 1;
+  const hourNoteList = notes.length > 0 && (
+    <ul className={clsx("space-y-1 text-sm text-muted", needsTheory && "mt-3")}>
+      {notes.map((n) => (
+        <li key={n.category}>
+          {twoCats && <span className="font-medium text-ink">{n.category}: </span>}
+          {n.kind === "vineri" ? f.hourFriday : f.hourNone}
+        </li>
+      ))}
+    </ul>
+  );
 
   // Grupele DESCHISE la sediul ales, în limba aleasă (din aplicație, prin API).
   const groupOpts = values.location ? optionsFor(options, values.location, values.language) : [];
@@ -1009,7 +1023,7 @@ export function EnrollForm({
                 error={!needsTheory ? undefined : noRuGroup ? e.errors.noRuGroup : msg("group_id")}
               >
                 {!needsTheory ? (
-                  <p className="text-sm text-muted">{f.noTheoryGroup}</p>
+                  hourNoteList || <p className="text-sm text-muted">{f.noTheoryGroup}</p>
                 ) : !values.location ? (
                   <p className="flex h-9 items-center text-sm text-faint">{f.slotPickSediu}</p>
                 ) : noOpenGroup ? (
@@ -1028,6 +1042,7 @@ export function EnrollForm({
                     <p className="mt-2 text-xs leading-relaxed text-faint">{f.fillLegend}</p>
                   </>
                 )}
+                {needsTheory && hourNoteList}
               </Field>
               <Field
                 label={f.practiceLocation} help={e.help.practiceLocation} helpLabel={e.helpLabel}

@@ -38,6 +38,31 @@ export interface EnrollOptions {
   locations: LocationOptions[];
 }
 
+/**
+ * Categoria grupei ca cheie de comparat: „” = grupa obișnuită (fără categorie sau B),
+ * altfel categoria cu majuscule. COPIE din practica-glg/lib/groupSchedule.ts (groupCategoryKey).
+ */
+export function groupCategoryKey(category: string | null | undefined): string {
+  const c = (category ?? "").toUpperCase().split(" ").filter(Boolean).join(" ");
+  return c === "B" ? "" : c;
+}
+
+/**
+ * Felul orei unei categorii. COPIE din practica-glg/lib/groupSchedule.ts (categoryHourKind),
+ * cele două trebuie ținute la fel. Patronul, 19.11.2026: „trecerile de la o categorie la alta
+ * sunt toate 18:00-22:00 vineri. toate restul categoriile inafara de B, inclusiv A,C,E etc sa fie
+ * fara ora”.
+ *  - "sediu": B (sau fără categorie), cu grupele deschise ale sediului;
+ *  - "vineri": orice trecere („B la C”, „C1 la C”, „A la B”), vineri 18:00-22:00;
+ *  - "fara": celelalte categorii (A1, A2, A, C, CE, D), fără zile și fără oră.
+ */
+export type CategoryHourKind = "sediu" | "vineri" | "fara";
+export function categoryHourKind(category: string | null | undefined): CategoryHourKind {
+  const k = groupCategoryKey(category);
+  if (!k) return "sediu";
+  return k.includes(" LA ") ? "vineri" : "fara";
+}
+
 export function optionsFor(all: EnrollOptions | null, location: string, lang: StudyLang): GroupOption[] {
   const loc = all?.locations.find((l) => l.name === location);
   return (loc?.options ?? []).filter((o) => o.language === lang);

@@ -12,8 +12,15 @@ import {
   type PaymentLinks,
   type PaymentPlan,
 } from "./plata";
-import { isSelectable, optionsFor, type EnrollOptions } from "./schedule";
-import { CATEGORIES, CATEGORY_COMBOS, categoryHasTheory, categoryHasTransmission } from "./categories";
+import { categoryHourKind, isSelectable, optionsFor, type CategoryHourKind, type EnrollOptions } from "./schedule";
+import {
+  CATEGORIES,
+  CATEGORY_COMBOS,
+  canonicalCategory,
+  categoryDef,
+  categoryHasTheory,
+  categoryHasTransmission,
+} from "./categories";
 import { isPhoneDigits, isRequestPhone, phoneDigits, samePhone } from "./phoneInput";
 
 /**
@@ -50,9 +57,38 @@ export function needsTransmission(v: Pick<EnrollValues, "category" | "category2"
   return chosenCategories(v).some((c) => categoryHasTransmission(c));
 }
 
-/** Se alege grupa de teorie? Doar dacă măcar o categorie aleasă are curs teoretic. */
+/**
+ * Felul orei pe cerere, după categoria ei în orice scriere („B-C”, „b la c”): "sediu", "vineri"
+ * sau "fara". COPIE din practica-glg/lib/enrollment/requestSlot.ts (requestHourKind): aplicația
+ * rescrie ora cererii primite de pe site după aceeași regulă (app/api/inscriere/route.ts, rowFor).
+ * O trecere scrisă altfel decât în catalog e tot trecere.
+ */
+export function requestHourKind(category: string | null | undefined): CategoryHourKind {
+  const c = canonicalCategory(category);
+  const kind = categoryHourKind(c);
+  return kind === "fara" && categoryDef(c).kind === "trecere" ? "vineri" : kind;
+}
+
+/**
+ * Se alege grupa (zilele și ora)? Doar dacă măcar o categorie aleasă e B (cu curs teoretic).
+ * Patronul, 19.11.2026: la celelalte categorii nu se alege nici ora, nici grupa: cele fără oră
+ * (A1, A2, A, C, CE, D) se stabilesc la telefon, trecerile sunt vineri 18:00-22:00.
+ */
 export function needsTheoryGroup(v: Pick<EnrollValues, "category" | "category2">): boolean {
-  return chosenCategories(v).some((c) => categoryHasTheory(c));
+  return chosenCategories(v).some((c) => categoryHasTheory(c) && requestHourKind(c) === "sediu");
+}
+
+/**
+ * Rândurile arătate în locul grupei pentru categoriile care nu sunt B: categoria și felul orei
+ * ("fara" = fără oră fixă, "vineri" = vineri 18:00-22:00). Gol la B.
+ */
+export function hourNotes(v: Pick<EnrollValues, "category" | "category2">): { category: string; kind: "fara" | "vineri" }[] {
+  const out: { category: string; kind: "fara" | "vineri" }[] = [];
+  for (const c of chosenCategories(v)) {
+    const kind = requestHourKind(c);
+    if (kind !== "sediu") out.push({ category: c, kind });
+  }
+  return out;
 }
 
 export type EnrollValues = {
@@ -248,7 +284,7 @@ export function validateEnroll(v: EnrollValues, options: EnrollOptions | null = 
   // trebuie să fie una din orarul fix al sediului pentru limba respectivă.
   // Grupa aleasă trebuie să fie una din opțiunile deschise la sediu, în limba
   // aleasă, și să NU fie plină (capacitate 30 RO / 15 RU).
-  // Categoriile fără curs teoretic (ex. „B la A1”) nu au grupă de ales.
+  // Grupa se alege doar la B (needsTheoryGroup): la celelalte categorii nu se alege nimic (19.11.2026).
   if (v.location && options && needsTheoryGroup(v)) {
     const opts = optionsFor(options, v.location, v.language);
     const anyAtLocation = options.locations.find((l) => l.name === v.location)?.options.length ?? 0;
