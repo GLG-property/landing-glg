@@ -13,6 +13,7 @@ import {
   hourNotes,
   needsTheoryGroup,
   needsTransmission,
+  NOTES_MAX,
   buildEnrollPayload,
   chosenCategories,
   emptyEnrollValues,
@@ -42,6 +43,10 @@ const inputBase =
   "input-3d h-11 w-full min-w-0 max-w-full appearance-none rounded-[10px] border px-3 text-base text-ink placeholder:text-faint outline-none transition-colors duration-200 sm:h-10 sm:text-sm";
 const inputOk = "border-line hover:border-faint focus:border-brand";
 const inputBad = "border-red-400 focus:border-red-500";
+
+// Câmpul de text liber (mențiuni): aceleași margini și umbră ca la input, fără înălțimea fixă.
+const textareaClass =
+  "input-3d block min-h-[5.5rem] w-full min-w-0 max-w-full resize-y appearance-none rounded-[10px] border border-line px-3 py-2.5 text-base text-ink placeholder:text-faint outline-none transition-colors duration-200 hover:border-faint focus:border-brand sm:text-sm";
 
 function inputClass(invalid: boolean) {
   return clsx(inputBase, invalid ? inputBad : inputOk);
@@ -1171,6 +1176,24 @@ export function EnrollForm({
                     { value: "retele_sociale", label: f.referralSocial },
                   ]}
                   onChange={(v) => set("referral", v as EnrollValues["referral"])}
+                />
+              </Field>
+              {/* Mențiuni libere (23.11.2026): de exemplu instructorul dorit. Ajung în „Mențiuni” pe cerere. */}
+              <Field
+                label={f.notes} help={e.help.notes} helpLabel={e.helpLabel}
+                htmlFor="notes"
+                optionalLabel={e.optional}
+                className="sm:col-span-2"
+              >
+                <textarea
+                  id="notes"
+                  name="notes"
+                  rows={3}
+                  className={textareaClass}
+                  value={values.notes}
+                  onChange={(ev) => set("notes", ev.target.value)}
+                  placeholder={f.notesPlaceholder}
+                  maxLength={NOTES_MAX}
                 />
               </Field>
             </FormSection>

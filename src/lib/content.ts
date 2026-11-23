@@ -100,6 +100,7 @@ export type EnrollDict = {
     transmission: string;
     practiceLocation: string;
     workplace: string;
+    notes: string;
     referral: string;
   };
   sections: {
@@ -135,6 +136,8 @@ export type EnrollDict = {
     idIssuedBy: string;
     idIssuedDate: string;
     workplace: string;
+    notes: string;
+    notesPlaceholder: string;
     referral: string;
     referralRecommendation: string;
     referralSocial: string;
@@ -804,6 +807,7 @@ const ro: Dict = {
       transmission: "Cutia de viteze pe care faci practica. Cu permis luat pe automată nu ai voie să conduci mașină cu cutie mecanică.",
       practiceLocation: "Sediul de unde pornești la lecțiile de condus. Poate fi altul decât cel de teorie: de exemplu teoria la Buiucani și practica la Botanica.",
       workplace: "Cu ce te ocupi: unde lucrezi sau unde înveți (de exemplu student, elev, angajat la…). Opțional, apare în cererea-contract.",
+      notes: "Orice dorință legată de curs: de exemplu instructorul la care vrei să faci lecțiile de condus. Opțional, o citește secretariatul.",
       referral: "De unde ai aflat de noi. Ne ajută să știm ce funcționează.",
     },
     sections: {
@@ -839,6 +843,8 @@ const ro: Dict = {
       idIssuedBy: "Eliberat de",
       idIssuedDate: "Data eliberării",
       workplace: "Ocupația",
+      notes: "Mențiuni",
+      notesPlaceholder: "De exemplu: vreau lecțiile de condus la un anumit instructor",
       referral: "De unde ai aflat de școală?",
       referralRecommendation: "Recomandare",
       referralSocial: "Rețele de socializare",
@@ -1585,6 +1591,7 @@ const ru: Dict = {
       transmission: "Коробка передач, на которой проходишь практику. С правами на автомат нельзя водить машину с механикой.",
       practiceLocation: "Филиал, откуда ты выезжаешь на уроки вождения. Может отличаться от филиала теории: например теория на Буюканах, а практика на Ботанике.",
       workplace: "Чем ты занимаешься: где работаешь или учишься (например студент, школьник, работаю в…). Необязательно, указывается в заявлении-договоре.",
+      notes: "Любое пожелание по курсу: например инструктор, у которого ты хочешь проходить уроки вождения. Необязательно, это читает секретариат.",
       referral: "Откуда ты узнал о нас. Помогает понять, что работает.",
     },
     sections: {
@@ -1620,6 +1627,8 @@ const ru: Dict = {
       idIssuedBy: "Кем выдано",
       idIssuedDate: "Дата выдачи",
       workplace: "Род занятий",
+      notes: "Пожелания",
+      notesPlaceholder: "Например: хочу уроки вождения у определённого инструктора",
       referral: "Откуда узнал(а) о школе?",
       referralRecommendation: "Рекомендация",
       referralSocial: "Социальные сети",

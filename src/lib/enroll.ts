@@ -112,6 +112,8 @@ export type EnrollValues = {
   id_issued_by: string;
   id_issued_date: string; // YYYY-MM-DD
   workplace: string;
+  /** Mențiuni libere ale cursantului (de ex. instructorul dorit); ajung în „Mențiuni” pe cerere. */
+  notes: string;
   referral: "" | "recomandare" | "retele_sociale";
   category: string;
   /** A doua categorie (opțional): aplicația creează două cereri, câte una pe categorie. "" = doar una. */
@@ -133,6 +135,9 @@ export type EnrollValues = {
   contract_read: boolean;
   consent: boolean;
 };
+
+/** Lungimea maximă a mențiunilor scrise de cursant pe site. */
+export const NOTES_MAX = 500;
 
 export function emptyEnrollValues(lang: Lang): EnrollValues {
   return {
@@ -156,6 +161,7 @@ export function emptyEnrollValues(lang: Lang): EnrollValues {
     id_issued_by: "",
     id_issued_date: "",
     workplace: "",
+    notes: "",
     referral: "",
     category: "B",
     category2: "",
@@ -385,6 +391,8 @@ export function buildEnrollPayload(v: EnrollValues): Record<string, unknown> {
     id_issued_by: opt(v.id_issued_by),
     id_issued_date: opt(v.id_issued_date),
     workplace: opt(v.workplace),
+    // Mențiunile scrise de cursant: aplicația le pune în „Mențiuni” pe cerere (cel mult 500 de semne).
+    notes: opt(v.notes.slice(0, NOTES_MAX)),
     referral: v.referral || undefined,
     phone_home: opt(phoneDigits(v.phone_home)),
     phone_family: opt(phoneDigits(v.phone_family)),
