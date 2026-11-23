@@ -299,8 +299,9 @@ export function validateEnroll(v: EnrollValues, options: EnrollOptions | null = 
     if (!v.group_id && opts.length > 0) errors.group_id = "required";
   }
 
-  // Poza buletinului: cel puțin fața (cerința patronului, 22.10.2026).
+  // Pozele buletinului: fața (22.10.2026) și verso-ul (23.11.2026) sunt amândouă obligatorii.
   if (v.id_photo_front.trim() === "") errors.id_photo_front = "photoMissing";
+  if (v.id_photo_back.trim() === "") errors.id_photo_back = "photoMissing";
 
   if (v.contract_read !== true) errors.contract_read = "contract";
   if (v.consent !== true) errors.consent = "consent";

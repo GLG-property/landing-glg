@@ -919,7 +919,7 @@ export function EnrollForm({
                 />
               </Field>
 
-              {/* Pozele buletinului: fața obligatorie, verso opțional (cerința patronului, 22.10.2026) */}
+              {/* Pozele buletinului: fața și verso-ul, amândouă obligatorii (verso-ul din 23.11.2026) */}
               <div className="border-t border-line pt-3 sm:col-span-2">
                 <p className="text-[13px] font-medium text-ink">{f.idPhoto}</p>
                 <p className="mt-1 text-xs text-faint">{f.idPhotoHint}</p>
@@ -933,7 +933,7 @@ export function EnrollForm({
                   labels={photoLabels}
                 />
               </Field>
-              <Field label={f.idPhotoBack} htmlFor="id_photo_back" optionalLabel={e.optional} error={msg("id_photo_back")}>
+              <Field label={f.idPhotoBack} htmlFor="id_photo_back" error={msg("id_photo_back")}>
                 <PhotoField
                   id="id_photo_back"
                   value={values.id_photo_back}
