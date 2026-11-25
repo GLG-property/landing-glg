@@ -58,8 +58,8 @@ export function needsTransmission(v: Pick<EnrollValues, "category" | "category2"
 }
 
 /**
- * Felul orei pe cerere, după categoria ei în orice scriere („B-C”, „b la c”): "sediu", "vineri"
- * sau "fara". COPIE din practica-glg/lib/enrollment/requestSlot.ts (requestHourKind): aplicația
+ * Felul orei pe cerere, după categoria ei în orice scriere („B-C”, „b la c”): "sediu", "online",
+ * "vineri" sau "fara". COPIE din practica-glg/lib/enrollment/requestSlot.ts (requestHourKind): aplicația
  * rescrie ora cererii primite de pe site după aceeași regulă (app/api/inscriere/route.ts, rowFor).
  * O trecere scrisă altfel decât în catalog e tot trecere.
  */
@@ -72,18 +72,23 @@ export function requestHourKind(category: string | null | undefined): CategoryHo
 /**
  * Se alege grupa (zilele și ora)? Doar dacă măcar o categorie aleasă e B (cu curs teoretic).
  * Patronul, 19.11.2026: la celelalte categorii nu se alege nici ora, nici grupa: cele fără oră
- * (A1, A2, A, C, CE, D) se stabilesc la telefon, trecerile sunt vineri 18:00-22:00.
+ * (A1, A2, A, C) se stabilesc la telefon, trecerile sunt vineri 18:00-22:00, iar „C1 la C”, „CE”,
+ * „D” și „D1 la D” au din 24.11.2026 ora online: marți și joi, 17:30.
  */
 export function needsTheoryGroup(v: Pick<EnrollValues, "category" | "category2">): boolean {
   return chosenCategories(v).some((c) => categoryHasTheory(c) && requestHourKind(c) === "sediu");
 }
 
+/** Un rând din locul grupei: categoria și felul orei ei (orice fel în afară de „sediu”). */
+export type HourNote = { category: string; kind: Exclude<CategoryHourKind, "sediu"> };
+
 /**
  * Rândurile arătate în locul grupei pentru categoriile care nu sunt B: categoria și felul orei
- * ("fara" = fără oră fixă, "vineri" = vineri 18:00-22:00). Gol la B.
+ * ("fara" = fără oră fixă, "vineri" = vineri 18:00-22:00, "online" = marți și joi, 17:30, online;
+ * patronul, 24.11.2026: „C1 la C, CE, D, D1 la D - ora automata ma-j 17:30 ONLINE”). Gol la B.
  */
-export function hourNotes(v: Pick<EnrollValues, "category" | "category2">): { category: string; kind: "fara" | "vineri" }[] {
-  const out: { category: string; kind: "fara" | "vineri" }[] = [];
+export function hourNotes(v: Pick<EnrollValues, "category" | "category2">): HourNote[] {
+  const out: HourNote[] = [];
   for (const c of chosenCategories(v)) {
     const kind = requestHourKind(c);
     if (kind !== "sediu") out.push({ category: c, kind });

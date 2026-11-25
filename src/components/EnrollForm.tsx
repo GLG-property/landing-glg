@@ -621,7 +621,7 @@ export function EnrollForm({
       {notes.map((n) => (
         <li key={n.category}>
           {twoCats && <span className="font-medium text-ink">{n.category}: </span>}
-          {n.kind === "vineri" ? f.hourFriday : f.hourNone}
+          {n.kind === "online" ? f.hourOnline : n.kind === "vineri" ? f.hourFriday : f.hourNone}
         </li>
       ))}
     </ul>

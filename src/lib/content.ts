@@ -158,10 +158,12 @@ export type EnrollDict = {
     transmissionAuto: string;
     /** Textul pentru categoriile fără curs teoretic (nu se alege grupă). */
     noTheoryGroup: string;
-    /** În locul grupei, la categoriile fără oră fixă (A1, A2, A, C, CE, D), 19.11.2026. */
+    /** În locul grupei, la categoriile fără oră fixă (A1, A2, A, C), 19.11.2026; CE și D au din 24.11.2026 ora online. */
     hourNone: string;
     /** În locul grupei, la treceri („B la C”), 19.11.2026. Fără liniuță lungă (DESIGN.md). */
     hourFriday: string;
+    /** În locul grupei, la „C1 la C”, „CE”, „D” și „D1 la D”: marți și joi, 17:30, online (24.11.2026). */
+    hourOnline: string;
     sediu: string;
     sediuPlaceholder: string;
     slot: string;
@@ -864,6 +866,7 @@ const ro: Dict = {
       noTheoryGroup: "Categoria aleasă nu are curs teoretic, deci nu alegi o grupă.",
       hourNone: "Cursul nu are o oră fixă. Te sunăm noi și stabilim împreună programul.",
       hourFriday: "Vineri, 18:00-22:00",
+      hourOnline: "Marți și Joi, 17:30, online",
       sediu: "Sediul (grupa de teorie)",
       sediuPlaceholder: "Alege sediul",
       slot: "Grupa (zilele și ora)",
@@ -1648,6 +1651,7 @@ const ru: Dict = {
       noTheoryGroup: "У выбранной категории нет теоретического курса, поэтому группу выбирать не нужно.",
       hourNone: "У курса нет фиксированного времени. Мы позвоним и вместе договоримся о расписании.",
       hourFriday: "Пятница, 18:00-22:00",
+      hourOnline: "Вторник и четверг, 17:30, онлайн",
       sediu: "Филиал (группа теории)",
       sediuPlaceholder: "Выбери филиал",
       slot: "Время группы",

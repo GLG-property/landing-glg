@@ -48,18 +48,30 @@ export function groupCategoryKey(category: string | null | undefined): string {
 }
 
 /**
+ * Categoriile cu ora online: marți și joi, 17:30. COPIE din practica-glg/lib/groupSchedule.ts
+ * (ONLINE_HOUR_CATEGORIES). Patronul, 24.11.2026: „C1 la C, CE, D, D1 la D - ora automata ma-j
+ * 17:30 ONLINE. asa modifica”. „C” simplu NU e în listă. Lista stă doar aici: încă o categorie
+ * se adaugă într-un singur loc (și la fel în aplicație).
+ */
+export const ONLINE_HOUR_CATEGORIES = ["C1 la C", "CE", "D", "D1 la D"] as const;
+
+/**
  * Felul orei unei categorii. COPIE din practica-glg/lib/groupSchedule.ts (categoryHourKind),
  * cele două trebuie ținute la fel. Patronul, 19.11.2026: „trecerile de la o categorie la alta
  * sunt toate 18:00-22:00 vineri. toate restul categoriile inafara de B, inclusiv A,C,E etc sa fie
  * fara ora”.
  *  - "sediu": B (sau fără categorie), cu grupele deschise ale sediului;
- *  - "vineri": orice trecere („B la C”, „C1 la C”, „A la B”), vineri 18:00-22:00;
- *  - "fara": celelalte categorii (A1, A2, A, C, CE, D), fără zile și fără oră.
+ *  - "online": categoriile din ONLINE_HOUR_CATEGORIES, marți și joi 17:30, online (24.11.2026);
+ *  - "vineri": orice altă trecere („B la A”, „A la B”, „A1 la A2”), vineri 18:00-22:00;
+ *  - "fara": celelalte categorii (A1, A2, A, C), fără zile și fără oră.
  */
-export type CategoryHourKind = "sediu" | "vineri" | "fara";
+export type CategoryHourKind = "sediu" | "vineri" | "fara" | "online";
+const ONLINE_CATEGORY_KEYS: ReadonlySet<string> = new Set(ONLINE_HOUR_CATEGORIES.map((c) => groupCategoryKey(c)));
 export function categoryHourKind(category: string | null | undefined): CategoryHourKind {
   const k = groupCategoryKey(category);
   if (!k) return "sediu";
+  // Ora online se caută ÎNAINTEA trecerilor: „C1 la C” și „D1 la D” sunt și ele treceri.
+  if (ONLINE_CATEGORY_KEYS.has(k)) return "online";
   return k.includes(" LA ") ? "vineri" : "fara";
 }
 
