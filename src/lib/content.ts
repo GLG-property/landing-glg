@@ -657,7 +657,7 @@ const ro: Dict = {
         people: [
           { name: "Nicolaescu Vladislav", role: "Manager 1", photo: "/echipa/vlad.jpg" },
           { name: "Malai Cristian", role: "Manager 2", photo: "/echipa/malai-cristian-birou.jpg" },
-          { name: "Stavila Ion", role: "Manager 3" },
+          { name: "Stavilă Ion", role: "Manager 3", photo: "/echipa/stavila-ion.jpg" },
         ],
       },
       {
@@ -1442,7 +1442,7 @@ const ru: Dict = {
         people: [
           { name: "Николаеску Владислав", role: "Менеджер 1", photo: "/echipa/vlad.jpg" },
           { name: "Малай Кристиан", role: "Менеджер 2", photo: "/echipa/malai-cristian-birou.jpg" },
-          { name: "Ставила Ион", role: "Менеджер 3" },
+          { name: "Ставила Ион", role: "Менеджер 3", photo: "/echipa/stavila-ion.jpg" },
         ],
       },
       {
